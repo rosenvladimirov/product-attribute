@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="product_variant_easy_edit_variant_view" model="ir.ui.view">
+            <field name="name">product.product.view.form.variant.easy</field>
+            <field name="model">product.product</field>
+            <field name="inherit_id" ref="product.product_variant_easy_edit_view"/>
+            <field name="arch" type="xml">
+                <field name="attribute_value_ids" position="after">
+                    <field name="variant_seller_ids" readonly="1">
+                        <tree string="Vendor Information">
+                            <field name="name"/>
+                            <field name="product_name"/>
+                            <field name="product_code"/>
+                        </tree>
+                    </field>
+                    <field name="id" invisible="1"/>
+                    <field name="default_variant_seller_id" domain="[('product_id', '=', id)]"/>
+                    <field name="label_name"/>
+                    <field name="label_code"/>
+                </field>
+            </field>
+        </record>
+        <record id="view_stock_product_variant_tree" model="ir.ui.view">
+            <field name="name">product.stock.tree.variant.inherit</field>
+            <field name="model">product.product</field>
+            <field name="inherit_id" ref="product.product_product_tree_view"/>
+            <field name="arch" type="xml">
+                <field name="default_code" position="before">
+                    <field name="image_small" widget="image" class="oe_image_small"/>
+                </field>
+            </field>
+        </record>
+    </data>
+</odoo>

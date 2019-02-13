@@ -24,6 +24,8 @@
             <form string="Customer Information">
                 <group>
                     <group string="Customer">
+                        <field name="product_variant_count" invisible="1"/>
+                        <field name="product_id" groups="product.group_product_variant" domain="[('product_tmpl_id', '=', product_tmpl_id)]"/>
                         <field name="name" string="Customer" context="{
                             'default_supplier': 0,
                             'search_default_customer': 1,
@@ -31,7 +33,7 @@
                         }"/>
                         <field name="product_name" string="Customer Product Name"/>
                         <field name="product_code" string="Customer Product Code"/>
-                        <field name="product_id" domain="[('product_tmpl_id', '=', product_tmpl_id)]" invisible="1"/>
+                        <!-- <field name="product_id" domain="[('product_tmpl_id', '=', product_tmpl_id)]" invisible="1"/> -->
                     </group>
                     <group string="Price List" groups="product.group_pricelist_item">
                         <field name="product_tmpl_id" string="Product" invisible="context.get('visible_product_tmpl_id', True)"/>

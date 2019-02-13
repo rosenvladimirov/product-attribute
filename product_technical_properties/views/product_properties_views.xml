@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="product_technical_properties_package_tree_view" model="ir.ui.view">
+            <field name="name">product.technical.properties.package.tree.view</field>
+            <field name="model">product.technical.properties.package</field>
+            <field name="arch" type="xml">
+                <tree string="Tank">
+                    <field name="name"/>
+                    <field name="dimensions_x"/>
+                    <field name="dimensions_y"/>
+                    <field name="dimensions_z"/>
+                    <field name="volume"/>
+                    <field name="image_small" widget="image"/>
+                </tree>
+            </field>
+        </record>
+        <record id="product_technical_properties_package_form_view" model="ir.ui.view">
+            <field name="name">product.technical.properties.package.form.view</field>
+            <field name="model">product.technical.properties.package</field>
+            <field name="arch" type="xml">
+                <form string="Package-Corpus">
+                    <sheet>
+                        <field name="image_medium" widget="image" class="oe_avatar"/>
+                        <div class="oe_title">
+                            <label class="oe_edit_only" for="name" string="Tank Name"/>
+                            <h1>
+                                <field name="name"/>
+                            </h1>
+                        </div>
+                        <group>
+                            <group string="Dimensions">
+                                <field name="dimensions_x"/>
+                                <field name="dimensions_y"/>
+                                <field name="dimensions_z"/>
+                                <field name="volume"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="product_technical_properties_tree_view" model="ir.ui.view">
+            <field name="name">product.technical.properties.view</field>
+            <field name="model">product.technical.properties</field>
+            <field name="arch" type="xml">
+                <tree string="Technical properties">
+                    <field name="sequence" widget="handle"/>
+                    <field name="name"/>
+                    <field name="type_display"/>
+                    <field name="type_display_attrs"/>
+                    <field name="type_fields" invisible="1"/>
+                    <field name="image_small" widget="image"/>
+                </tree>
+            </field>
+        </record>
+        <record id="product_technical_properties_form_view" model="ir.ui.view">
+            <field name="name">product.technical.properties.form.view</field>
+            <field name="model">product.technical.properties</field>
+            <field name="arch" type="xml">
+                <form string="Technical properties">
+                    <sheet>
+                        <field name="image_medium" widget="image" class="oe_avatar" attrs="{'invisible':[('type_fields', '!=', 'package')]}"/>
+                        <div class="oe_title">
+                            <label class="oe_edit_only" for="name" string="Properties Name"/>
+                            <h1>
+                                <field name="name"/>
+                            </h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="type_fields"/>
+                            </group>
+                            <group name="properties">
+                                <field name="type_float" attrs="{'invisible':[('type_fields', '!=', 'float')]}"/>
+                                <field name="type_char" attrs="{'invisible':[('type_fields', '!=', 'char')]}"/>
+                                <field name="type_int" attrs="{'invisible':[('type_fields', '!=', 'int')]}"/>
+                                <field name="type_boolean" attrs="{'invisible':[('type_fields', '!=', 'boolean')]}"/>
+                                <field name="type_tank" attrs="{'invisible':[('type_fields', '!=', 'tank')]}"/>
+                                <field name="type_uom_id" attrs="{'invisible':[('type_fields', 'in', ('char', 'package', 'tank'))]}"/>
+                            </group>
+                            <group string="Range" attrs="{'invisible':[('type_fields', '!=', 'range')]}">
+                                <field name="type_int" attrs="{'invisible':[('type_fields', 'not in', ('int', 'range'))]}"/>
+                                <field name="type_int_second" attrs="{'invisible':[('type_fields', 'not in', ('int', 'range'))]}"/>
+                            </group>
+                            <group string="Dimensions" attrs="{'invisible':[('type_fields', '!=', 'package')]}">
+                                <field name="type_package_id" attrs="{'invisible':[('type_fields', '!=', 'package')]}"/>
+                                <field name="dimensions_x"/>
+                                <field name="dimensions_y"/>
+                                <field name="dimensions_z"/>
+                                <field name="volume"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="action_product_technical_properties_view">
+            <field name="name">Technical properties</field>
+            <field name="res_model">product.technical.properties</field>
+            <field name="view_ids" eval="[(5, 0, 0),
+                (0, 0, {'view_mode': 'tree', 'view_id': ref('product_technical_properties_tree_view')}),
+                (0, 0, {'view_mode': 'form', 'view_id': ref('product_technical_properties_form_view')})]"/>
+        </record>
+
+        <record id="product_technical_form_view" model="ir.ui.view">
+            <field name="name">product.technical.form.view</field>
+            <field name="model">product.technical</field>
+            <field name="arch" type="xml">
+                <form string="Technical properties">
+                    <sheet>
+                        <div class="oe_title">
+                            <label class="oe_edit_only" for="name" string="Properties Name"/>
+                            <h1>
+                                <field name="name"/>
+                            </h1>
+                        </div>
+                        <field name="lines_ids" context="{'default_categ_id': active_id}">
+                            <form string="Technical properties">
+                                <sheet>
+                                    <field name="image_medium" widget="image" class="oe_avatar" attrs="{'invisible':[('type_fields', '!=', 'package')]}"/>
+                                    <div class="oe_title">
+                                        <label class="oe_edit_only" for="name" string="Properties Name"/>
+                                        <h1>
+                                            <field name="name"/>
+                                        </h1>
+                                    </div>
+                                    <group>
+                                        <group>
+                                            <field name="type_fields"/>
+                                        </group>
+                                        <group name="properties">
+                                            <field name="type_float" attrs="{'invisible':[('type_fields', '!=', 'float')]}"/>
+                                            <field name="type_char" attrs="{'invisible':[('type_fields', '!=', 'char')]}"/>
+                                            <field name="type_int" attrs="{'invisible':[('type_fields', '!=', 'int')]}"/>
+                                            <field name="type_boolean" attrs="{'invisible':[('type_fields', '!=', 'boolean')]}"/>
+                                            <field name="type_tank" attrs="{'invisible':[('type_fields', '!=', 'tank')]}"/>
+                                            <field name="type_uom_id" attrs="{'invisible':[('type_fields', 'in', ('char', 'package', 'msl'))]}"/>
+                                        </group>
+                                        <group string="Range" attrs="{'invisible':[('type_fields', '!=', 'range')]}">
+                                            <field name="type_int" attrs="{'invisible':[('type_fields', 'not in', ('int', 'range'))]}"/>
+                                            <field name="type_int_second" attrs="{'invisible':[('type_fields', 'not in', ('int', 'range'))]}"/>
+                                        </group>
+                                        <group string="Dimensions" attrs="{'invisible':[('type_fields', '!=', 'package')]}">
+                                            <field name="type_package_id" attrs="{'invisible':[('type_fields', '!=', 'package')]}"/>
+                                            <field name="dimensions_x"/>
+                                            <field name="dimensions_y"/>
+                                            <field name="dimensions_z"/>
+                                            <field name="volume"/>
+                                        </group>
+                                    </group>
+                                </sheet>
+                            </form>
+                            <tree string="Technical properties">
+                                <field name="sequence" widget="handle"/>
+                                <field name="name"/>
+                                <field name="type_display"/>
+                                <!-- <field name="type_range"/> -->
+                                <field name="type_display_attrs"/>
+                                <field name="type_fields" invisible="1"/>
+                                <field name="image_small" widget="image" attrs="{'invisible':[('type_fields', '!=', 'package')]}"/>
+                            </tree>
+                        </field>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record id="product_technical_tree_view" model="ir.ui.view">
+            <field name="name">product.technical.tree.view</field>
+            <field name="model">product.technical</field>
+            <field name="arch" type="xml">
+                <tree string="Technical properties">
+                    <field name="name"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="product_technical_action" model="ir.actions.act_window">
+            <field name="name">The Category technical properties</field>
+            <field name="res_model">product.technical</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p>
+                  Create The Category technical Properties.
+                </p>
+            </field>
+        </record>
+
+        <!-- Product base form view -->
+        <record id="product_template_only_form_th_properties_view" model="ir.ui.view">
+            <field name="name">product.template.product.form</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="product.product_template_only_form_view"/>
+            <field name="arch" type="xml">
+                <data>
+                    <xpath expr="//field[@name='categ_id']" position="after">
+                        <field name="technical_properties_id"
+                                string="Technical properties"
+                                context="{'default_categ_id': technical_properties_id}"/>
+                    </xpath>
+                    <xpath expr="//page[@name='notes']" position="before">
+                        <page name="th_properties" string="Technical properties" attrs="{'invisible':[('technical_properties_id', '=', False)]}">
+                            <group name="technical_properties" colspan="4">
+                                <field name="technical_properties_ids" nolabel="1"
+                                    context="{'default_product_tmpl_id': active_id}">
+                                    <tree>
+                                        <field name="sequence" widget="handle"/>
+                                        <field name="name"/>
+                                        <field name="type_display"/>
+                                        <!-- <field name="type_range"/> -->
+                                        <field name="type_display_attrs"/>
+                                        <field name="type_fields" invisible="1"/>
+                                        <field name="image_small" widget="image" attrs="{'invisible':[('type_fields', '!=', 'package')]}"/>
+                                    </tree>
+                                </field>
+                            </group>
+                        </page>
+                    </xpath>
+                </data>
+            </field>
+        </record>
+    </data>
+</odoo>

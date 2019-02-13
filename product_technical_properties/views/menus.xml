@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem
+        action="product_technical_action" id="menu_technical_properties_action"
+        parent="stock.menu_product_in_config_stock" sequence="999" groups="product_technical_properties.group_th_pro_manager"/>
+</odoo>

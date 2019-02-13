@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="report_inventory_variant" inherit_id="stock.report_inventory">
+            <xpath expr="//span[@t-field='line.product_id']" position="replace">
+                <td>
+                    <span t-field="line.product_id.display_label_name"/>
+                    <br/>
+                    <span t-field="line.product_id.barcode"/>
+                </td>
+            </xpath>
+        </template>
+    </data>
+</odoo>

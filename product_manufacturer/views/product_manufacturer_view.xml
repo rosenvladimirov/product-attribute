@@ -20,5 +20,18 @@
             </page>
         </field>
     </record>
+    <record id="product_template_manufacturer_pref_search_inherit" model="ir.ui.view">
+        <field name="name">product.template.manufacturer_pref.view.search</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_search_view"/>
+        <field name="arch" type="xml">
+            <field name="name" position="replace">
+                <field name="name" string="Product" filter_domain="['|','|','|',('default_code','ilike',self),('manufacturer_pref','ilike',self),('name','ilike',self),('barcode','ilike',self)]"/>
+            </field>
+            <field name="name" position="after">
+                <field name="manufacturer_pref" string="Manufacturer code" filter_domain="[('manufacturer_pref','ilike',self)]"/>
+            </field>
+        </field>
+    </record>
 
 </odoo>

@@ -1,0 +1,132 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+#	* product_dimensions
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 10.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2017-07-13 15:15+0000\n"
+"PO-Revision-Date: 2017-07-13 15:15+0000\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: product_dimensions
+#: model:ir.ui.view,arch_db:product_dimensions.product_packaging_delivery_form_no_dimensions
+msgid "Delivery"
+msgstr "Livraison"
+
+#. module: product_dimensions
+#: model:ir.ui.view,arch_db:product_dimensions.product_packaging_form_view_inherit
+#: model:ir.ui.view,arch_db:product_dimensions.product_variant_easy_edit_view_dimensions
+#: model:ir.ui.view,arch_db:product_dimensions.view_template_property_form_bel
+msgid "Dimensions (L-W-H)"
+msgstr ""
+
+#. module: product_dimensions
+#: model:ir.model.fields,field_description:product_dimensions.field_delivery_carrier_height
+#: model:ir.model.fields,field_description:product_dimensions.field_product_product_height
+#: model:ir.model.fields,field_description:product_dimensions.field_product_template_height
+msgid "Height"
+msgstr "Hauteur"
+
+#. module: product_dimensions
+#: model:ir.model.fields,field_description:product_dimensions.field_delivery_carrier_length
+#: model:ir.model.fields,field_description:product_dimensions.field_product_product_length
+#: model:ir.model.fields,field_description:product_dimensions.field_product_template_length
+msgid "Length"
+msgstr "Longueur"
+
+#. module: product_dimensions
+#: model:ir.ui.view,arch_db:product_dimensions.product_packaging_form_view_inherit
+#: model:ir.ui.view,arch_db:product_dimensions.product_variant_easy_edit_view_dimensions
+msgid "Measurements"
+msgstr ""
+
+#. module: product_dimensions
+#: model:ir.model,name:product_dimensions.model_product_packaging
+msgid "Packaging"
+msgstr ""
+
+#. module: product_dimensions
+#: model:ir.model,name:product_dimensions.model_product_product
+msgid "Product"
+msgstr "Produit"
+
+#. module: product_dimensions
+#: model:ir.model,name:product_dimensions.model_product_template
+msgid "Product Template"
+msgstr "Modèle d'article"
+
+#. module: product_dimensions
+#: model:ir.model.fields,help:product_dimensions.field_delivery_carrier_height
+#: model:ir.model.fields,help:product_dimensions.field_product_product_height
+#: model:ir.model.fields,help:product_dimensions.field_product_template_height
+msgid "The height in cm, not including packaging etc"
+msgstr ""
+
+#. module: product_dimensions
+#: model:ir.model.fields,help:product_dimensions.field_delivery_carrier_length
+#: model:ir.model.fields,help:product_dimensions.field_product_product_length
+#: model:ir.model.fields,help:product_dimensions.field_product_template_length
+msgid "The length in cm, not including packaging etc"
+msgstr ""
+
+#. module: product_dimensions
+#: model:ir.model.fields,help:product_dimensions.field_product_packaging_volume
+msgid "The volume of the package in m3"
+msgstr ""
+
+#. module: product_dimensions
+#: model:ir.model.fields,help:product_dimensions.field_delivery_carrier_weight_g
+#: model:ir.model.fields,help:product_dimensions.field_product_product_weight_g
+#: model:ir.model.fields,help:product_dimensions.field_product_template_weight_g
+msgid "The weight in gram not including packaging etc"
+msgstr ""
+
+#. module: product_dimensions
+#: model:ir.model.fields,help:product_dimensions.field_product_packaging_weight
+msgid "The weight of the package in Kg, not including the product itself"
+msgstr ""
+
+#. module: product_dimensions
+#: model:ir.model.fields,help:product_dimensions.field_delivery_carrier_width
+#: model:ir.model.fields,help:product_dimensions.field_product_product_width
+#: model:ir.model.fields,help:product_dimensions.field_product_template_width
+msgid "The width in cm, not including packaging etc"
+msgstr ""
+
+#. module: product_dimensions
+#: model:ir.model.fields,field_description:product_dimensions.field_product_packaging_volume
+msgid "Volume"
+msgstr "Volume"
+
+#. module: product_dimensions
+#: model:ir.model.fields,field_description:product_dimensions.field_product_packaging_weight
+msgid "Weight"
+msgstr "Poids"
+
+#. module: product_dimensions
+#: model:ir.model.fields,field_description:product_dimensions.field_delivery_carrier_weight_display
+#: model:ir.model.fields,field_description:product_dimensions.field_product_product_weight_display
+#: model:ir.model.fields,field_description:product_dimensions.field_product_template_weight_display
+msgid "Weight Display Unit"
+msgstr ""
+
+#. module: product_dimensions
+#: model:ir.model.fields,field_description:product_dimensions.field_delivery_carrier_weight_g
+#: model:ir.model.fields,field_description:product_dimensions.field_product_product_weight_g
+#: model:ir.model.fields,field_description:product_dimensions.field_product_template_weight_g
+msgid "Weight in gram"
+msgstr "Weight in gram"
+
+#. module: product_dimensions
+#: model:ir.model.fields,field_description:product_dimensions.field_delivery_carrier_width
+#: model:ir.model.fields,field_description:product_dimensions.field_product_product_width
+#: model:ir.model.fields,field_description:product_dimensions.field_product_template_width
+msgid "Width"
+msgstr "Largeur"

@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!--
+       <record id="view_res_partner_filter" model="ir.ui.view">
+            <field name="name">res.partner.select</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_res_partner_filter"/>
+            <field name="arch" type="xml">
+                <xpath expr="//filter[@name='supplier']" position="after">
+                   <filter string="Distributors" name="distributor" domain="[('distributor', '=', 1)]"/>
+                </xpath>
+                <xpath expr="//field[@name='parent_id']" position="after">
+                   <field name="distributor_id" domain="[('is_company','=',1)]" operator="child_of"/>
+                </xpath>
+            </field>
+        </record>
+        -->
+        <record id="action_partner_manufactuer_form" model="ir.actions.act_window">
+            <field name="name">Manufactuers</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">res.partner</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">kanban,tree,form</field>
+            <field name="filter" eval="False"/>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to add Manifacturies you are distributing.
+              </p><p>
+                Odoo helps you easily track all activities related to
+                a manufacture: history of purchases,
+                documents, etc.
+              </p>
+            </field>
+        </record>
+        <record id="view_partner_distributor_form" model="ir.ui.view">
+            <field name="name">res.partner.distributor.form</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_form" />
+            <field name="priority" eval="2"/>
+            <field name="arch" type="xml">
+                <!--
+                <button name="toggle_active" position="before">
+                    <button name="%(action_partner_manufactuer_form)d" type="action"
+                            context="{'search_default_supplier': 1, 'default_distributor_id': active_id, 'default_customer': 0, 'default_supplier': 1, 'default_company_type': 'company'}"
+                            attrs="{'invisible': [('is_company', '=', False)]}"
+                            class="oe_stat_button" icon="fa-cubes">
+                            <field name="count_manufacture" widget="statinfo" string="Manufatuers"/>
+                    </button>
+                </button>
+                -->
+                <field name="industry_id"  position="after">
+                    <field name="manufacture_ids" context="{'search_default_supplier': 1, 'default_distributor_id': active_id, 'default_customer': 0, 'default_supplier': 1, 'default_company_type': 'company'}"/>
+                    <!-- <field name="distributor_id" attrs="{'invisible': [('is_company', '=', False), ('manufacture_ids', '=', False)]}" options="{'no_create': True}"/> -->
+                </field>
+            </field>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_template_property_form_dimensions" model="ir.ui.view">
+        <field name="name">product.template.stock.property.form.inherit</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="stock.view_template_property_form"/>
+        <field name="arch" type="xml">
+            <!-- Add dimensions to product -->
+            <!-- Move weight field below tracking together with other dimensions, add gram display option -->
+            <xpath expr="//group[@name='group_lots_and_weight']//label[@for='weight']" position="replace">
+            </xpath>
+            <xpath expr="//group[@name='group_lots_and_weight']//field[@name='weight']/.." position="replace">
+            </xpath>
+            <xpath expr="//group[@name='group_lots_and_weight']//label[@for='volume']" position="before">
+                <field name="show_imperial" invisible="1"/>
+                <label for="weight" attrs="{'invisible':[('type', 'not in', ['product', 'consu'])]}"/>
+                <div class="o_row" name="weight" attrs="{'invisible':[('type', 'not in', ['product', 'consu'])]}">
+                    <field name="weight" attrs="{'invisible': [('weight_display', '=', 'g')]}"/>
+                    <field name="weight_g" attrs="{'invisible': [('weight_display', '=', 'kg')]}"/>
+                    <field name="weight_display" widget="radio" class="oe_inline"/>
+                    <div style="padding-left: 10px; color: #A9A9A9" attrs="{'invisible': [('show_imperial', '=', False)]}">
+                        <em>
+                            <span attrs="{'invisible': [('weight_lb', '=', 0)]}"><field name="weight_lb" class="oe_inline"/> lb </span>
+                            <span><field name="weight_oz" class="oe_inline"/> oz</span>
+                        </em>
+                    </div>
+                </div>
+            </xpath>
+            <xpath expr="//group[@name='group_lots_and_weight']//field[@name='volume']" position="after">
+                <span>m³</span>
+                <div style="padding-left: 10px; color: #A9A9A9" attrs="{'invisible': [('show_imperial', '=', False)]}">
+                    <em>
+                        <div><field name="volume_gal" class="oe_inline"/> gal</div>
+                    </em>
+                </div>
+            </xpath>
+            <xpath expr="//group[@name='group_lots_and_weight']//field[@name='volume']/.." position="after">
+                <label for="dimensions" string="Dimensions (L-W-H)" attrs="{'invisible':[('type', 'not in', ['product', 'consu'])]}"/>
+                <div class="o_row" name="dimensions" attrs="{'invisible':[('type', 'not in', ['product', 'consu'])]}">
+                    <field name="length"/><span>x</span>
+                    <field name="width"/><span>x</span>
+                    <field name="height"/><span>cm</span>
+                    <div style="padding-left: 10px; color: #A9A9A9" attrs="{'invisible': [('show_imperial', '=', False)]}">
+                        <em>
+                            <field name="length_in"/><span> x </span>
+                            <field name="width_in"/><span> x </span>
+                            <field name="height_in"/><span> in</span>
+                        </em>
+                    </div>
+                </div>
+            </xpath>
+
+        </field>
+    </record>
+
+    <!-- Remove volume/weight display restrictions from stock view -->
+    <record id="product_variant_easy_edit_view_dimensions" model="ir.ui.view">
+        <field name="name">product.product.view.form.easy.dimensions</field>
+        <field name="model">product.product</field>
+        <field name="inherit_id" ref="product.product_variant_easy_edit_view"/>
+        <field name="arch" type="xml">
+            <!-- Replace double group tag and add dimensions -->
+            <xpath expr="//label[@for='volume']/../.." position="replace"/>
+            <xpath expr="//group[@name='pricing']/.." position="after">
+                <group name="weight" string="Measurements" attrs="{'invisible':[('type', 'not in', ['product', 'consu'])]}">
+                    <field name="show_imperial" invisible="1"/>
+                    <label for="weight"/>
+                    <div class="o_row" name="weight">
+                        <field name="weight" attrs="{'invisible': [('weight_display', '=', 'g')]}"/>
+                        <field name="weight_g" attrs="{'invisible': [('weight_display', '=', 'kg')]}"/>
+                        <field name="weight_display" widget="radio" class="oe_inline"/>
+                        <div style="padding-left: 10px; color: #A9A9A9" attrs="{'invisible': [('show_imperial', '=', False)]}">
+                            <em>
+                                <span attrs="{'invisible': [('weight_lb', '=', 0)]}"><field name="weight_lb" class="oe_inline"/> lb </span>
+                                <span><field name="weight_oz" class="oe_inline"/> oz</span>
+                            </em>
+                        </div>
+                    </div>
+                    <label for="volume"/>
+                    <div class="o_row">
+                        <field name="volume"/>
+                        <span>m³</span>
+                        <div style="padding-left: 10px; color: #A9A9A9" attrs="{'invisible': [('show_imperial', '=', False)]}">
+                            <em>
+                                <div><field name="volume_gal" class="oe_inline"/> gal</div>
+                            </em>
+                        </div>
+                    </div>
+                    <label for="dimensions" string="Dimensions (L-W-H)"/>
+                    <div class="o_row" name="dimensions">
+                        <field name="length"/><span>x</span>
+                        <field name="width"/><span>x</span>
+                        <field name="height"/><span>cm</span>
+                        <div style="padding-left: 10px; color: #A9A9A9" attrs="{'invisible': [('show_imperial', '=', False)]}">
+                            <em>
+                                <field name="length_in"/><span> x </span>
+                                <field name="width_in"/><span> x </span>
+                                <field name="height_in"/><span> in</span>
+                            </em>
+                        </div>
+                    </div>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Remove volume/weight display restrictions from stock view -->
+    <record id="product_template_form_view_procurement_button_remove_display_restriction" model="ir.ui.view">
+        <field name="name">product.template_procurement.remove_display_restriction</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="stock.product_template_form_view_procurement_button"/>
+        <field name="arch" type="xml">
+            <xpath expr="//label[@for='weight']" position="attributes">
+                <attribute name="attrs">{'invisible':[('type', 'not in', ['product', 'consu'])]}</attribute>
+            </xpath>
+            <xpath expr="//div[@name='weight']" position="attributes">
+                <attribute name="attrs">{'invisible':[('type', 'not in', ['product', 'consu'])]}</attribute>
+            </xpath>
+            <xpath expr="//label[@for='volume']" position="attributes">
+                <attribute name="attrs">{'invisible':[('type', 'not in', ['product', 'consu'])]}</attribute>
+            </xpath>
+            <xpath expr="//div[@name='volume']" position="attributes">
+                <attribute name="attrs">{'invisible':[('type', 'not in', ['product', 'consu'])]}</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Remove duplicate dimension fields from delivery module -->
+    <record id="product_packaging_delivery_form_no_dimensions" model="ir.ui.view">
+        <field name="name">product.packaging.form.delivery</field>
+        <field name="model">product.packaging</field>
+        <field name="inherit_id" ref="delivery.product_packaging_delivery_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='height']" position="replace">
+            </xpath>
+            <xpath expr="//field[@name='width']" position="replace">
+            </xpath>
+            <xpath expr="//field[@name='length']" position="replace">
+            </xpath>
+            <xpath expr="//group[@name='delivery']" position="attributes">
+                <attribute name="string">Delivery</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Add dimensions to package -->
+    <record id="product_packaging_form_view_dimensions" model="ir.ui.view">
+        <field name="name">product.packaging.form.view.inherit</field>
+        <field name="model">product.packaging</field>
+        <field name="inherit_id" ref="product.product_packaging_form_view"/>
+        <field name="arch" type="xml">
+            <!--
+            <xpath expr="//field[@name='qty']" position="before">
+                <field name="product_tmpl_id"/>
+            </xpath>
+            -->
+            <xpath expr="//group[@name='qty']" position="after">
+                <group name="measurements" string="Measurements">
+                    <field name="show_imperial" invisible="1"/>
+                    <label for="weight"/>
+                    <div class="o_row" name="weight">
+                        <field name="weight"/><span>kg</span>
+                        <div style="padding-left: 10px; color: #A9A9A9" attrs="{'invisible': [('show_imperial', '=', False)]}">
+                            <em>
+                                <span attrs="{'invisible': [('weight_lb', '=', 0)]}"><field name="weight_lb" class="oe_inline"/> lb </span>
+                                <span><field name="weight_oz" class="oe_inline"/> oz</span>
+                            </em>
+                        </div>
+                    </div>
+                    <label for="volume"/>
+                    <div class="o_row" name="volume">
+                        <field name="volume"/><span>m³</span>
+                        <div style="padding-left: 10px; color: #A9A9A9" attrs="{'invisible': [('show_imperial', '=', False)]}">
+                            <em>
+                                <div><field name="volume_gal" class="oe_inline"/> gal</div>
+                            </em>
+                        </div>
+                    </div>
+                    <label for="dimensions" string="Dimensions (L-W-H)"/>
+                    <div class="o_row" name="dimensions">
+                        <field name="length"/><span>x</span>
+                        <field name="width"/><span>x</span>
+                        <field name="height"/><span>cm</span>
+                        <div style="padding-left: 10px; color: #A9A9A9" attrs="{'invisible': [('show_imperial', '=', False)]}">
+                            <em>
+                                <field name="length_in"/><span> x </span>
+                                <field name="width_in"/><span> x </span>
+                                <field name="height_in"/><span> in</span>
+                            </em>
+                        </div>
+                    </div>
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>
