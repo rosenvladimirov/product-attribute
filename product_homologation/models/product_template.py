@@ -11,6 +11,6 @@ _logger = logging.getLogger(__name__)
 class ProductProduct(models.Model):
     _inherit = "product.template"
 
-    homologation = fields.Char('Homologation', help="Plase fill the Homologation code")
+    homologation = fields.Char('Homologation', help="Plase fill the Homologation code", translate=True)
     show_homologation = fields.Boolean('Show in documents')
     #homologation_document = dms_fields.DocumentBinary(string="File", filename=_get_filename, directory=_get_directory)

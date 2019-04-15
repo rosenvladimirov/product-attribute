@@ -13,7 +13,7 @@ _logger = logging.getLogger(__name__)
 class BarcodeNomenclature(models.Model):
     _inherit = 'barcode.nomenclature'
 
-    def check_encoding(self, barcode, encoding):
+    def check_encoding(self, barcode, encoding, pattern=None):
         if encoding in ('gs1', 'udi'):
             if re.match(r'^(01)[0-9]{14}(10\w*|17[0-9]{6})(10\w*|17[0-9]{6})$', barcode) \
                     or re.match(r'^(01)[0-9]{14}(21\w*|17\d{6})(21\w*|17\d{6})$', barcode) \
@@ -25,6 +25,12 @@ class BarcodeNomenclature(models.Model):
                     or re.match(r'^(01)[0-9]{14}(21\w*|17\d{6})(21\w*|17\d{6})$', barcode) \
                     or re.match(r'^(01)[0-9]{14}(21\w*)$', barcode) \
                     or re.match(r'^(01)[0-9]{14}(10\w*)$', barcode):
+                return True
+        elif encoding == 'europlacerlot':
+            return barcode[:1].isdigit() == False
+        elif encoding == 'pattern' and pattern:
+            match = re.compile(pattern)
+            if match.match(barcode):
                 return True
         else:
             return super(BarcodeNomenclature, self).check_encoding(barcode, encoding)
@@ -50,7 +56,6 @@ class BarcodeNomenclature(models.Model):
                 if data['expiration_date']:
                     match['use_date'] = data['expiration_date']
                 return match
-
         if not match['match']:
             return super(BarcodeNomenclature, self).match_pattern(barcode, pattern)
 
@@ -67,34 +72,45 @@ class BarcodeNomenclature(models.Model):
         for rule in self.rule_ids:
             rules.append({'type': rule.type, 'encoding': rule.encoding, 'sequence': rule.sequence, 'pattern': rule.pattern, 'alias': rule.alias})
 
-        for rule in rules:
+        for rule in sorted(rules, key=lambda k: k['sequence']):
             cur_barcode = barcode
             if rule['encoding'] == 'ean13' and self.check_encoding(barcode,'upca') and self.upc_ean_conv in ['upc2ean','always']:
                 cur_barcode = '0'+cur_barcode
             elif rule['encoding'] == 'upca' and self.check_encoding(barcode,'ean13') and barcode[0] == '0' and self.upc_ean_conv in ['ean2upc','always']:
                 cur_barcode = cur_barcode[1:]
 
-            if not self.check_encoding(barcode,rule['encoding']):
+            if not self.check_encoding(barcode,rule['encoding'], pattern=rule['pattern']):
                 continue
 
             match = self.match_pattern(cur_barcode, rule['pattern'])
+            _logger.info("MATCH %s:%s" % (match, rule))
             if match['match']:
                 if rule['type'] == 'alias':
                     barcode = rule['alias']
                     parsed_result['code'] = barcode
+                elif rule['type'] == 'lot' and rule['encoding'] == 'europlacerlot':
+                    parsed_result['encoding'] = rule['encoding']
+                    parsed_result['type'] = rule['type']
+                    parsed_result['value'] = match['value']
+                    parsed_result['code'] = cur_barcode
+                    parsed_result['lot'] = match['base_code'][1:]
+                    parsed_result['base_code'] = False
+                    return parsed_result
                 elif rule['type'] == 'product' and rule['encoding'] in ('gs1', 'udi', 'hibc'):
                     parsed_result['encoding'] = rule['encoding']
                     parsed_result['type'] = rule['type']
                     parsed_result['code'] = cur_barcode
                     parsed_result['base_code'] = match['base_code']
                     parsed_result['lot'] = match['lot_number']
-                    parsed_result['use_date'] = match['use_date']
+                    parsed_result['use_date'] = match.get('use_date') and ['use_date'] or False
                     return parsed_result
                 else:
                     parsed_result['encoding'] = rule['encoding']
                     parsed_result['type'] = rule['type']
                     parsed_result['value'] = match['value']
                     parsed_result['code'] = cur_barcode
+                    parsed_result['lot'] = False
+                    parsed_result['use_date'] = False
                     if rule['encoding'] == "ean13":
                         parsed_result['base_code'] = self.sanitize_ean(match['base_code'])
                     elif rule['encoding'] == "upca":
@@ -111,5 +127,7 @@ class BarcodeRule(models.Model):
     encoding = fields.Selection(selection_add=[
             ('gs1', 'GTIN+AI(n)'),
             ('udi', 'Unique Device Identification (UDI)'),
-            ('hibc', 'Health Industry Bar Code Standard')
+            ('hibc', 'Health Industry Bar Code Standard'),
+            ('europlacerlot', 'LOT/SN for Europlacer'),
+            ('pattern', 'Pattern mode'),
         ])

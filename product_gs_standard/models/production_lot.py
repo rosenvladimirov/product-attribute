@@ -5,6 +5,7 @@ import re
 from datetime import datetime
 from odoo.osv import expression
 from odoo import api, fields, models, _
+from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
 from .hibc import HIBC
 from .gs1 import GS1
 
@@ -25,12 +26,12 @@ class StockProductionLot(models.Model):
         for record in self:
             if record.name and len(record.product_id.barcode or []) in (8, 12, 13, 14) and record.product_id.tracking == 'lot':
                 if record.use_date:
-                    record.gs1 = "01%s17%s10%s" % (record.product_id.barcode, datetime.strptime(record.use_date, "%Y%m%d"), record.name)
+                    record.gs1 = "01%s17%s10%s" % (record.product_id.barcode, datetime.strptime(record.use_date, DEFAULT_SERVER_DATETIME_FORMAT).strftime("%Y%m%d"), record.name)
                 else:
                     record.gs1 = "01%s10%s" % (record.product_id.barcode, record.name)
             elif record.name and len(record.product_id.barcode or []) in (8, 12, 13, 14) and record.product_id.tracking in ('serial', 'serialrange'):
                 if record.use_date:
-                    record.gs1 = "01%s17%s21%s" % (record.product_id.barcode, datetime.strptime(record.use_date, "%Y%m%d"), record.name)
+                    record.gs1 = "01%s17%s21%s" % (record.product_id.barcode, datetime.strptime(record.use_date, DEFAULT_SERVER_DATETIME_FORMAT).strftime("%Y%m%d"), record.name)
                 else:
                     record.gs1 = "01%s21%s" % (record.product_id.barcode, record.name)
             elif record.product_id.tracking == 'lot':

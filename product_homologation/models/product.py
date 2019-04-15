@@ -10,7 +10,7 @@ _logger = logging.getLogger(__name__)
 class Product(models.Model):
     _inherit = 'product.product'
 
-    homologation_variant = fields.Char('Homologation', help="Plase fill the Homologation code")
+    homologation_variant = fields.Char('Homologation', help="Plase fill the Homologation code", translate=True)
 
     @api.onchange('homologation_variant')
     def _on_change_homologation_variant(self):
