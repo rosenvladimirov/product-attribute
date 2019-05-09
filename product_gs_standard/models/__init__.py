@@ -3,3 +3,4 @@
 
 from . import production_lot
 from . import barcodes
+from . import stock_move_line

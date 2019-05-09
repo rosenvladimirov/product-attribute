@@ -11,6 +11,7 @@ Add support for GS1 [GTIN+AI(n)], UDI and HIBC standarts in barcode nomenclature
     """,
     'depends': [
         'stock',
+        'product_expiry',
     ],
     "demo" : [],
     "data" : [
