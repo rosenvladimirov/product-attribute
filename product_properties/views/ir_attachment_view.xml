@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Files -->
+    <record model="ir.ui.view" id="view_datasheets_file_kanban_properties">
+        <field name="name">product.manufacturer.datasheets.kanban</field>
+        <field name="model">product.manufacturer.datasheets</field>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <kanban>
+                <field name="ir_attachment_id"/>
+                <field name="mimetype"/>
+                <field name="type"/>
+                <field name="datas_fname"/>
+                <field name="name"/>
+                <field name="version"/>
+                <field name="is_date"/>
+                <field name="iso_number"/>
+                <field name="date_issue"/>
+                <field name="date_expiry"/>
+                <field name="qc_manager_id"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div t-attf-class="#{kanban_color(record.color.raw_value)} oe_kanban_global_click">
+                            <div class="oe_kanban_vignette">
+                                <div class="oe_attachment">
+                                    <div class="row">
+                                        <div class="col-xs-4 o_kanban_primary_left" t-if="record.type.raw_value == 'binary'">
+                                            <a t-attf-href="/web/content/#{record.ir_attachment_id.raw_value}?download=1">
+                                                <t t-set="webimage" t-value="new RegExp('image.*(gif|jpeg|jpg|png)').test(record.mimetype.value)"/>
+                                                <div t-if="!webimage" class="o_image" t-att-data-mimetype="record.mimetype.value"/>
+                                                <div t-if="webimage" class="o_attachment_image">
+                                                    <img t-attf-src="/web/image/#{record.ir_attachment_id.raw_value}?download=1"/>
+                                                </div>
+                                            </a>
+                                        </div>
+                                        <div class="col-xs-8">
+                                            <strong><field name="name"/></strong><br/>
+                                            <div class="mt8">
+                                                <field name="manufacturer_id"/>
+                                                <field name="product_brand_id"/>
+                                                <field name="version"/>
+                                            </div>
+                                            <t t-if="record.is_date">
+                                                <div class="mt8">
+                                                    <t t-if="record.date_issue.raw_value and record.date_expiry.raw_value lt (new Date())" t-set="redo">oe_kanban_text_red</t>
+                                                    <div class="oe_kanban_bottom_left">
+                                                        <t t-if="record.is_date">
+                                                            <b><span t-attf-class="#{redo || ''}"><t t-esc="record.iso_number.raw_value"/>/<field name="date_issue"/> Expr.: <field name="date_expiry"/></span></b>
+                                                        </t>
+                                                    </div>
+                                                    <field name="qc_manager_id"/>
+                                                </div>
+                                            </t>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="view_product_manufacturer_datasheets_eazy_kanban" model="ir.ui.view">
+        <field name="name">product.manufacturer.datasheets.kanban</field>
+        <field name="model">product.manufacturer.datasheets</field>
+        <field eval="1" name="priority"/>
+        <field name="arch" type="xml">
+            <kanban class="pp_ds_kanban o_kanban_small_column o_emphasize_colors" js_class="file_kanban">
+                <field name="id" />
+                <field name="ir_attachment_id"/>
+                <field name="color"/>
+                <field name="iso_number"/>
+                <field name="is_date"/>
+                <field name="date_issue"/>
+                <field name="date_expiry"/>
+                <field name="qc_manager_id"/>
+                <field name="write_uid"/>
+                <field name="name" />
+                <field name="datas_fname"/>
+                <field name="manufacturer_id"/>
+                <field name="product_brand_id"/>
+                <field name="version"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div t-attf-class="#{kanban_color(record.color.raw_value)} oe_kanban_global_click">
+                            <div class="pp_ds_main">
+                                <div class="oe_kanban_content">
+                                    <div class="pp_ds_thumbnail" t-attf-data-id="#{record.id.raw_value}">
+                                        <img t-att-src="kanban_image('product.manufacturer.datasheets', 'thumbnail_medium', record.id.raw_value)"/>
+                                    </div>
+                                    <div class="o_kanban_record_top">
+                                        <div class="o_kanban_record_headings">
+                                           <div class="pp_ds_name">
+                                                <t name="name" t-esc="record.name.value" />
+                                            </div>
+                                        </div>
+                                        <div class="o_dropdown_kanban dropdown">
+                                            <a class="dropdown-toggle btn" data-toggle="dropdown" href="#" >
+                                                <span class="fa fa-ellipsis-v" aria-hidden="true"/>
+                                            </a>
+                                            <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                                                <li>
+                                                    <a type="delete">
+                                                        <i class="fa fa-trash-o" aria-hidden="true" />
+                                                        <span>Delete</span>
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a t-attf-href="/web/content?id=#{record.ir_attachment_id.raw_value}&amp;field=content&amp;model=ir.attachment&amp;filename_field=datas_fname&amp;download=true">
+                                                        <i class="fa fa-download" aria-hidden="true" />
+                                                        <span>Download</span>
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <ul class="oe_kanban_colorpicker" data-field="color"/>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    <div class="o_kanban_record_body" name="body"/>
+                                        <!-- <t t-esc="record.iso_number.raw_value"/>/<field name="date_issue"/>  -->
+                                    <div class="o_kanban_record_bottom">
+                                        <t t-if="record.date_issue.raw_value and record.date_expiry.raw_value lt (new Date())" t-set="redo">oe_kanban_text_red</t>
+                                        <div class="oe_kanban_bottom_left">
+                                            <t t-if="record.is_date">
+                                                <b><span t-attf-class="#{redo || ''}">Expr.: <field name="date_expiry"/></span></b>
+                                            </t>
+                                        </div>
+                                        <div class="oe_kanban_bottom_right">
+                                            <t t-if="record.is_date">
+                                                <img t-att-src="kanban_image('res.users', 'image_small', record.qc_manager_id.raw_value)" t-att-title="record.qc_manager_id.value" width="24" height="24" class="oe_kanban_avatar"/>
+                                            </t>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="view_datasheets_form" model="ir.ui.view">
+        <field name="name">product.manufacturer.datasheets.form</field>
+        <field name="model">product.manufacturer.datasheets</field>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <form string="Attachments">
+                <sheet>
+                    <label for="name" class="oe_edit_only"/>
+                    <h1>
+                        <field name="name"/>
+                    </h1>
+                    <group>
+                        <group>
+                            <field name="res_id" invisible="1"/>
+                            <field name="type"/>
+                            <field name="datas" filename="datas_fname" attrs="{'invisible':[('type','=','url')]}"/>
+                            <field name="datas_fname" invisible="1" attrs="{'invisible':[('type','=','url')]}" class="oe_inline oe_right"/>
+                            <field name="url" widget="url" attrs="{'invisible':[('type','=','binary')]}"/>
+                            <field name="mimetype" groups="base.group_no_one"/>
+                            <field name="is_date"/>
+                        </group>
+                        <group>
+                            <field name="manufacturer_id" domain="[('product_variant_ids', 'in', [res_id])]"/>
+                            <field name="version"/>
+                        </group>
+                    </group>
+                    <group name="iso" string="Certificate data">
+                        <group>
+                            <field name="iso_number"/>
+                            <field name="date_issue"/>
+                            <!-- <field name="notified_body_ids" widget="many2many_tags"/> -->
+                        </group>
+                        <group>
+                            <field name="qc_manager_id"/>
+                            <field name="date_expiry" attrs="{'invisible':[('is_date','=',False)]}"/>
+                            <field name="notified_body_id" context="{'type_company': 1}"/>
+                        </group>
+                    </group>
+                    <group name="description_group" string="Description" groups="base.group_no_one" colspan="4">
+                        <field name="description" nolabel="1"/>
+                    </group>
+                    <group string="History" groups="base.group_no_one" colspan="4">
+                        <label for="create_uid" string="Creation"/>
+                        <div name="creation_div">
+                            <field name="create_uid" readonly="1" class="oe_inline"/> on
+                            <field name="create_date" readonly="1" class="oe_inline"/>
+                        </div>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+</odoo>

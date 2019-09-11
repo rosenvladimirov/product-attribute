@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_order_form" model="ir.ui.view">
+        <field name="name">sale.order.form</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook" position="inside">
+                <page name="print_properties" string="Properties for Print">
+                    <field name="print_properties">
+                        <form string="Properties for print">
+                            <group>
+                                <group>
+                                    <field name="name"/>
+                                    <field name="print"/>
+                                </group>
+                            </group>
+                        </form>
+                        <tree string="Properties for print">
+                            <field name="name"/>
+                            <field name="print"/>
+                        </tree>
+                    </field>
+                </page>
+                <page name="printpreview" string="Prodcuts properties">
+                    <field name="products_properties" col="4" colspan="4" nolabel="1"/>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>

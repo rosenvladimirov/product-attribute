@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_product_pricelist_print_line_tree" model="ir.ui.view">
+        <field name="name">product.pricelist.print.line.tree</field>
+        <field name="model">product.pricelist.print.line</field>
+        <field name="arch" type="xml">
+           <tree string="Product pricelist lines (Name)" create="0">
+               <field name="pricelist_id"/>
+               <field name="partner_id"/>
+               <field name="product_tmpl_id"/>
+               <field name="product_id"/>
+               <field name="quantity" invisible="1"/>
+               <field name="product_uom"/>
+               <field name="standard_price" invisible="context.get('show_standard_price')"/>
+               <field name="price_unit"/>
+               <field name="tax_id" widget="many2many_tags" options="{'no_create': True}" domain="[('type_tax_use','=','sale'),('company_id','=',parent.company_id)]" readonly="1"/>
+               <field name="price_subtotal" widget="monetary" groups="sale.group_show_price_subtotal"/>
+               <field name="price_total" widget="monetary" groups="sale.group_show_price_total"/>
+           </tree>
+            <!--
+           <tree string="Product pricelist lines (Internal reference)" create="0" default_order="default_code" invisible="context.get('order_field') == 'default_code'">
+               <field name="pricelist_id"/>
+               <field name="partner_id"/>
+               <field name="product_tmpl_id"/>
+               <field name="product_id"/>
+               <field name="quantity" invisible="1"/>
+               <field name="product_uom"/>
+               <field name="standard_price" invisible="context.get('show_standard_price')"/>
+               <field name="price_unit"/>
+               <field name="tax_id" widget="many2many_tags" options="{'no_create': True}" domain="[('type_tax_use','=','sale'),('company_id','=',parent.company_id)]" readonly="1"/>
+               <field name="price_subtotal" widget="monetary" groups="sale.group_show_price_subtotal"/>
+               <field name="price_total" widget="monetary" groups="sale.group_show_price_total"/>
+           </tree>
+           -->
+        </field>
+    </record>
+    <record model="ir.ui.view" id="view_product_pricelist_print_line_pivot">
+        <field name="name">product.pricelist.print.line.pivot</field>
+        <field name="model">product.pricelist.print.line</field>
+        <field name="arch" type="xml">
+            <pivot string="Prices">
+                <field name="product_id" type="row"/>
+                <field name="pricelist_id" type="col"/>
+                <field name="price_unit" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+    <record model="ir.ui.view" id="view_product_pricelist_print_line_graph">
+            <field name="name">product.pricelist.print.line.graph</field>
+            <field name="model">product.pricelist.print.line</field>
+            <field name="arch" type="xml">
+                <graph string="Sales Orders">
+                    <field name="partner_id"/>
+                    <field name="price_unit" type="measure"/>
+                </graph>
+            </field>
+    </record>
+    <record id="view_product_pricelist_print_line_filter" model="ir.ui.view">
+        <field name="name">product.pricelist.print.line.select</field>
+        <field name="model">product.pricelist.print.line</field>
+        <field name="arch" type="xml">
+            <search string="Search in Pricelists">
+                <field name="pricelist_id"/>
+                <field name="partner_id" operator="child_of"/>
+                <field name="product_id"/>
+                <group expand="0" string="Group By">
+                    <filter string="Product" domain="[]" context="{'group_by':'product_tmpl_id'}"/>
+                    <filter string="Product Variant" domain="[]" context="{'group_by':'product_id'}"/>
+                    <filter string="Partner" domain="[]" context="{'group_by':'partner_id'}"/>
+                    <filter string="Pricelist" domain="[]" context="{'group_by':'pricelist_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+    <record id="action_product_pricelist_print_line" model="ir.actions.act_window">
+        <field name="name">Pricelists</field>
+        <field name="res_model">product.pricelist.print.line</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,graph,pivot</field>
+        <field name="view_id" ref="product_pricelist_direct_print.view_product_pricelist_print_line_tree"/>
+        <field name="search_view_id" ref="product_pricelist_direct_print.view_product_pricelist_print_line_filter"/>
+    </record>
+</odoo>

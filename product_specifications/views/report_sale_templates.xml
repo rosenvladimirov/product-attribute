@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<odoo>
+    <template id="report_saleorder_document_inherit_sale_properties" inherit_id="l10n_bg_extend.report_saleorder_document">
+        <xpath expr="//td[@name='linename']" position="inside">
+            <t t-if="not l.product_id.specifications and l.product_id.product_tmpl_id.specifications">
+                <br/>
+                <span t-field="l.product_id.product_tmpl_id.specifications"/>
+            </t>
+            <t t-if="l.product_id.specifications">
+                <br/>
+                <span t-field="l.product_id.specifications"/>
+            </t>
+        </xpath>
+    </template>
+</odoo>

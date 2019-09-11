@@ -1,0 +1,1029 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+#	* product_properties
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 11.0+e-20190711\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2019-08-01 06:56+0000\n"
+"PO-Revision-Date: 2019-08-01 06:56+0000\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: product_properties
+#: code:addons/product_properties/models/product.py:168
+#: code:addons/product_properties/models/product_brand.py:25
+#: code:addons/product_properties/models/product_template.py:157
+#, python-format
+msgid "<p class=\"oe_view_nocontent_create\">\n"
+"                        Click to upload datasheet to your product.\n"
+"                    </p><p>\n"
+"                        Use this feature to store any files, like drawings or specifications.\n"
+"                    </p>"
+msgstr "<p class=\"oe_view_nocontent_create\">\n"
+"                        Click to upload datasheet to your product.\n"
+"                    </p><p>\n"
+"                        Use this feature to store any files, like drawings or specifications.\n"
+"                    </p>"
+
+#. module: product_properties
+#: model:ir.ui.view,arch_db:product_properties.product_template_manufacturer_form_view
+#: model:ir.ui.view,arch_db:product_properties.view_product_brand_form
+msgid "<span>Datasheets</span>"
+msgstr "<span>Спецификации</span>"
+
+#. module: product_properties
+#: model:ir.model.fields,help:product_properties.field_product_manufacturer_type
+msgid "A stockable product is a product for which you manage stock. The \"Inventory\" app has to be installed.\n"
+"A consumable product, on the other hand, is a product for which stock is not managed.\n"
+"A service is a non-material product you provide.\n"
+"A digital content is a non-material product you sell online. The files attached to the products are the one that are sold on the e-commerce such as e-books, music, pictures,... The \"Digital Product\" module has to be installed."
+msgstr "A stockable product is a product for which you manage stock. The \"Inventory\" app has to be installed.\n"
+"A consumable product, on the other hand, is a product for which stock is not managed.\n"
+"A service is a non-material product you provide.\n"
+"A digital content is a non-material product you sell online. The files attached to the products are the one that are sold on the e-commerce such as e-books, music, pictures,... The \"Digital Product\" module has to be installed."
+
+#. module: product_properties
+#: model:ir.model.fields,field_description:product_properties.field_product_manufacturer_datasheets_access_token
+msgid "Access Token"
+msgstr "Удостоверение за достъп"
+
+#. module: product_properties
+#: model:ir.model.fields,field_description:product_properties.field_product_manufacturer_active
+#: model:ir.model.fields,field_description:product_properties.field_product_manufacturer_datasheets_active
+msgid "Active"
+msgstr "Активен"
+
+#. module: product_properties
+#: model:ir.model.fields,field_description:product_properties.field_product_manufacturer_datasheets_name
+msgid "Attachment Name"
+msgstr "Име на прикачения файл"
+
+#. module: product_properties
+#: model:ir.model.fields,field_description:product_properties.field_product_manufacturer_datasheets_local_url
+#: model:ir.model.fields,field_description:product_properties.field_product_manufacturer_datasheets_website_url
+msgid "Attachment URL"
+msgstr " URL на прикачен файл"
+
+#. module: product_properties
+#: code:addons/product_properties/models/product_properties.py:25
+#: selection:product.properties,type_fields:0
+#: selection:product.properties.type,type_fields:0
+#, python-format
+msgid "Base on URL"
+msgstr "Базирано на URL"
+
+#. module: product_properties
+#: code:addons/product_properties/models/product_properties.py:26
+#: selection:product.properties,type_fields:0
+#: selection:product.properties.type,type_fields:0
+#, python-format
+msgid "Base on field"
+msgstr "Базирано на поле"
+
+#. module: product_properties
+#: model:ir.model.fields,field_description:product_properties.field_product_manufacturer_image
+msgid "Big-sized image"
+msgstr "Голямо изображение"
+
+#. module: product_properties
+#: model:ir.model.fields,field_description:product_properties.field_product_manufacturer_datasheets_product_brand_id
+#: model:ir.model.fields,field_description:product_properties.field_product_manufacturer_product_brand_id
+msgid "Brand"
+msgstr "Бранд"
+
+#. module: product_properties
+#: model:ir.model.fields,field_description:product_properties.field_product_product_product_properties_has
+#: model:ir.model.fields,field_description:product_properties.field_product_template_product_properties_has
+msgid "Categorie Product properties"
+msgstr "Категория Спецификации за продукт"
+
+#. module: product_properties
+#: model:ir.model.fields,field_description:product_properties.field_product_properties_category_lines_categ_id
+#: model:ir.model.fields,field_description:product_properties.field_product_properties_category_lines_product_categ_id
+msgid "Category"
+msgstr "Категория"
+
+#. module: product_properties
+#: model:ir.model.fields,field_description:product_properties.field_product_category_product_properties_ids
+#: model:ir.model.fields,field_description:product_properties.field_product_properties_category_lines_ids
+msgid "Category properties"
+msgstr "Категория на спецификациите"
+
+#. module: product_properties
+#: model:ir.model.fields,field_description:product_properties.field_product_manufacturer_datasheets_checksum
+msgid "Checksum/SHA1"
+msgstr "Контролна сума/SHA1"
+
+#. module: product_properties
+#: model:ir.model.fields,help:product_properties.field_product_properties_category_lines_type_field_target
+#: model:ir.model.fields,help:product_properties.field_product_properties_type_field_target
+msgid "Choice target/source field for collection data.\n"
+"                                  target/source in odoo model."
+msgstr "Choice target/source field for collection data.\n"
+"                                  target/source in odoo model."
+
+#. module: product_properties
+#: model:ir.model,name:product_properties.model_res_company
+msgid "Companies"
+msgstr "Компании"
+
+#. module: product_properties
+#: model:ir.model.fields,field_description:product_properties.field_product_manufacturer_company_id
+#: model:ir.model.fields,field_description:product_properties.field_product_manufacturer_datasheets_company_id
+msgid "Company"
+msgstr "Фирма"
+
+#. module: product_properties
+#: model:ir.model.fields,field_description:product_properties.field_product_manufacturer_count_datasheets
+msgid "Count Datasheets"
+msgstr "Брой спецификации"
+
+#. module: product_properties
+#: model:ir.model.fields,field_description:product_properties.field_product_manufacturer_create_uid
+#: model:ir.model.fields,field_description:product_properties.field_product_manufacturer_datasheets_create_uid
+#: model:ir.model.fields,field_description:product_properties.field_product_properties_category_create_uid
+#: model:ir.model.fields,field_description:product_properties.field_product_properties_category_lines_create_uid
+#: model:ir.model.fields,field_description:product_properties.field_product_properties_create_uid
+#: model:ir.model.fields,field_description:product_properties.field_product_properties_package_create_uid
+#: model:ir.model.fields,field_description:product_properties.field_product_properties_type_create_uid
+#: model:ir.model.fields,field_description:product_properties.field_product_properties_uom_create_uid
+msgid "Created by"
+msgstr "Създадено от"
+
+#. module: product_properties
+#: model:ir.model.fields,field_description:product_properties.field_product_manufacturer_create_date
+#: model:ir.model.fields,field_description:product_properties.field_product_manufacturer_datasheets_create_date
+#: model:ir.model.fields,field_description:product_properties.field_product_properties_category_create_date
+#: model:ir.model.fields,field_description:product_properties.field_product_properties_category_lines_create_date
+#: model:ir.model.fields,field_description:product_properties.field_product_properties_create_date
+#: model:ir.model.fields,field_description:product_properties.field_product_properties_package_create_date
+#: model:ir.model.fields,field_description:product_properties.field_product_properties_type_create_date
+#: model:ir.model.fields,field_description:product_properties.field_product_properties_uom_create_date
+msgid "Created on"
+msgstr "Създадено на"
+
+#. module: product_properties
+#: model:ir.model.fields,field_description:product_properties.field_product_manufacturer_datasheets_store_lobject
+msgid "Data"
+msgstr "Дата"
+
+#. module: product_properties
+#: model:ir.model.fields,field_description:product_properties.field_product_manufacturer_datasheets_db_datas
+msgid "Database Data"
+msgstr "Данни в базите"
+
+#. module: product_properties
+#: model:ir.ui.view,arch_db:product_properties.product_manufacturer_tree_view
+msgid "Dataseets"
+msgstr "Спецификации"
+
+#. module: product_properties
+#: code:addons/product_properties/models/product.py:160
+#: code:addons/product_properties/models/product_brand.py:17
+#: code:addons/product_properties/models/product_template.py:149
+#: model:ir.ui.view,arch_db:product_properties.product_manufacturer_form_view
+#, python-format
+msgid "Datasheets"
+msgstr "Спецификации"
+
+#. module: product_properties
+#: model:ir.model,name:product_properties.model_product_manufacturer_datasheets
+msgid "Datasheets Document"
+msgstr "Документ Спецификация"
+
+#. module: product_properties
+#: model:ir.model.fields,field_description:product_properties.field_product_manufacturer_datasheets_description
+msgid "Description"
+msgstr "Описание"
+
+#. module: product_properties
+#: model:ir.ui.view,arch_db:product_properties.product_category_form_view_inherit_properties
+#: model:ir.ui.view,arch_db:product_properties.product_properties_form_view
+#: model:ir.ui.view,arch_db:product_properties.product_properties_package_form_view
+msgid "Dimensions"
+msgstr "Размери"
+
+#. module: product_properties
+#: model:ir.model.fields,field_description:product_properties.field_product_manufacturer_datasheets_display_name
+#: model:ir.model.fields,field_description:product_properties.field_product_properties_category_display_name
+#: model:ir.model.fields,field_description:product_properties.field_product_properties_category_lines_display_name
+#: model:ir.model.fields,field_description:product_properties.field_product_properties_display_name
+#: model:ir.model.fields,field_description:product_properties.field_product_properties_package_display_name
+#: model:ir.model.fields,field_description:product_properties.field_product_properties_type_display_name
+#: model:ir.model.fields,field_description:product_properties.field_product_properties_uom_display_name
+msgid "Display Name"
+msgstr "Име за показване"
+
+#. module: product_properties
+#: model:ir.ui.view,arch_db:product_properties.product_manufacturer_form_view
+msgid "Distributors"
+msgstr "Дистрибутори"
+
+#. module: product_properties
+#: model:ir.model.fields,field_description:product_properties.field_product_manufacturer_datasheets_is_document
+msgid "Document"
+msgstr "Документ"
+
+#. module: product_properties
+#: model:ir.model.fields,field_description:product_properties.field_product_manufacturer_datasheets_store_directory
+msgid "Document Directory"
+msgstr "Папка с документи"
+
+#. module: product_properties
+#: model:ir.model.fields,field_description:product_properties.field_product_manufacturer_datasheets_store_document
+msgid "Document File"
+msgstr "Документ"
+
+#. module: product_properties
+#: model:ir.ui.view,arch_db:product_properties.product_template_only_form_el_properties_view
+msgid "Product properties"
+msgstr "Спецификация"
+
+#. module: product_properties
+#: model:ir.ui.view,arch_db:product_properties.product_category_form_view_inherit_properties
+#: model:ir.ui.view,arch_db:product_properties.product_properties_tree_view
+msgid "Product properties"
+msgstr "Спецификация"
+
+#. module: product_properties
+#: model:ir.model.fields,help:product_properties.field_product_properties_category_lines_type_field
+#: model:ir.model.fields,help:product_properties.field_product_properties_type_field
+#: model:ir.model.fields,help:product_properties.field_product_properties_type_type_field
+msgid "Field"
+msgstr "Поле"
+
+#. module: product_properties
+#: model:ir.model.fields,field_description:product_properties.field_product_manufacturer_datasheets_datas
+msgid "File Content"
+msgstr "Съдържание на файл"
+
+#. module: product_properties
+#: model:ir.model.fields,field_description:product_properties.field_product_manufacturer_datasheets_extension
+msgid "File Extension"
+msgstr "Разширение на файл"
+
+#. module: product_properties
+#: model:ir.model.fields,field_description:product_properties.field_product_manufacturer_datasheets_datas_fname
+msgid "File Name"
+msgstr "Име на файл"
+
+#. module: product_properties
+#: model:ir.model.fields,field_description:product_properties.field_product_manufacturer_datasheets_file_size
+msgid "File Size"
+msgstr "Размер на файл"
+
+#. module: product_properties
+#: code:addons/product_properties/models/product_properties.py:19
+#: selection:product.properties,type_fields:0
+#: selection:product.properties.type,type_fields:0
+#, python-format
+msgid "Float"
+msgstr "Плаваща запетая"
+
+#. module: product_properties
+#: model:ir.model.fields,help:product_properties.field_product_manufacturer_packaging_ids
+msgid "Gives the different ways to package the same product."
+msgstr "Дава различни начини за опаковане на един и същ продукт."
+
+#. module: product_properties
+#: model:ir.ui.view,arch_db:product_properties.product_manufacturer_search_view
+msgid "Group By"
+msgstr "Групиране по"
+
+#. module: product_properties
+#: model:ir.model.fields,field_description:product_properties.field_product_manufacturer_has_datasheets
+msgid "Has Datasheets"
+msgstr "Има Спецификации"
+
+#. module: product_properties
+#: model:ir.module.category,description:product_properties.module_category_product_properties
+msgid "Helps you manage your Product Properties."
+msgstr "Helps you manage your Product Properties."
+
+#. module: product_properties
+#: model:ir.model.fields,field_description:product_properties.field_product_manufacturer_datasheets_id
+#: model:ir.model.fields,field_description:product_properties.field_product_manufacturer_id
+#: model:ir.model.fields,field_description:product_properties.field_product_properties_category_id
+#: model:ir.model.fields,field_description:product_properties.field_product_properties_category_lines_id
+#: model:ir.model.fields,field_description:product_properties.field_product_properties_id
+#: model:ir.model.fields,field_description:product_properties.field_product_properties_package_id
+#: model:ir.model.fields,field_description:product_properties.field_product_properties_type_id
+#: model:ir.model.fields,field_description:product_properties.field_product_properties_uom_id
+msgid "ID"
+msgstr "ID"
+
+#. module: product_properties
+#: model:ir.model.fields,help:product_properties.field_product_manufacturer_active
+msgid "If the active field is set to False, it will allow you to hide the bills of material without removing it."
+msgstr "If the active field is set to False, it will allow you to hide the bills of material without removing it."
+
+#. module: product_properties
+#: model:ir.model.fields,field_description:product_properties.field_product_properties_category_lines_image
+#: model:ir.model.fields,field_description:product_properties.field_product_properties_image
+#: model:ir.model.fields,field_description:product_properties.field_product_properties_package_image
+msgid "Image"
+msgstr "Изображение"
+
+#. module: product_properties
+#: model:ir.model.fields,help:product_properties.field_product_manufacturer_image
+msgid "Image of the product variant (Big-sized image of product template if false). It is automatically resized as a 1024x1024px image, with aspect ratio preserved."
+msgstr "Image of the product variant (Big-sized image of product template if false). It is automatically resized as a 1024x1024px image, with aspect ratio preserved."
+
+#. module: product_properties
+#: model:ir.model.fields,help:product_properties.field_product_manufacturer_image_medium
+msgid "Image of the product variant (Medium-sized image of product template if false)."
+msgstr "Image of the product variant (Medium-sized image of product template if false)."
+
+#. module: product_properties
+#: model:ir.model.fields,help:product_properties.field_product_manufacturer_image_small
+msgid "Image of the product variant (Small-sized image of product template if false)."
+msgstr "Image of the product variant (Small-sized image of product template if false)."
+
+#. module: product_properties
+#: model:ir.model.fields,field_description:product_properties.field_product_manufacturer_datasheets_index_content
+msgid "Indexed Content"
+msgstr "Индексирано съдържание"
+
+#. module: product_properties
+#: model:ir.model,name:product_properties.model_product_manufacturer
+msgid "Information about a product manufacturer"
+msgstr "Информация за производителя"
+
+#. module: product_properties
+#: model:ir.model,name:product_properties.model_product_supplierinfo
+msgid "Information about a product vendor"
+msgstr "Информация за достаавчиак на продукт"
+
+#. module: product_properties
+#: code:addons/product_properties/models/product_properties.py:20
+#: selection:product.properties,type_fields:0
+#: selection:product.properties.type,type_fields:0
+#, python-format
+msgid "Integer"
+msgstr "Цяло число"
+
+#. module: product_properties
+#: model:ir.model.fields,field_description:product_properties.field_product_manufacturer_datasheets_public
+msgid "Is public document"
+msgstr "Е публичен документ"
+
+#. module: product_properties
+#: model:ir.model.fields,field_description:product_properties.field_product_manufacturer___last_update
+#: model:ir.model.fields,field_description:product_properties.field_product_manufacturer_datasheets___last_update
+#: model:ir.model.fields,field_description:product_properties.field_product_properties___last_update
+#: model:ir.model.fields,field_description:product_properties.field_product_properties_category___last_update
+#: model:ir.model.fields,field_description:product_properties.field_product_properties_category_lines___last_update
+#: model:ir.model.fields,field_description:product_properties.field_product_properties_package___last_update
+#: model:ir.model.fields,field_description:product_properties.field_product_properties_type___last_update
+#: model:ir.model.fields,field_description:product_properties.field_product_properties_uom___last_update
+msgid "Last Modified on"
+msgstr "Последно обновено на"
+
+#. module: product_properties
+#: model:ir.model.fields,field_description:product_properties.field_product_manufacturer_datasheets_write_uid
+#: model:ir.model.fields,field_description:product_properties.field_product_manufacturer_write_uid
+#: model:ir.model.fields,field_description:product_properties.field_product_properties_category_lines_write_uid
+#: model:ir.model.fields,field_description:product_properties.field_product_properties_category_write_uid
+#: model:ir.model.fields,field_description:product_properties.field_product_properties_package_write_uid
+#: model:ir.model.fields,field_description:product_properties.field_product_properties_type_write_uid
+#: model:ir.model.fields,field_description:product_properties.field_product_properties_uom_write_uid
+#: model:ir.model.fields,field_description:product_properties.field_product_properties_write_uid
+msgid "Last Updated by"
+msgstr "Последно обновено от"
+
+#. module: product_properties
+#: model:ir.model.fields,field_description:product_properties.field_product_manufacturer_datasheets_write_date
+#: model:ir.model.fields,field_description:product_properties.field_product_manufacturer_write_date
+#: model:ir.model.fields,field_description:product_properties.field_product_properties_category_lines_write_date
+#: model:ir.model.fields,field_description:product_properties.field_product_properties_category_write_date
+#: model:ir.model.fields,field_description:product_properties.field_product_properties_package_write_date
+#: model:ir.model.fields,field_description:product_properties.field_product_properties_type_write_date
+#: model:ir.model.fields,field_description:product_properties.field_product_properties_uom_write_date
+#: model:ir.model.fields,field_description:product_properties.field_product_properties_write_date
+msgid "Last Updated on"
+msgstr "Последно обновено на"
+
+#. module: product_properties
+#: code:addons/product_properties/models/product_properties.py:24
+#: selection:product.properties,type_fields:0
+#: selection:product.properties.type,type_fields:0
+#, python-format
+msgid "Linked width pricelist"
+msgstr "Linked width pricelist"
+
+#. module: product_properties
+#: model:res.groups,name:product_properties.group_el_pro_manager
+msgid "Manager"
+msgstr "Мениджър"
+
+#. module: product_properties
+#: model:ir.model.fields,field_description:product_properties.field_product_manufacturer_display_name
+#: model:ir.model.fields,field_description:product_properties.field_product_manufacturer_name
+msgid "Manuf. Name"
+msgstr "Произв. Име"
+
+#. module: product_properties
+#: model:ir.model.fields,field_description:product_properties.field_product_manufacturer_manufacturer_pref
+#: model:ir.model.fields,field_description:product_properties.field_product_product_manufacturer_pref
+#: model:ir.model.fields,field_description:product_properties.field_product_supplierinfo_manufacturer_pref
+#: model:ir.model.fields,field_description:product_properties.field_product_template_manufacturer_pref
+msgid "Manuf. Product Code"
+msgstr "Код на продукт от производител"
+
+#. module: product_properties
+#: model:ir.model.fields,field_description:product_properties.field_product_manufacturer_manufacturer_pname
+#: model:ir.model.fields,field_description:product_properties.field_product_product_manufacturer_pname
+#: model:ir.model.fields,field_description:product_properties.field_product_supplierinfo_manufacturer_pname
+#: model:ir.model.fields,field_description:product_properties.field_product_template_manufacturer_pname
+msgid "Manuf. Product Name"
+msgstr "Произв. име на продукта"
+
+#. module: product_properties
+#: model:ir.model.fields,field_description:product_properties.field_product_manufacturer_manufacturer_purl
+#: model:ir.model.fields,field_description:product_properties.field_product_product_manufacturer_purl
+#: model:ir.model.fields,field_description:product_properties.field_product_template_manufacturer_purl
+msgid "Manuf. Product URL"
+msgstr "Произв. URL на продукта"
+
+#. module: product_properties
+#: model:ir.model.fields,field_description:product_properties.field_product_manufacturer_datasheets_manufacturer_id
+#: model:ir.model.fields,field_description:product_properties.field_product_manufacturer_manufacturer
+#: model:ir.model.fields,field_description:product_properties.field_product_product_manufacturer_id
+#: model:ir.model.fields,field_description:product_properties.field_product_template_manufacturer_id
+#: model:ir.model.fields,field_description:product_properties.field_purchase_order_line_manufacturer_id
+#: model:ir.ui.view,arch_db:product_properties.product_manufacturer_form_view
+#: model:ir.ui.view,arch_db:product_properties.product_manufacturer_search_view
+#: model:ir.ui.view,arch_db:product_properties.product_supplierinfo_search_manufacturer_view
+#: model:ir.ui.view,arch_db:product_properties.product_template_manufacturer_form_view
+#: model:ir.ui.view,arch_db:product_properties.product_template_manufacturer_pref_search_inherit
+#: model:ir.ui.view,arch_db:product_properties.product_variant_easy_edit_manufacturer_view
+#: model:ir.ui.view,arch_db:product_properties.view_product_manufacturer_inherit
+msgid "Manufacturer"
+msgstr "Производител"
+
+#. module: product_properties
+#: model:ir.ui.view,arch_db:product_properties.product_manufacturer_form_view
+#: model:ir.ui.view,arch_db:product_properties.product_manufacturer_tree_view
+msgid "Manufacturer Information"
+msgstr "Информация за производител"
+
+#. module: product_properties
+#: model:ir.ui.view,arch_db:product_properties.product_template_manufacturer_pref_search_inherit
+msgid "Manufacturer code"
+msgstr "Manufacturer code"
+
+#. module: product_properties
+#: model:ir.model.fields,field_description:product_properties.field_product_supplierinfo_manufacturer_id
+msgid "Manufacturer info"
+msgstr "Информация за производител"
+
+#. module: product_properties
+#: model:ir.model.fields,field_description:product_properties.field_product_template_manufacturer_ids
+#: model:ir.ui.view,arch_db:product_properties.product_template_manufacturer_form_view
+msgid "Manufacturers"
+msgstr "Производители"
+
+#. module: product_properties
+#: model:ir.model.fields,field_description:product_properties.field_product_manufacturer_image_medium
+#: model:ir.model.fields,field_description:product_properties.field_product_properties_category_lines_image_medium
+#: model:ir.model.fields,field_description:product_properties.field_product_properties_image_medium
+#: model:ir.model.fields,field_description:product_properties.field_product_properties_package_image_medium
+msgid "Medium-sized image"
+msgstr "Картинка със среден размер"
+
+#. module: product_properties
+#: model:ir.model.fields,help:product_properties.field_product_properties_category_lines_image_medium
+#: model:ir.model.fields,help:product_properties.field_product_properties_image_medium
+#: model:ir.model.fields,help:product_properties.field_product_properties_package_image_medium
+msgid "Medium-sized image of the product. It is automatically resized as a 128x128px image, with aspect ratio preserved, only when the image exceeds one of those sizes. Use this field in form views or some kanban views."
+msgstr "Medium-sized image of the product. It is automatically resized as a 128x128px image, with aspect ratio preserved, only when the image exceeds one of those sizes. Use this field in form views or some kanban views."
+
+#. module: product_properties
+#: model:ir.model.fields,field_description:product_properties.field_product_manufacturer_datasheets_mimetype
+msgid "Mime Type"
+msgstr "Тип файл (MIME)"
+
+#. module: product_properties
+#: code:addons/product_properties/models/product_properties.py:23
+#: selection:product.properties,type_fields:0
+#: selection:product.properties.type,type_fields:0
+#, python-format
+msgid "Package"
+msgstr "Пакет"
+
+#. module: product_properties
+#: model:ir.model.fields,field_description:product_properties.field_product_properties_package_name
+#: model:ir.ui.view,arch_db:product_properties.product_properties_package_form_view
+msgid "Package Name"
+msgstr "Име на пакет"
+
+#. module: product_properties
+#: model:ir.ui.view,arch_db:product_properties.product_properties_package_form_view
+#: model:ir.ui.view,arch_db:product_properties.product_properties_package_tree_view
+msgid "Package-Corpus"
+msgstr "Package-Corpus"
+
+#. module: product_properties
+#: model:ir.model.fields,field_description:product_properties.field_product_product_product_properties_package
+#: model:ir.model.fields,field_description:product_properties.field_product_template_product_properties_package
+msgid "Package/Socket type"
+msgstr "Package/Socket type"
+
+#. module: product_properties
+#: model:ir.ui.view,arch_db:product_properties.product_manufacturer_form_view
+msgid "Price"
+msgstr "Цена"
+
+#. module: product_properties
+#: model:ir.model.fields,field_description:product_properties.field_product_properties_category_lines_print_domain
+#: model:ir.model.fields,field_description:product_properties.field_product_properties_print_domain
+msgid "Print domain"
+msgstr "Print domain"
+
+#. module: product_properties
+#: model:ir.model,name:product_properties.model_product_product
+#: model:ir.model.fields,field_description:product_properties.field_product_manufacturer_product_variant_id
+#: model:ir.ui.view,arch_db:product_properties.product_manufacturer_form_view
+#: model:ir.ui.view,arch_db:product_properties.product_manufacturer_search_view
+#: model:ir.ui.view,arch_db:product_properties.product_manufacturer_tree_view
+#: model:ir.ui.view,arch_db:product_properties.product_template_manufacturer_form_view
+#: model:ir.ui.view,arch_db:product_properties.product_template_manufacturer_pref_search_inherit
+msgid "Product"
+msgstr "Продукт"
+
+#. module: product_properties
+#: model:ir.model,name:product_properties.model_product_category
+msgid "Product Category"
+msgstr "Категория на продукта"
+
+#. module: product_properties
+#: model:ir.model,name:product_properties.model_product_properties_category_lines
+msgid "Product Category lines properties"
+msgstr "Product Category lines properties"
+
+#. module: product_properties
+#: model:ir.model.fields,field_description:product_properties.field_product_product_manufacturer
+#: model:ir.model.fields,field_description:product_properties.field_product_template_manufacturer
+msgid "Product Manufacturer"
+msgstr "Производител"
+
+#. module: product_properties
+#: model:ir.model.fields,field_description:product_properties.field_product_manufacturer_packaging_ids
+msgid "Product Packages"
+msgstr "Продуктови опаковки"
+
+#. module: product_properties
+#: model:ir.ui.view,arch_db:product_properties.product_manufacturer_form_view
+msgid "Product Packaging"
+msgstr "Продуктово опаковане"
+
+#. module: product_properties
+#: model:ir.module.category,name:product_properties.module_category_product_properties
+msgid "Product Properties"
+msgstr "Спецификации"
+
+#. module: product_properties
+#: model:ir.model.fields,field_description:product_properties.field_product_manufacturer_product_tmpl_id
+#: model:ir.model.fields,field_description:product_properties.field_product_properties_product_tmpl_id
+msgid "Product Template"
+msgstr "Шаблон за продукт"
+
+#. module: product_properties
+#: model:ir.model,name:product_properties.model_product_template
+msgid "Product Template (Multi-Company)"
+msgstr "Product Template (Multi-Company)"
+
+#. module: product_properties
+#: model:ir.model.fields,field_description:product_properties.field_product_manufacturer_type
+msgid "Product Type"
+msgstr "Тип на продукта"
+
+#. module: product_properties
+#: model:ir.model.fields,field_description:product_properties.field_product_manufacturer_supplierinfo_ids
+msgid "Product destributor"
+msgstr "Дистрибутор"
+
+#. module: product_properties
+#: model:ir.actions.act_window,name:product_properties.product_manufacturer_action
+#: model:ir.model.fields,field_description:product_properties.field_product_product_manufacturer_ids
+#: model:ir.ui.menu,name:product_properties.menu_product_manufacturer_purchase
+msgid "Product manufacturer"
+msgstr "Производител"
+
+#. module: product_properties
+#: model:ir.actions.act_window,name:product_properties.action_product_properties_view
+#: model:ir.model,name:product_properties.model_product_properties
+#: model:ir.model,name:product_properties.model_product_properties_category
+#: model:ir.model.fields,field_description:product_properties.field_product_product_product_properties_ids
+#: model:ir.model.fields,field_description:product_properties.field_product_template_product_properties_ids
+#: model:ir.ui.view,arch_db:product_properties.product_category_form_view_inherit_properties
+#: model:ir.ui.view,arch_db:product_properties.product_properties_form_view
+msgid "Product properties"
+msgstr "Product properties"
+
+#. module: product_properties
+#: model:ir.ui.view,arch_db:product_properties.product_manufacturer_search_view
+msgid "Product template"
+msgstr "Product template"
+
+#. module: product_properties
+#: model:ir.model.fields,field_description:product_properties.field_product_manufacturer_product_id
+msgid "Product variant"
+msgstr "Вариант на продукт"
+
+#. module: product_properties
+#: model:ir.model.fields,field_description:product_properties.field_product_manufacturer_product_variant_ids
+msgid "Products"
+msgstr "Продукти"
+
+#. module: product_properties
+#: model:ir.ui.view,arch_db:product_properties.product_category_form_view_inherit_properties
+#: model:ir.ui.view,arch_db:product_properties.product_properties_form_view
+msgid "Properties Name"
+msgstr "Properties Name"
+
+#. module: product_properties
+#: model:ir.model.fields,field_description:product_properties.field_product_properties_category_lines_name
+#: model:ir.model.fields,field_description:product_properties.field_product_properties_category_name
+#: model:ir.model.fields,field_description:product_properties.field_product_properties_name
+msgid "Property name"
+msgstr "Property name"
+
+#. module: product_properties
+#: model:ir.model,name:product_properties.model_purchase_order
+msgid "Purchase Order"
+msgstr "Заявка за доставка"
+
+#. module: product_properties
+#: model:ir.model,name:product_properties.model_purchase_order_line
+msgid "Purchase Order Line"
+msgstr "Ред от поръчката"
+
+#. module: product_properties
+#: code:addons/product_properties/models/product_properties.py:21
+#: model:ir.ui.view,arch_db:product_properties.product_category_form_view_inherit_properties
+#: model:ir.ui.view,arch_db:product_properties.product_properties_form_view
+#: selection:product.properties,type_fields:0
+#: selection:product.properties.type,type_fields:0
+#, python-format
+msgid "Range"
+msgstr "Range"
+
+#. module: product_properties
+#: model:ir.model.fields,field_description:product_properties.field_product_manufacturer_datasheets_ir_attachment_id
+msgid "Related attachment"
+msgstr "Related attachment"
+
+#. module: product_properties
+#: model:ir.model.fields,field_description:product_properties.field_product_manufacturer_datasheets_res_field
+msgid "Resource Field"
+msgstr "Ресурсно поле"
+
+#. module: product_properties
+#: model:ir.model.fields,field_description:product_properties.field_product_manufacturer_datasheets_res_id
+msgid "Resource ID"
+msgstr "ID на ресурс"
+
+#. module: product_properties
+#: model:ir.model.fields,field_description:product_properties.field_product_manufacturer_datasheets_res_model
+msgid "Resource Model"
+msgstr "Модел на ресурс"
+
+#. module: product_properties
+#: model:ir.model.fields,field_description:product_properties.field_product_manufacturer_datasheets_res_name
+msgid "Resource Name"
+msgstr "Име на ресурс"
+
+#. module: product_properties
+#: model:ir.model.fields,help:product_properties.field_product_manufacturer_datasheets_product_brand_id
+#: model:ir.model.fields,help:product_properties.field_product_manufacturer_product_brand_id
+msgid "Select a brand for this product"
+msgstr "Select a brand for this product"
+
+#. module: product_properties
+#: model:ir.model.fields,field_description:product_properties.field_product_manufacturer_sequence
+#: model:ir.model.fields,field_description:product_properties.field_product_properties_category_lines_sequence
+#: model:ir.model.fields,field_description:product_properties.field_product_properties_sequence
+msgid "Sequence"
+msgstr "Последователност"
+
+#. module: product_properties
+#: model:ir.model.fields,field_description:product_properties.field_product_manufacturer_image_small
+#: model:ir.model.fields,field_description:product_properties.field_product_properties_category_lines_image_small
+#: model:ir.model.fields,field_description:product_properties.field_product_properties_image_small
+#: model:ir.model.fields,field_description:product_properties.field_product_properties_package_image_small
+msgid "Small-sized image"
+msgstr "Картинка с малък размер"
+
+#. module: product_properties
+#: model:ir.model.fields,help:product_properties.field_product_properties_category_lines_image_small
+#: model:ir.model.fields,help:product_properties.field_product_properties_image_small
+#: model:ir.model.fields,help:product_properties.field_product_properties_package_image_small
+msgid "Small-sized image of the product. It is automatically resized as a 64x64px image, with aspect ratio preserved. Use this field anywhere a small image is required."
+msgstr "Small-sized image of the product. It is automatically resized as a 64x64px image, with aspect ratio preserved. Use this field anywhere a small image is required."
+
+#. module: product_properties
+#: model:ir.model.fields,help:product_properties.field_product_manufacturer_product_id
+msgid "Specify a product if this rule only applies to one product. Keep empty otherwise."
+msgstr "Specify a product if this rule only applies to one product. Keep empty otherwise."
+
+#. module: product_properties
+#: model:ir.model.fields,help:product_properties.field_product_manufacturer_product_tmpl_id
+msgid "Specify a template if this rule only applies to one product template. Keep empty otherwise."
+msgstr "Specify a template if this rule only applies to one product template. Keep empty otherwise."
+
+#. module: product_properties
+#: model:ir.model.fields,field_description:product_properties.field_product_manufacturer_datasheets_storage_type
+msgid "Storage Type"
+msgstr "Storage Type"
+
+#. module: product_properties
+#: model:ir.model.fields,field_description:product_properties.field_product_manufacturer_datasheets_store_fname
+msgid "Stored Filename"
+msgstr "Stored Filename"
+
+#. module: product_properties
+#: code:addons/product_properties/models/product_properties.py:18
+#: selection:product.properties,type_fields:0
+#: selection:product.properties.type,type_fields:0
+#, python-format
+msgid "String"
+msgstr "String"
+
+#. module: product_properties
+#: model:ir.model.fields,field_description:product_properties.field_purchase_order_line_supplierinfo_id
+msgid "Supplierinfo"
+msgstr "Supplierinfo"
+
+#. module: product_properties
+#: model:ir.model.fields,field_description:product_properties.field_product_properties_category_lines_type_field_target
+#: model:ir.model.fields,field_description:product_properties.field_product_properties_type_field_target
+msgid "Target/Source Odoo field"
+msgstr "Target/Source Odoo field"
+
+#. module: product_properties
+#: model:ir.model.fields,field_description:product_properties.field_product_properties_category_lines_type_field_model_id
+#: model:ir.model.fields,field_description:product_properties.field_product_properties_type_field_model_id
+msgid "Target/Source Odoo model"
+msgstr "Target/Source Odoo model"
+
+#. module: product_properties
+#: model:ir.model.fields,field_description:product_properties.field_res_company_octopartcode
+msgid "The Octopart API code"
+msgstr "The Octopart API code"
+
+#. module: product_properties
+#: model:res.groups,comment:product_properties.group_el_pro_manager
+msgid "The Product Properties manager manages to configure new types"
+msgstr "The Product Properties manager manages to configure new types"
+
+#. module: product_properties
+#: model:res.groups,comment:product_properties.group_el_pro_user
+msgid "The Product Properties user uses to fill data in product"
+msgstr "The Product Properties user uses to fill data in product"
+
+#. module: product_properties
+#: model:ir.model,name:product_properties.model_product_properties_type
+msgid "The Properties types"
+msgstr "The Properties types"
+
+#. module: product_properties
+#: model:ir.model.fields,help:product_properties.field_product_manufacturer_datasheets_res_model
+msgid "The database object this attachment will be attached to."
+msgstr "The database object this attachment will be attached to."
+
+#. module: product_properties
+#: model:ir.model.fields,help:product_properties.field_product_properties_category_lines_sequence
+#: model:ir.model.fields,help:product_properties.field_product_properties_sequence
+msgid "The first in the sequence is the default one."
+msgstr "The first in the sequence is the default one."
+
+#. module: product_properties
+#: model:ir.model,name:product_properties.model_product_properties_package
+msgid "The properteis packages/corpuses"
+msgstr "The properteis packages/corpuses"
+
+#. module: product_properties
+#: model:ir.model,name:product_properties.model_product_properties_uom
+msgid "The properties units"
+msgstr "The properties units"
+
+#. module: product_properties
+#: model:ir.model.fields,help:product_properties.field_product_manufacturer_datasheets_res_id
+msgid "The record id this is attached to."
+msgstr "The record id this is attached to."
+
+#. module: product_properties
+#: model:ir.model.fields,help:product_properties.field_product_properties_category_lines_image
+#: model:ir.model.fields,help:product_properties.field_product_properties_image
+#: model:ir.model.fields,help:product_properties.field_product_properties_package_image
+msgid "This field holds the image used as image for the product, limited to 1024x1024px."
+msgstr "Това поле съдържа изображението, използвано като изображение за варианта на продукта, ограничено до 1024x1024px."
+
+#. module: product_properties
+#: model:ir.model.fields,field_description:product_properties.field_product_manufacturer_datasheets_type
+msgid "Type"
+msgstr "Тип"
+
+#. module: product_properties
+#: model:ir.model.fields,field_description:product_properties.field_product_properties_category_lines_type_field
+#: model:ir.model.fields,field_description:product_properties.field_product_properties_type_field
+#: model:ir.model.fields,field_description:product_properties.field_product_properties_type_type_field
+msgid "Type Field"
+msgstr "Type Field"
+
+#. module: product_properties
+#: model:ir.model.fields,field_description:product_properties.field_product_properties_type_name
+msgid "Type Name"
+msgstr "Type Name"
+
+#. module: product_properties
+#: model:ir.model.fields,field_description:product_properties.field_product_properties_category_lines_type_url
+#: model:ir.model.fields,field_description:product_properties.field_product_properties_type_type_url
+#: model:ir.model.fields,field_description:product_properties.field_product_properties_type_url
+msgid "Type Url"
+msgstr "Type Url"
+
+#. module: product_properties
+#: model:ir.model.fields,field_description:product_properties.field_product_properties_category_lines_type_fields
+#: model:ir.model.fields,field_description:product_properties.field_product_properties_type_fields
+#: model:ir.model.fields,field_description:product_properties.field_product_properties_type_type_fields
+msgid "Type properties"
+msgstr "Type properties"
+
+#. module: product_properties
+#: model:ir.model.fields,field_description:product_properties.field_product_properties_category_lines_type_uom_id
+#: model:ir.model.fields,field_description:product_properties.field_product_properties_type_type_uom_id
+#: model:ir.model.fields,field_description:product_properties.field_product_properties_type_uom_id
+#: model:ir.model.fields,field_description:product_properties.field_product_properties_uom_name
+msgid "UOM Name"
+msgstr "UOM Name"
+
+#. module: product_properties
+#: model:ir.model.fields,help:product_properties.field_product_properties_category_lines_type_url
+#: model:ir.model.fields,help:product_properties.field_product_properties_type_type_url
+#: model:ir.model.fields,help:product_properties.field_product_properties_type_url
+msgid "URL"
+msgstr "Адрес (URL)"
+
+#. module: product_properties
+#: code:addons/product_properties/models/product.py:26
+#, python-format
+msgid "Unit(s)"
+msgstr "бр."
+
+#. module: product_properties
+#: model:ir.model.fields,field_description:product_properties.field_product_manufacturer_datasheets_url
+msgid "Url"
+msgstr "Url"
+
+#. module: product_properties
+#: model:ir.model.fields,field_description:product_properties.field_res_company_use_octopart
+msgid "Use Octopart"
+msgstr "Use Octopart"
+
+#. module: product_properties
+#: model:ir.model.fields,field_description:product_properties.field_purchase_order_use_product_description
+msgid "Use Product Description"
+msgstr "Use Product Description"
+
+#. module: product_properties
+#: model:ir.ui.view,arch_db:product_properties.purchase_order_form
+msgid "Use product description"
+msgstr "Use product description"
+
+#. module: product_properties
+#: model:res.groups,name:product_properties.group_el_pro_user
+msgid "User"
+msgstr "Потребител"
+
+#. module: product_properties
+#: model:ir.model.fields,field_description:product_properties.field_product_properties_category_lines_type_display
+#: model:ir.model.fields,field_description:product_properties.field_product_properties_type_display
+msgid "Value"
+msgstr "Стойност"
+
+#. module: product_properties
+#: model:ir.model.fields,field_description:product_properties.field_product_properties_category_lines_type_package
+#: model:ir.model.fields,field_description:product_properties.field_product_properties_category_lines_type_range
+#: model:ir.model.fields,field_description:product_properties.field_product_properties_type_package
+#: model:ir.model.fields,field_description:product_properties.field_product_properties_type_range
+msgid "Value Range"
+msgstr "Value Range"
+
+#. module: product_properties
+#: model:ir.model.fields,field_description:product_properties.field_product_properties_category_lines_type_display_attrs
+#: model:ir.model.fields,field_description:product_properties.field_product_properties_type_display_attrs
+msgid "Value attrs"
+msgstr "Value attrs"
+
+#. module: product_properties
+#: model:ir.model.fields,field_description:product_properties.field_product_properties_category_lines_type_boolean
+#: model:ir.model.fields,field_description:product_properties.field_product_properties_type_boolean
+#: model:ir.model.fields,field_description:product_properties.field_product_properties_type_type_boolean
+msgid "Value for Boolean"
+msgstr "Value for Boolean"
+
+#. module: product_properties
+#: model:ir.model.fields,field_description:product_properties.field_product_properties_category_lines_type_char
+#: model:ir.model.fields,field_description:product_properties.field_product_properties_type_char
+#: model:ir.model.fields,field_description:product_properties.field_product_properties_type_type_char
+msgid "Value for Char"
+msgstr "Value for Char"
+
+#. module: product_properties
+#: model:ir.model.fields,field_description:product_properties.field_product_properties_category_lines_type_float
+#: model:ir.model.fields,field_description:product_properties.field_product_properties_type_float
+#: model:ir.model.fields,field_description:product_properties.field_product_properties_type_type_float
+msgid "Value for Float"
+msgstr "Value for Float"
+
+#. module: product_properties
+#: model:ir.model.fields,field_description:product_properties.field_product_properties_category_lines_type_int
+#: model:ir.model.fields,field_description:product_properties.field_product_properties_type_int
+#: model:ir.model.fields,field_description:product_properties.field_product_properties_type_type_int
+msgid "Value for Int"
+msgstr "Value for Int"
+
+#. module: product_properties
+#: model:ir.model.fields,field_description:product_properties.field_product_properties_category_lines_type_package_id
+#: model:ir.model.fields,field_description:product_properties.field_product_properties_type_package_id
+#: model:ir.model.fields,field_description:product_properties.field_product_properties_type_type_package_id
+msgid "Value for Package"
+msgstr "Value for Package"
+
+#. module: product_properties
+#: model:ir.model.fields,field_description:product_properties.field_product_properties_category_lines_type_int_second
+#: model:ir.model.fields,field_description:product_properties.field_product_properties_type_int_second
+#: model:ir.model.fields,field_description:product_properties.field_product_properties_type_type_int_second
+msgid "Value for Second Int"
+msgstr "Value for Second Int"
+
+#. module: product_properties
+#: model:ir.model.fields,field_description:product_properties.field_product_manufacturer_product_variant_count
+msgid "Variant Count"
+msgstr "Variant Count"
+
+#. module: product_properties
+#: model:ir.model.fields,field_description:product_properties.field_product_product_variant_manufacturer_ids
+#: model:ir.model.fields,field_description:product_properties.field_product_template_variant_manufacturer_ids
+msgid "Variant Manufacturer"
+msgstr "Variant Manufacturer"
+
+#. module: product_properties
+#: model:ir.model.fields,field_description:product_properties.field_product_manufacturer_datasheets_version
+msgid "Version"
+msgstr "Версия"
+
+#. module: product_properties
+#: model:ir.model.fields,field_description:product_properties.field_product_properties_category_lines_dimensions_x
+#: model:ir.model.fields,field_description:product_properties.field_product_properties_dimensions_x
+#: model:ir.model.fields,field_description:product_properties.field_product_properties_package_dimensions_x
+#: model:ir.model.fields,field_description:product_properties.field_product_properties_type_dimensions_x
+msgid "X Dimensions"
+msgstr "X Dimensions"
+
+#. module: product_properties
+#: model:ir.model.fields,field_description:product_properties.field_product_properties_category_lines_dimensions_y
+#: model:ir.model.fields,field_description:product_properties.field_product_properties_dimensions_y
+#: model:ir.model.fields,field_description:product_properties.field_product_properties_package_dimensions_y
+#: model:ir.model.fields,field_description:product_properties.field_product_properties_type_dimensions_y
+msgid "Y Dimensions"
+msgstr "Y Dimensions"
+
+#. module: product_properties
+#: model:ir.model.fields,help:product_properties.field_product_manufacturer_datasheets_type
+msgid "You can either upload a file from your computer or copy/paste an internet link to your file."
+msgstr "Можете да качите файл от компютъра си или да копирате / поставите интернет връзка във файла си."
+
+#. module: product_properties
+#: code:addons/product_properties/models/product_properties.py:22
+#: selection:product.properties,type_fields:0
+#: selection:product.properties.type,type_fields:0
+#, python-format
+msgid "Yse/No"
+msgstr "Yse/No"
+
+#. module: product_properties
+#: model:ir.model.fields,field_description:product_properties.field_product_properties_category_lines_dimensions_z
+#: model:ir.model.fields,field_description:product_properties.field_product_properties_dimensions_z
+#: model:ir.model.fields,field_description:product_properties.field_product_properties_package_dimensions_z
+#: model:ir.model.fields,field_description:product_properties.field_product_properties_type_dimensions_z
+msgid "Z Dimensions"
+msgstr "Z Dimensions"
+
+#. module: product_properties
+#: model:ir.ui.view,arch_db:product_properties.product_manufacturer_search_view
+msgid "manufacturer"
+msgstr "manufacturer"
+
+#. module: product_properties
+#: model:ir.model,name:product_properties.model_product_brand
+msgid "product.brand"
+msgstr "product.brand"

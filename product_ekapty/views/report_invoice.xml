@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="report_invoice_document_with_ekapty" inherit_id="l10n_gr_extend.report_invoice_document" primary="True">
+            <xpath expr="//span[@t-field='l.name']" position="after">
+                <t t-if="l.product_id.show_homologation and (l.product_id.product_tmpl_id.ekapty or l.product_id.ekapty)">
+                    <br/>
+                    <t t-if="l.product_id.product_tmpl_id.ekapty">
+                        <span t-field="l.product_id.product_tmpl_id.ekapty"/>
+                    </t>
+                    <t t-if="l.product_id.ekapty">
+                        <span t-field="l.product_id.ekapty"/>
+                    </t>
+                </t>
+            </xpath>
+        </template>
+    </data>
+</odoo>

@@ -63,6 +63,7 @@ class BarcodeNomenclature(models.Model):
         parsed_result = {
             'encoding': '',
             'type': 'error',
+            'sub_type': 'product',
             'code': barcode,
             'base_code': barcode,
             'value': 0,
@@ -70,7 +71,7 @@ class BarcodeNomenclature(models.Model):
 
         rules = []
         for rule in self.rule_ids:
-            rules.append({'type': rule.type, 'encoding': rule.encoding, 'sequence': rule.sequence, 'pattern': rule.pattern, 'alias': rule.alias})
+            rules.append({'type': rule.type, 'sub_type': rule.sub_type, 'encoding': rule.encoding, 'sequence': rule.sequence, 'pattern': rule.pattern, 'alias': rule.alias})
 
         for rule in sorted(rules, key=lambda k: k['sequence']):
             cur_barcode = barcode
@@ -83,30 +84,56 @@ class BarcodeNomenclature(models.Model):
                 continue
 
             match = self.match_pattern(cur_barcode, rule['pattern'])
-            _logger.info("MATCH %s:%s" % (match, rule))
+            #_logger.info("MATCH %s:%s" % (match, rule))
             if match['match']:
                 if rule['type'] == 'alias':
                     barcode = rule['alias']
                     parsed_result['code'] = barcode
+                elif rule['type'] == 'product' and rule['sub_type'] in ('component', 'product'):
+                    parsed_result['encoding'] = rule['encoding']
+                    parsed_result['type'] = rule['type']
+                    parsed_result['sub_type'] = rule['sub_type']
+                    parsed_result['value'] = match['value']
+                    parsed_result['code'] = cur_barcode
+                    parsed_result['lot'] = False
+                    parsed_result['use_date'] = False
+                    parsed_result['base_code'] = match['base_code']
+                    return parsed_result
+
+                elif rule['type'] == 'lot' and rule['sub_type'] in ('component', 'product'):
+                    parsed_result['encoding'] = rule['encoding']
+                    parsed_result['type'] = rule['type']
+                    parsed_result['sub_type'] = rule['sub_type']
+                    parsed_result['value'] = match['value']
+                    parsed_result['code'] = cur_barcode
+                    parsed_result['lot'] = (rule['encoding'] == 'europlacerlot') and match['base_code'][1:] or match['base_code']
+                    parsed_result['base_code'] = False
+                    return parsed_result
+
                 elif rule['type'] == 'lot' and rule['encoding'] == 'europlacerlot':
                     parsed_result['encoding'] = rule['encoding']
                     parsed_result['type'] = rule['type']
+                    parsed_result['sub_type'] = rule['sub_type']
                     parsed_result['value'] = match['value']
                     parsed_result['code'] = cur_barcode
                     parsed_result['lot'] = match['base_code'][1:]
                     parsed_result['base_code'] = False
                     return parsed_result
+
                 elif rule['type'] == 'product' and rule['encoding'] in ('gs1', 'udi', 'hibc'):
                     parsed_result['encoding'] = rule['encoding']
                     parsed_result['type'] = rule['type']
+                    parsed_result['sub_type'] = rule['sub_type']
                     parsed_result['code'] = cur_barcode
                     parsed_result['base_code'] = match['base_code']
                     parsed_result['lot'] = match['lot_number']
                     parsed_result['use_date'] = match.get('use_date') and ['use_date'] or False
                     return parsed_result
+
                 else:
                     parsed_result['encoding'] = rule['encoding']
                     parsed_result['type'] = rule['type']
+                    parsed_result['sub_type'] = rule['sub_type']
                     parsed_result['value'] = match['value']
                     parsed_result['code'] = cur_barcode
                     parsed_result['lot'] = False
@@ -131,3 +158,10 @@ class BarcodeRule(models.Model):
             ('europlacerlot', 'LOT/SN for Europlacer'),
             ('pattern', 'Pattern mode'),
         ])
+
+    sub_type = fields.Selection([
+                ('component', 'MRP Component'),
+                ('product', 'MRP Product'),
+                ('momp', 'MRP Manufacture order'),
+                ('wo', 'MRP Workorder'),
+                ], string="Application use")

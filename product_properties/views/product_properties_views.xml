@@ -1,0 +1,673 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="product_properties_package_tree_view" model="ir.ui.view">
+            <field name="name">product.properties.package.tree.view</field>
+            <field name="model">product.properties.package</field>
+            <field name="arch" type="xml">
+                <tree string="Package-Corpus">
+                    <field name="name"/>
+                    <field name="dimensions_x"/>
+                    <field name="dimensions_y"/>
+                    <field name="dimensions_z"/>
+                    <field name="image_small" widget="image"/>
+                </tree>
+            </field>
+        </record>
+        <record id="product_properties_package_form_view" model="ir.ui.view">
+            <field name="name">product.properties.package.form.view</field>
+            <field name="model">product.properties.package</field>
+            <field name="arch" type="xml">
+                <form string="Package-Corpus">
+                    <sheet>
+                        <field name="image_medium" widget="image" class="oe_avatar"/>
+                        <div class="oe_title">
+                            <label class="oe_edit_only" for="name" string="Package Name"/>
+                            <h1>
+                                <field name="name"/>
+                            </h1>
+                        </div>
+                        <group>
+                            <group string="Dimensions">
+                                <field name="dimensions_x"/>
+                                <field name="dimensions_y"/>
+                                <field name="dimensions_z"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record id="product_properties_package_search_view" model="ir.ui.view">
+            <field name="name">product.properties.package.search.view</field>
+            <field name="model">product.properties.package</field>
+            <field name="arch" type="xml">
+                <search string="Product properties package">
+                    <field string="Name" name="name" filter_domain="[('name', '=', self)]"/>
+                    <group expand="0" string="Group By">
+                        <filter string="Name" name="groupby_name" domain="[]" context="{'group_by': 'name'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+        <record id="product_properties_package_action" model="ir.actions.act_window">
+            <field name="name">Product properties packages</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">product.properties.package</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="product_properties_package_search_view"/>
+        </record>
+
+        <record id="product_properties_dropdown_tree_view" model="ir.ui.view">
+            <field name="name">product.properties.dropdown.tree.view</field>
+            <field name="model">product.properties.dropdown</field>
+            <field name="arch" type="xml">
+                <tree string="Product properties Dropdown">
+                    <field name="code"/>
+                    <field name="name"/>
+                </tree>
+            </field>
+        </record>
+        <record id="product_properties_dropdown_view" model="ir.ui.view">
+            <field name="name">product.properties.dropdown.form.view</field>
+            <field name="model">product.properties.dropdown</field>
+            <field name="arch" type="xml">
+                <form string="Product properties Dropdown">
+                    <sheet>
+                        <group>
+                            <field name="code"/>
+                            <field name="name"/>
+                            <field name="name_id" domain="[('type_fields', '=', 'dropdown_id')]"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record id="product_properties_dropdown_search_view" model="ir.ui.view">
+            <field name="name">product.properties.dropdown.search.view</field>
+            <field name="model">product.properties.dropdown</field>
+            <field name="arch" type="xml">
+                <search string="Product properties Dropdown">
+                    <field string="Name" name="name" filter_domain="[('name', '=', self)]"/>
+                    <group expand="0" string="Group By">
+                        <filter string="Type" name="groupby_name_id" domain="[]" context="{'group_by': 'name_id'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+        <record id="product_properties_dropdown_action" model="ir.actions.act_window">
+            <field name="name">Product properties dropdown</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">product.properties.dropdown</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="product_properties_dropdown_search_view"/>
+        </record>
+
+        <record id="product_properties_search_view" model="ir.ui.view">
+            <field name="name">product.properties.search.view</field>
+            <field name="model">product.properties</field>
+            <field name="arch" type="xml">
+                <search string="Product properties">
+                    <field string="Product" name="product_id" filter_domain="[('product_id', '=', self)]"/>
+                    <group expand="0" string="Group By">
+                        <filter string="Product" name="groupby_product" domain="[]" context="{'group_by': 'product_id'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+        <record id="product_properties_tree_view" model="ir.ui.view">
+            <field name="name">product.properties.view</field>
+            <field name="model">product.properties</field>
+            <field name="arch" type="xml">
+                <tree string="Product properties">
+                    <field name="sequence" widget="handle"/>
+                    <field name="product_tmpl_id"/>
+                    <field name="product_id"/>
+                    <field name="categ_id"/>
+                    <field name="name"/>
+                    <field name="type_display"/>
+                    <field name="type_display_attrs" attrs="{'invisible': [('type_fields', '!=', 'package')]}"/>
+                    <field name="type_fields" invisible="1"/>
+                    <field name="image_small" widget="image" attrs="{'invisible': [('type_fields', '!=', 'package')]}"/>
+                </tree>
+            </field>
+        </record>
+        <record id="product_properties_form_view" model="ir.ui.view">
+            <field name="name">product.properties.form.view</field>
+            <field name="model">product.properties</field>
+            <field name="arch" type="xml">
+                <form string="Product properties">
+                    <sheet>
+                        <field name="image_medium" widget="image" class="oe_avatar" attrs="{'invisible':[('type_fields', '!=', 'package')]}"/>
+                        <div class="oe_title">
+                            <label class="oe_edit_only" for="name" string="Properties Name"/>
+                            <h1>
+                                <field name="name"/>
+                            </h1>
+                            <h2>
+                                <field name="product_id" readonly="1"/>
+                            </h2>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="type_fields"/>
+                            </group>
+                            <group name="properties">
+                                <field name="type_float" attrs="{'invisible':[('type_fields', '!=', 'float')]}"/>
+                                <field name="type_char" attrs="{'invisible':[('type_fields', '!=', 'char')]}"/>
+                                <field name="type_int" attrs="{'invisible':[('type_fields', '!=', 'int')]}"/>
+                                <field name="type_boolean" attrs="{'invisible':[('type_fields', '!=', 'boolean')]}"/>
+                                <field name="type_url" widget="url" attrs="{'invisible':[('type_fields', '!=', 'url')]}"/>
+                                <field name="type_uom_id" attrs="{'invisible':[('type_fields', 'in', ('char', 'package', 'field', 'lot', 'url', 'dropdown_id', 'date'))]}" domain="[('name_id', '=', active_id)]" context="{'default_name_id': active_id}"/>
+                                <field name="type_dropdown_id" attrs="{'invisible':[('type_fields', '!=', 'dropdown_id')]}" domain="[('name_id', '=', name)]" context="{'default_name_id': name}"/>
+                                <field name="type_field" attrs="{'invisible':[('type_fields', '!=', 'field')]}"/>
+                            </group>
+                            <group name="fields" string="Fields sources" attrs="{'invisible':[('type_fields', '!=', 'field')]}">
+                                <field name="type_field_model_id" readonly="0" options="{'no_create_edit': True}" attrs="{'invisible':[('type_fields', '!=', 'field')]}"/>
+                                <field name="type_field_target" options="{'no_create_edit': True}" attrs="{'invisible':[('type_fields', '!=', 'field')]}"/>
+                            </group>
+                            <group string="Range" attrs="{'invisible':[('type_fields', '!=', 'range')]}">
+                                <field name="type_int" attrs="{'invisible':[('type_fields', 'not in', ('int', 'range'))]}"/>
+                                <field name="type_int_second" attrs="{'invisible':[('type_fields', 'not in', ('int', 'range'))]}"/>
+                            </group>
+                            <group string="Dimensions" attrs="{'invisible':[('type_fields', '!=', 'package')]}">
+                                <field name="type_package_id" attrs="{'invisible':[('type_fields', '!=', 'package')]}" domain="[('name_id', '=', active_id)]" context="{'default_name_id': active_id}"/>
+                                <field name="dimensions_x"/>
+                                <field name="dimensions_y"/>
+                                <field name="dimensions_z"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="action_product_properties_view">
+            <field name="name">Product properties</field>
+            <field name="res_model">product.properties</field>
+            <field name="view_ids" eval="[(5, 0, 0),
+                (0, 0, {'view_mode': 'tree', 'view_id': ref('product_properties_tree_view')}),
+                (0, 0, {'view_mode': 'form', 'view_id': ref('product_properties_form_view')})]"/>
+        </record>
+
+        <record id="product_properties_print_form_view" model="ir.ui.view">
+            <field name="name">product.properties.print.form.view</field>
+            <field name="model">product.properties.print</field>
+            <field name="arch" type="xml">
+                <form string="Properties for print">
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="print"/>
+                            <field name="system_properties"/>
+                        </group>
+                    </group>
+                </form>
+            </field>
+        </record>
+        <record id="product_properties_print_tree_view" model="ir.ui.view">
+            <field name="name">product.properties.print.tree.view</field>
+            <field name="model">product.properties.print</field>
+            <field name="arch" type="xml">
+                <tree string="Properties for print">
+                    <field name="sequence" widget="handle"/>
+                    <field name="name"/>
+                    <field name="print"/>
+                    <field name="system_properties"/>
+                </tree>
+            </field>
+        </record>
+        <record id="product_properties_print_search_view" model="ir.ui.view">
+            <field name="name">product.properties.print.search.view</field>
+            <field name="model">product.properties.print</field>
+            <field name="arch" type="xml">
+                <search string="Product properties for print">
+                    <field string="Properties type" name="name" filter_domain="[('name', '=', self)]"/>
+                    <group expand="0" string="Group By">
+                        <filter string="Partner properties" name="groupby_partner_id" domain="[]" context="{'group_by': 'partner_id'}"/>
+                        <filter string="Sale order properties" name="groupby_order_id" domain="[]" context="{'group_by': 'order_id'}"/>
+                        <filter string="Invoice properties" name="groupby_invoice_id" domain="[]" context="{'group_by': 'invoice_id'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="product_properties_type_search_view" model="ir.ui.view">
+            <field name="name">product.properties.type.search.view</field>
+            <field name="model">product.properties.type</field>
+            <field name="arch" type="xml">
+                <search string="Product properties type">
+                    <field string="Properties type" name="name" filter_domain="[('name', '=', self)]"/>
+                    <group expand="0" string="Group By">
+                        <filter string="Type properties" name="groupby_type" domain="[]" context="{'group_by': 'type_fields'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="product_properties_type_tree_view" model="ir.ui.view">
+            <field name="name">product.properties.type.view</field>
+            <field name="model">product.properties.type</field>
+            <field name="arch" type="xml">
+                <tree string="Product properties type">
+                    <field name="sequence" widget="handle"/>
+                    <field name="name"/>
+                    <field name="type_fields"/>
+                </tree>
+            </field>
+        </record>
+        <record id="product_properties_type_form_view" model="ir.ui.view">
+            <field name="name">product.properties.type.form.view</field>
+            <field name="model">product.properties.type</field>
+            <field name="arch" type="xml">
+                <form string="Product properties type">
+                    <sheet>
+                        <div class="oe_title">
+                            <label class="oe_edit_only" for="name" string="Properties Name"/>
+                            <h1>
+                                <field name="name"/>
+                            </h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="type_fields"/>
+                            </group>
+                            <group name="properties">
+                                <field name="type_float" attrs="{'invisible':[('type_fields', '!=', 'float')]}"/>
+                                <field name="type_char" attrs="{'invisible':[('type_fields', '!=', 'char')]}"/>
+                                <field name="type_int" attrs="{'invisible':[('type_fields', '!=', 'int')]}"/>
+                                <field name="type_boolean" attrs="{'invisible':[('type_fields', '!=', 'boolean')]}"/>
+                                <field name="type_url" widget="url" attrs="{'invisible':[('type_fields', '!=', 'url')]}"/>
+                                <!-- <field name="type_uom_id" attrs="{'invisible':[('type_fields', 'in', ('char', 'package', 'field', 'lot', 'url', 'dropdown_id'))]}"/> -->
+                                <!-- <field name="type_dropdown_id" attrs="{'invisible':[('type_fields', '!=', 'dropdown_id')]}" domain="[('name_id', '=', active_id)]" context="{'default_name_id': active_id}"/> -->
+                                <field name="type_field" attrs="{'invisible':[('type_fields', '!=', 'field')]}"/>
+                            </group>
+                            <group name="fields" string="Fields sources" attrs="{'invisible':[('type_fields', '!=', 'field')]}">
+                                <field name="type_field_model_id" readonly="0" options="{'no_create_edit': True}" attrs="{'invisible':[('type_fields', '!=', 'field')]}"/>
+                                <field name="type_field_target" options="{'no_create_edit': True}" attrs="{'invisible':[('type_fields', '!=', 'field')]}"/>
+                            </group>
+                            <group string="Range" attrs="{'invisible':[('type_fields', '!=', 'range')]}">
+                                <field name="type_int" attrs="{'invisible':[('type_fields', 'not in', ('int', 'range'))]}"/>
+                                <field name="type_int_second" attrs="{'invisible':[('type_fields', 'not in', ('int', 'range'))]}"/>
+                            </group>
+                            <separator name="listings" attrs="{'invisible':[('type_fields', 'in', ('char', 'package', 'field', 'lot', 'url', 'dropdown_id', 'date'))]}" colspan="4"/>
+                            <field name="type_uom_id" attrs="{'invisible':[('type_fields', 'in', ('char', 'package', 'field', 'lot', 'url', 'dropdown_id', 'date'))]}" domain="[('name_id', '=', active_id)]" context="{'default_name_id': active_id}">
+                                <tree>
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="name"/>
+                                </tree>
+                            </field>
+                            <separator name="listings" attrs="{'invisible':[('type_fields', '!=', 'package')]}" colspan="4"/>
+                            <field name="type_package_id" nolabel="1" colspan="4" attrs="{'invisible':[('type_fields', '!=', 'package')]}" domain="[('name_id', '=', active_id)]" context="{'default_name_id': active_id}">
+                                <tree>
+                                    <field name="dimensions_x"/>
+                                    <field name="dimensions_y"/>
+                                    <field name="dimensions_z"/>
+                                </tree>
+                            </field>
+                            <separator name="dropdowns" attrs="{'invisible':[('type_fields', '!=', 'dropdown_id')]}" colspan="4"/>
+                            <field name="type_dropdown_id" widget="many2many_list" nolabel="1" colspan="4" attrs="{'invisible':[('type_fields', '!=', 'dropdown_id')]}" domain="[('name_id', '=', active_id)]" context="{'default_name_id': active_id}">
+                                <tree>
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="code"/>
+                                    <field name="name"/>
+                                    <field name="name_id" invisible="1"/>
+                                </tree>
+                            </field>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="product_properties_category_form_view" model="ir.ui.view">
+            <field name="name">product.properties.category.form.view</field>
+            <field name="model">product.properties.category</field>
+            <field name="arch" type="xml">
+                <form string="Properties for print">
+                    <sheet>
+                        <group>
+                            <group colspan="4">
+                                <field name="name"/>
+                            </group>
+                            <!-- <label for="lines_ids" colspan="4"/> -->
+                            <field name="lines_ids" nolabel="1" colspan="4" context="{'system_properties': True}"/>
+                            <field name="print_ids" nolabel="1" colspan="4"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record id="product_properties_category_lines_search_view" model="ir.ui.view">
+            <field name="name">product.properties.category.lines.search.view</field>
+            <field name="model">product.properties.category.lines</field>
+            <field name="arch" type="xml">
+                <search string="Product properties">
+                    <field string="Internal category" name="product_categ_id" filter_domain="[('product_categ_id', '=', self)]"/>
+                    <group expand="0" string="Group By">
+                        <filter string="Internal category" name="groupby_product_categ_id" domain="[]" context="{'group_by': 'product_categ_id'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+        <record id="product_properties_category_lines_tree_view" model="ir.ui.view">
+            <field name="name">product.properties.category.lines.view</field>
+            <field name="model">product.properties.category.lines</field>
+            <field name="arch" type="xml">
+                <tree string="Product properties">
+                    <field name="sequence" widget="handle"/>
+                    <field name="name"/>
+                    <field name="type_display"/>
+                    <!-- <field name="type_range"/> -->
+                    <field name="type_display_attrs"/>
+                    <field name="type_fields" invisible="1"/>
+                    <field name="image_small" widget="image" attrs="{'invisible': [('type_fields', '!=', 'package')]}"/>
+                </tree>
+            </field>
+        </record>
+        <record id="product._properties_category_lines_form_view" model="ir.ui.view">
+            <field name="name">product.properties.category.lines.form.view</field>
+            <field name="model">product.properties.category.lines</field>
+            <field name="arch" type="xml">
+                <form string="Product properties">
+                    <sheet>
+                        <field name="image_medium" widget="image" class="oe_avatar" attrs="{'invisible':[('type_fields', '!=', 'package')]}"/>
+                        <div class="oe_title">
+                            <label class="oe_edit_only" for="name" string="Properties Name"/>
+                            <h1>
+                                <field name="name" colspan="4"/>
+                            </h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="type_fields"/>
+                            </group>
+                            <group name="properties">
+                                <field name="type_float" attrs="{'invisible':[('type_fields', '!=', 'float')]}"/>
+                                <field name="type_char" attrs="{'invisible':[('type_fields', '!=', 'char')]}"/>
+                                <field name="type_int" attrs="{'invisible':[('type_fields', '!=', 'int')]}"/>
+                                <field name="type_boolean" attrs="{'invisible':[('type_fields', '!=', 'boolean')]}"/>
+                                <field name="type_url" widget="url" attrs="{'invisible':[('type_fields', '!=', 'url')]}"/>
+                                <field name="type_uom_id" attrs="{'invisible':[('type_fields', 'in', ('char', 'package', 'field', 'lot', 'url', 'dropdown_id', 'date'))]}" domain="[('name_id', '=', active_id)]" context="{'default_name_id': active_id}"/>
+                                <field name="type_dropdown_id" attrs="{'invisible':[('type_fields', '!=', 'dropdown_id')]}" domain="[('name_id', '=', name)]" context="{'default_name_id': name}"/>
+                                <field name="type_field" attrs="{'invisible':[('type_fields', '!=', 'field')]}"/>
+                            </group>
+                            <group name="fields" string="Fields sources" attrs="{'invisible':[('type_fields', '!=', 'field')]}">
+                                <field name="type_field_model_id" readonly="0" options="{'no_create_edit': True}" attrs="{'invisible':[('type_fields', '!=', 'field')]}"/>
+                                <field name="type_field_target" options="{'no_create_edit': True}" attrs="{'invisible':[('type_fields', '!=', 'field')]}"/>
+                            </group>
+                            <group string="Range" attrs="{'invisible':[('type_fields', '!=', 'range')]}">
+                                <field name="type_int" attrs="{'invisible':[('type_fields', 'not in', ('int', 'range'))]}"/>
+                                <field name="type_int_second" attrs="{'invisible':[('type_fields', 'not in', ('int', 'range'))]}"/>
+                            </group>
+                            <group string="Dimensions" attrs="{'invisible':[('type_fields', '!=', 'package')]}">
+                                <field name="type_package_id" attrs="{'invisible':[('type_fields', '!=', 'package')]}" domain="[('name_id', '=', active_id)]" context="{'default_name_id': active_id}"/>
+                                <field name="dimensions_x"/>
+                                <field name="dimensions_y"/>
+                                <field name="dimensions_z"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="product_properties_category_action" model="ir.actions.act_window">
+            <field name="name">Categories</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">product.properties.category</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="product_properties_category_form_view"/>
+        </record>
+
+        <record id="product_properties_type_action" model="ir.actions.act_window">
+            <field name="name">Types</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">product.properties.type</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="product_properties_type_search_view"/>
+            <field name="context">{'groupby_type':1}</field>
+        </record>
+
+        <record id="product_properties_action" model="ir.actions.act_window">
+            <field name="name">Product properties</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">product.properties</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="product_properties_search_view"/>
+            <field name="context">{'groupby_product':1}</field>
+        </record>
+
+        <record id="product_properties_print_action" model="ir.actions.act_window">
+            <field name="name">For print</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">product.properties.print</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="product_properties_print_search_view"/>
+        </record>
+
+        <menuitem id="menu_product_properties_action" name="Product Properties" action="product_properties_action"
+            parent="stock.menu_stock_inventory_control" sequence="999" groups="product_properties.group_el_pro_user"/>
+
+        <menuitem id="menu_product_properties_all_action" parent="stock.menu_product_in_config_stock" name="Product properties"
+            sequence="60" groups="base.group_no_one"/>
+
+        <menuitem id="menu_product_properties_type_action" parent="menu_product_properties_all_action" action="product_properties_type_action"
+            sequence="1" groups="base.group_no_one"/>
+
+        <menuitem id="menu_product_properties_package_action" parent="menu_product_properties_all_action" action="product_properties_package_action"
+            sequence="1" groups="base.group_no_one"/>
+
+        <menuitem id="menu_product_properties_dropdown_action" parent="menu_product_properties_all_action" action="product_properties_dropdown_action"
+            sequence="1" groups="base.group_no_one"/>
+
+        <menuitem id="menu_product_properties_print_action" parent="menu_product_properties_all_action" action="product_properties_print_action"
+            sequence="2" groups="base.group_no_one"/>
+
+        <menuitem id="menu_product_properties_category_action" parent="menu_product_properties_all_action" action="product_properties_category_action"
+            sequence="3" groups="base.group_no_one"/>
+
+        <record id="product_category_form_view_inherit_properties" model="ir.ui.view">
+            <field name="name">product.category.properties.form</field>
+            <field name="model">product.category</field>
+            <field name="inherit_id" ref="product.product_category_form_view" />
+            <field name="arch" type="xml">
+                <group name="first" position="after">
+                    <group string="Product properties">
+                        <field name="product_properties_ids" context="{'default_categ_id': active_id}" nolabel="1">
+                            <form string="Product properties">
+                                <sheet>
+                                    <field name="image_medium" widget="image" class="oe_avatar" attrs="{'invisible':[('type_fields', '!=', 'package')]}"/>
+                                    <div class="oe_title">
+                                        <label class="oe_edit_only" for="name" string="Properties Name"/>
+                                        <h1>
+                                            <field name="name"/>
+                                        </h1>
+                                    </div>
+                                    <group>
+                                        <group>
+                                            <field name="type_fields"/>
+                                        </group>
+                                        <group name="properties">
+                                            <field name="type_float" attrs="{'invisible':[('type_fields', '!=', 'float')]}"/>
+                                            <field name="type_char" attrs="{'invisible':[('type_fields', '!=', 'char')]}"/>
+                                            <field name="type_int" attrs="{'invisible':[('type_fields', '!=', 'int')]}"/>
+                                            <field name="type_boolean" attrs="{'invisible':[('type_fields', '!=', 'boolean')]}"/>
+                                            <field name="type_url" widget="url" attrs="{'invisible':[('type_fields', '!=', 'url')]}"/>
+                                            <field name="type_uom_id" attrs="{'invisible':[('type_fields', 'in', ('char', 'package', 'msl', 'type_field', 'url', 'dropdown_id'))]}" domain="[('name_id', '=', active_id)]" context="{'default_name_id': active_id}"/>
+                                            <field name="type_dropdown_id" attrs="{'invisible':[('type_fields', '!=', 'dropdown_id')]}" domain="[('name_id', '=', name)]" context="{'default_name_id': name}"/>
+                                        </group>
+                                        <group string="Range" attrs="{'invisible':[('type_fields', '!=', 'range')]}">
+                                            <field name="type_int" attrs="{'invisible':[('type_fields', 'not in', ('int', 'range'))]}"/>
+                                            <field name="type_int_second" attrs="{'invisible':[('type_fields', 'not in', ('int', 'range'))]}"/>
+                                        </group>
+                                        <group string="Dimensions" attrs="{'invisible':[('type_fields', '!=', 'package')]}">
+                                            <field name="type_package_id" attrs="{'invisible':[('type_fields', '!=', 'package')]}" domain="[('name_id', '=', active_id)]" context="{'default_name_id': active_id}"/>
+                                            <field name="dimensions_x"/>
+                                            <field name="dimensions_y"/>
+                                            <field name="dimensions_z"/>
+                                        </group>
+                                    </group>
+                                </sheet>
+                            </form>
+                            <tree string="Product properties">
+                                <field name="sequence" widget="handle"/>
+                                <field name="name"/>
+                                <field name="type_display"/>
+                                <!-- <field name="type_range"/> -->
+                                <field name="type_display_attrs"/>
+                                <field name="type_fields" invisible="1"/>
+                                <field name="image_small" widget="image" attrs="{'invisible':[('type_fields', '!=', 'package')]}"/>
+                            </tree>
+                        </field>
+                    </group>
+                </group>
+            </field>
+        </record>
+
+        <!-- Product base form view -->
+        <record id="product_template_only_form_el_properties_view" model="ir.ui.view">
+            <field name="name">product.template.product.form</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="product.product_template_form_view"/>
+            <field name="arch" type="xml">
+                <data>
+                    <xpath expr="//page[@name='notes']" position="before">
+                        <field name="product_properties_has" invisible="1"/>
+                        <field name="product_variant_id" invisible="1"/>
+                        <page name="product_properties" string="Product properties">
+                            <group name="product_properties" colspan="4">
+                                <field name="has_product_properties" invisible="1"/>
+                                <group colspan="4">
+                                    <label for="categ_ids" string="Properties Category" col="1"/>
+                                    <field name="categ_ids" nolabel="1" widget="many2many_tags" col="3"/>
+                                </group>
+                                <field name="product_properties_ids" nolabel="1" colspan="4" context="{'default_product_tmpl_id': active_id, 'search_default_product_tmpl_id': active_id}">
+                                    <tree>
+                                        <field name="sequence" widget="handle"/>
+                                        <field name="product_id" invisible="1"/>
+                                        <field name="name"/>
+                                        <field name="type_display"/>
+                                        <field name="categ_id" invisible="1"/>
+                                        <field name="type_fields" invisible="1"/>
+                                        <field name="type_field_model_id" invisible="1"/>
+                                        <field name="type_field_target" invisible="1"/>
+                                        <field name="type_char" invisible="1"/>
+                                        <field name="type_int" invisible="1"/>
+                                        <field name="type_int_second" invisible="1"/>
+                                        <field name="type_package_id" invisible="1"/>
+                                        <field name="type_float" invisible="1"/>
+                                        <field name="type_boolean" invisible="1"/>
+                                        <field name="dimensions_x" invisible="1"/>
+                                        <field name="dimensions_y" invisible="1"/>
+                                        <field name="dimensions_z" invisible="1"/>
+                                        <field name="type_uom_id" invisible="1"/>
+                                        <field name="type_url" widget="image_url" class="oe_image_small" width="100px" height="100px" attrs="{'invisible': [('type_fields', '!=', 'url')]}" invisible="1"/>
+                                        <field name="type_display_attrs" invisible="1"/>
+                                        <field name="image_small" widget="image" attrs="{'invisible':[('type_fields', '!=', 'package')]}" invisible="1"/>
+                                    </tree>
+                                </field>
+                                <field name="curr_categ_ids" widget="many2many_tags" colspan="4" nolabel="1"/>
+                            </group>
+                            <!--
+                            <group name="variant_product_properties" colspan="4" attrs="{'invisible': [('product_variant_count','&lt;=',1)]}">
+                                <field name="has_product_properties" invisible="1"/>
+                                <button name="action_get_properties" type="object" string="Get properties" attrs="{'invisible': [('has_product_properties', '=', True)]}"/>
+                                <field name="product_properties_ids" nolabel="1" colspan="4" context="{'default_product_id': active_id, 'search_default_partner_id': active_id}">
+                                    <tree>
+                                        <field name="sequence" widget="handle"/>
+                                        <field name="name"/>
+                                        <field name="type_display"/>
+                                        <field name="type_url" widget="image_url" class="oe_image_small" width="100px" height="100px" attrs="{'invisible':[('type_fields', '!=', 'url')]}"/>
+                                        <field name="type_display_attrs"/>
+                                        <field name="type_fields" invisible="1"/>
+                                        <field name="image_small" widget="image" attrs="{'invisible':[('type_fields', '!=', 'package')]}"/>
+                                    </tree>
+                                </field>
+                            </group>
+                            -->
+                        </page>
+                    </xpath>
+                </data>
+            </field>
+        </record>
+
+        <record id="product_variant_easy_edit_manufacturer_view" model="ir.ui.view">
+            <field name="name">product.product.view.form.manufacturer.easy</field>
+            <field name="model">product.product</field>
+            <field name="inherit_id" ref="product.product_variant_easy_edit_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//group[@name='packaging']" position="before">
+                    <group name="variant_product_properties" string="Product properties" colspan="4">
+                        <field name="has_product_properties" invisible="1"/>
+                        <field name="product_tmpl_id" invisible="1"/>
+                        <!-- <button name="action_get_properties" type="object" string="Get properties" attrs="{'invisible': ['|', ('has_product_properties', '=', True), ('type_properties', '=', 'reset')]}"/> -->
+                        <group colspan="4">
+                            <label for="categ_ids" string="Properties Category" col="1"/>
+                            <field name="categ_ids" nolabel="1" widget="many2many_tags" col="3"/>
+                        </group>
+                        <field name="product_properties_ids" on_change="1" nolabel="1" context="{'default_product_tmpl_id': product_tmpl_id, 'default_product_id': active_id, 'search_product_id': active_id}" colspan="4">
+                            <tree>
+                                <field name="sequence" widget="handle"/>
+                                <field name="product_tmpl_id" invisible="1"/>
+                                <field name="name" string="Variant properties name"/>
+                                <field name="categ_id" invisible="1"/>
+                                <field name="type_display"/>
+                                <field name="type_fields" invisible="1"/>
+                                <field name="type_field_model_id" invisible="1"/>
+                                <field name="type_field_target" invisible="1"/>
+                                <field name="type_char" invisible="1"/>
+                                <field name="type_int" invisible="1"/>
+                                <field name="type_int_second" invisible="1"/>
+                                <field name="type_package_id" invisible="1"/>
+                                <field name="type_float" invisible="1"/>
+                                <field name="type_boolean" invisible="1"/>
+                                <field name="dimensions_x" invisible="1"/>
+                                <field name="dimensions_y" invisible="1"/>
+                                <field name="dimensions_z" invisible="1"/>
+                                <field name="type_uom_id" invisible="1"/>
+                                <field name="type_url" widget="image_url" class="oe_image_small" width="100px" height="100px" attrs="{'invisible':[('type_fields', '!=', 'url')]}" invisible="1"/>
+                                <field name="type_display_attrs" invisible="1"/>
+                                <field name="image_small" widget="image" attrs="{'invisible':[('type_fields', '!=', 'package')]}" invisible="1"/>
+                            </tree>
+                        </field>
+                        <field name="tproduct_properties_ids" on_change="1" nolabel="1" options="{'no_create_edit': True}">
+                            <tree>
+                                <field name="sequence" widget="handle"/>
+                                <field name="product_tmpl_id" invisible="1"/>
+                                <field name="name" string="Product properties name"/>
+                                <field name="categ_id" invisible="1"/>
+                                <field name="type_display"/>
+                                <field name="type_fields" invisible="1"/>
+                                <field name="dimensions_x" invisible="1"/>
+                                <field name="dimensions_y" invisible="1"/>
+                                <field name="dimensions_z" invisible="1"/>
+                                <field name="type_url" widget="image_url" class="oe_image_small" width="100px" height="100px" attrs="{'invisible':[('type_fields', '!=', 'url')]}" invisible="1"/>
+                                <field name="type_display_attrs" invisible="1"/>
+                                <field name="image_small" widget="image" attrs="{'invisible':[('type_fields', '!=', 'package')]}" invisible="1"/>
+                            </tree>
+                        </field>
+                        <field name="curr_categ_ids" widget="many2many_tags" colspan="4" nolabel="1"/>
+                    </group>
+                    <group name="manufacturer" string="Manufacturer" colspan="4">
+                        <group>
+                            <field name="manufacturer_id" readonly="1"/>
+                            <field name="manufacturer" context="{'default_supplier':True, 'default_customer':False}" invisible="1"/>
+                            <field name="manufacturer_pname" />
+                        </group>
+                        <group>
+                            <field name="manufacturer_pref" />
+                            <field name="manufacturer_purl" widget="url"/>
+                        </group>
+                    </group>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

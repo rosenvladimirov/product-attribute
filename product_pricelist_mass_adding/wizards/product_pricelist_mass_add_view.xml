@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--   Product Price List -->
+    <record id="view_product_pricelist_adding" model="ir.ui.view">
+          <field name="name">Price mass adding</field>
+          <field name="model">product.pricelist.adding</field>
+          <field name="arch" type="xml">
+            <form string="Price List">
+                <group>
+                    <field name="update"/>
+                </group>
+                <group string="Mass adding pricelists">
+                    <field name="item_ids" nolabel="1" context="{'default_base':'list_price', 'default_applied_on' :'1_product'}">
+                        <tree string="Pricelist Items" editable="bottom">
+                            <field name="pricelist_id" string="Pricelist" required='1'/>
+                            <field name="fixed_price" string="Price" required='1'/>
+                            <field name="min_quantity"/>
+                            <field name="date_start"/>
+                            <field name="date_end"/>
+                            <field name="applied_on" invisible="1"/>
+                        </tree>
+                    </field>
+                </group>
+                <footer>
+                    <button name="mass_add" string="Add"  type="object" class="btn-primary" attrs="{'invisible': [('update','in',('update','delete'))]}"/>
+                    <button name="mass_update" string="Update"  type="object" class="btn-primary" attrs="{'invisible': [('update','in',('add','delete'))]}"/>
+                    <button name="mass_delete" string="Delete"  type="object" class="btn-primary" attrs="{'invisible': [('update','in',('add','update'))]}"/>
+                    <button string="Cancel" class="btn-default" special="cancel" />
+                </footer>
+            </form>
+          </field>
+    </record>
+
+    <act_window id="action_product_pricelist_mass_add"
+        key2="client_action_multi"
+        name="Price List mass adding"
+        res_model="product.pricelist.adding"
+        src_model="product.template"
+        groups="product.group_sale_pricelist"
+        view_mode="form" target="new" view_type="form" />
+</odoo>

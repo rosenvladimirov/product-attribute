@@ -16,6 +16,7 @@ Add support for GS1 [GTIN+AI(n)], UDI and HIBC standarts in barcode nomenclature
     "demo" : [],
     "data" : [
         'views/production_lot_views.xml',
+        'views/barcodes_view.xml',
     ],
     'license': 'AGPL-3',
     "installable": True,

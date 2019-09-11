@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="report_invoice_document_with_specification" inherit_id="l10n_bg_extend.report_invoice_document" primary="True">
+            <xpath expr="//td[@name='description']" position="inside">
+                <t t-if="not l.product_id.specifications and l.product_id.product_tmpl_id.specifications">
+                    <br/>
+                    <span t-field="l.product_id.product_tmpl_id.specifications"/>
+                </t>
+                <t t-if="l.product_id.specifications">
+                    <br/>
+                    <span t-field="l.product_id.specifications"/>
+                </t>
+            </xpath>
+        </template>
+    </data>
+</odoo>

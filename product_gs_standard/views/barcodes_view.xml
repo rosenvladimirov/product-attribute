@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<odoo>
+    <record model="ir.ui.view" id="view_barcode_rule_form">
+        <field name="name">Barcode Rule</field>
+        <field name="model">barcode.rule</field>
+        <field name="inherit_id" ref="barcodes.view_barcode_rule_form"/>
+        <field name="arch" type="xml">
+            <field name="type" position="after">
+                <field name="sub_type"/>
+            </field>
+        </field>
+    </record>
+</odoo>

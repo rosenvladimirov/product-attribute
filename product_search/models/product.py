@@ -10,7 +10,7 @@ _logger = logging.getLogger(__name__)
 class ProductProduct(models.Model):
     _inherit = "product.product"
 
-    description_short = fields.Char("Short description", size=19, translate=True)
+    #description_short = fields.Char("Short description", size=19, translate=True)
 
     variant_seller_ids = fields.One2many('product.supplierinfo', 'product_id')
     default_variant_seller_id = fields.Many2one('product.supplierinfo', 'Choice default label')
@@ -32,27 +32,26 @@ class ProductProduct(models.Model):
 
     @api.model
     def name_search(self, name='', args=None, operator='ilike', limit=100):
-        #_logger.info("Search %s:%s:%s" % (name, args, operator))
-        if name:
-            domain += [('description_short', operator, name)]
-            products = self.search(domain, limit=limit)
-            if products:
-                return products.name_get()
-            else:
-                attr = self.env["product.attribute.line"].name_search(name=name)
-                ids = [x[0] for x in attr]
-                if ids:
-                    product_template = self.env['product.template'].search([('attribute_line_ids', 'in', ids)])
-                    domain = [('product_tmpl_id', 'in', [x.id for x in product_template])]
-                    products = self.search(domain, limit=limit)
-                    if products:
-                        return products.name_get()
+        if name and args:
+            attr = self.env["product.attribute.line"].name_search(name=name)
+            ids = [x[0] for x in attr]
+            if ids:
+                product_template = self.env['product.template'].search([('attribute_line_ids', 'in', ids)])
+                domain = [('product_tmpl_id', 'in', [x.id for x in product_template])]
+                products = self.search(domain, limit=limit)
+                if products:
+                    return products.name_get()
+            if name and len([x for x in filter(lambda y: y[0] in ('manufacturer_pref'), args)]) == 0:
+                Product = self.env['product.product']
+                products = Product.search(["|" for x in range(1, len(args))]+[('manufacturer_pref', operator, name)]+args, limit=limit)
+                if products:
+                    return products.name_get()
         return super(ProductProduct, self).name_search(name=name, args=args, operator=operator, limit=limit)
 
 class ProductTemplate(models.Model):
     _inherit = "product.template"
 
-    description_short = fields.Char("Short description", size=19, translate=True)
+    #description_short = fields.Char("Short description", size=19, translate=True)
 
     @api.model
     def name_search(self, name='', args=None, operator='ilike', limit=100):
@@ -63,4 +62,11 @@ class ProductTemplate(models.Model):
         #_logger.info("Filter %s:%s:%s" % (ids, name, args))
         if ids:
             super(ProductTemplate, self).name_search(name="", args=[('id', 'in', ids)], operator='ilike', limit=limit)
+        Product = self.env['product.product']
+        templates = self.browse([])
+        if name and len([x for x in filter(lambda y: y[0] in ('manufacturer_pref'), args)]) == 0:
+            # ["|" for x in range(1, len(args))]
+            products = Product.search([('manufacturer_pref', operator, name)]+args, limit=limit)
+            if products:
+                return products.name_get()
         return super(ProductTemplate, self).name_search(name=name, args=args, operator=operator, limit=limit)
