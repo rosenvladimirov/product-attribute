@@ -68,6 +68,7 @@
                                         <field name="product_id" invisible="1"/>
                                         <field name="product_tmpl_id" string="Product" invisible="1"/>
                                         <field name="min_qty"/>
+                                        <field name="divide_qty"/>
                                         <field name="price" string="Price"/>
                                         <field name="date_start"/>
                                         <field name="date_end"/>
@@ -115,7 +116,7 @@
         </record>
 
         <record id="product_manufacturer_action" model="ir.actions.act_window">
-            <field name="name">Product manufacturer</field>
+            <field name="name">Factory Product Info</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">product.manufacturer</field>
             <field name="view_type">form</field>
@@ -199,13 +200,17 @@
             <field name="inherit_id" ref="product.product_supplierinfo_form_view"/>
             <field name="arch" type="xml">
                 <field name="name" position="before">
-                    <field name="manufacturer_id" widget="selection"/>
+                    <!--  widget="selection" -->
+                    <field name="manufacturer_id"/>
                 </field>
                 <field name="product_name" position="after">
                     <field name="manufacturer_pname" readonly="1"/>
                 </field>
                 <field name="product_code" position="after">
                     <field name="manufacturer_pref" readonly="1"/>
+                </field>
+                <field name="min_qty" position="before">
+                    <field name="divide_qty"/>
                 </field>
             </field>
         </record>
@@ -216,6 +221,9 @@
             <field name="arch" type="xml">
                 <field name="name" position="after">
                     <field name="manufacturer_id"/>
+                </field>
+                <field name="min_qty" position="after">
+                    <field name="divide_qty"/>
                 </field>
             </field>
         </record>

@@ -15,7 +15,7 @@
                     <field name="use_product_description" string="Use product description"/>
                 </field>
                 <xpath expr="//notebook" position="inside">
-                    <page name="print_properties" string="Properties for Print">
+                    <page name="print_properties" string="Properties for Print" groups="product_properties.group_properties_print">
                         <field name="print_properties">
                             <form string="Properties for print">
                                 <group>

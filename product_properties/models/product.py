@@ -7,9 +7,15 @@ from lxml import etree
 from copy import deepcopy
 import os
 import json
+import re
 
 from odoo import api, fields, models, tools, _
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, ValidationError
+from odoo.osv import expression
+
+from odoo.addons import decimal_precision as dp
+
+from odoo.tools import float_compare, pycompat
 
 import logging
 _logger = logging.getLogger(__name__)
@@ -45,6 +51,7 @@ class ProductProduct(models.Model):
                 record.product_properties_has = True
             else:
                 record.product_properties_has = False
+
     @api.multi
     def _compute_tproduct_properties_ids(self):
         for record in self:
@@ -114,9 +121,39 @@ class ProductProduct(models.Model):
 
     @api.multi
     def _select_seller(self, partner_id=False, quantity=0.0, date=None, uom_id=False):
-        res = super(ProductProduct, self)._select_seller(partner_id=partner_id, quantity=quantity, date=date, uom_id=uom_id)
-        if self.env.context.get('manufacturer_id', False):
-            return res.filtered(lambda r: r.manufacturer_id == self.env.context.get('manufacturer_id'))
+        self.ensure_one()
+        if date is None:
+            date = fields.Date.context_today(self)
+        precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
+
+        res = self.env['product.supplierinfo']
+        sellers = self.seller_ids
+        if self.env.context.get('force_company'):
+            sellers = sellers.filtered(lambda s: not s.company_id or s.company_id.id == self.env.context['force_company'])
+        if self._context.get('manufacturer_id', False):
+            sellers = sellers.filtered(lambda r: r.manufacturer_id and r.manufacturer_id.id == self._context.get('manufacturer_id') or True)
+        for seller in sellers:
+            # Set quantity in UoM of seller
+            quantity_uom_seller = quantity
+            if quantity_uom_seller and uom_id and uom_id != seller.product_uom:
+                quantity_uom_seller = uom_id._compute_quantity(quantity_uom_seller, seller.product_uom)
+            divide_qty = seller.divide_qty > 0.0 or quantity_uom_seller
+
+            if seller.date_start and seller.date_start > date:
+                continue
+            if seller.date_end and seller.date_end < date:
+                continue
+            if partner_id and seller.name not in [partner_id, partner_id.parent_id]:
+                continue
+            if float_compare(quantity_uom_seller, seller.min_qty, precision_digits=precision) == -1:
+                continue
+            if quantity_uom_seller % divide_qty != 0:
+                continue
+            if seller.product_id and seller.product_id != self:
+                continue
+
+            res |= seller
+            break
         return res
 
     @api.onchange('categ_ids')
@@ -229,16 +266,18 @@ class ProductProduct(models.Model):
 
     def _compute_datasheet_ids(self):
         for product in self:
-            domain = ['|',
+            domain = ['|','|',
                       '&', ('res_model', '=', 'product.product'), ('res_id', '=', product.id),
+                      '&', ('res_model', '=', 'res.partner'), ('res_id', '=', self.manufacturer_id.id),
                       '&', ('res_model', '=', 'product.brand'), ('res_id', '=', product.product_brand_id.id)
                       ]
             product.datasheet_ids = [x['id'] for x in self.env['product.manufacturer.datasheets'].search_read(domain, ['name'])]
 
     @api.one
     def _compute_has_datasheets(self):
-        domain = ['|',
+        domain = ['|','|',
                     '&', ('res_model', '=', 'product.product'), ('res_id', '=', self.id),
+                    '&', ('res_model', '=', 'res.partner'), ('res_id', '=', self.manufacturer_id.id),
                     '&', ('res_model', '=', 'product.brand'), ('res_id', '=', self.product_brand_id.id)
                   ]
         nbr_datasheet = self.env['product.manufacturer.datasheets'].search_count(domain)
@@ -246,8 +285,9 @@ class ProductProduct(models.Model):
 
     @api.multi
     def action_see_datasheets(self):
-        domain = ['|',
+        domain = ['|','|',
                     '&', ('res_model', '=', 'product.product'), ('res_id', '=', self.id),
+                    '&', ('res_model', '=', 'res.partner'), ('res_id', '=', self.manufacturer_id.id),
                     '&', ('res_model', '=', 'product.brand'), ('res_id', '=', self.product_brand_id.id)
                   ]
 
@@ -267,7 +307,7 @@ class ProductProduct(models.Model):
                         Use this feature to store any files, like drawings or specifications.
                     </p>'''),
             'limit': 80,
-            'context': "{'default_res_model': '%s','default_res_id': %d, 'default_manufacturer': %d}" % ('product.product', self.id, self.manufacturer.id)
+            'context': "{'default_res_model': '%s','default_res_id': %d, 'default_manufacturer': %d, 'partner_id': %d}" % ('product.product', self.id, self.manufacturer.id, self.manufacturer_id)
             }
 
 
@@ -277,10 +317,12 @@ class SupplierInfo(models.Model):
     manufacturer_id = fields.Many2one("product.manufacturer", "Manufacturer info")
     manufacturer_pref = fields.Char(related="manufacturer_id.manufacturer_pref", string='Manuf. Product Code')
     manufacturer_pname = fields.Char(related="manufacturer_id.manufacturer_pname", string='Manuf. Product Name')
+    divide_qty = fields.Float('Divide Quantity', default=1.0, required=True,
+        help="The minimal quantity to purchase from this vendor, expressed in the vendor Product Unit of Measure if not any, in the default unit of measure of the product otherwise.")
 
     @api.onchange('manufacturer_id')
     def _onchange_manufacturer_id(self):
-        if self.manufacturer_id:
+        if self.manufacturer_id and not self._context.get('default_manufacturer_id', False):
             manufacturer = self.env['product.manufacturer'].search([('id', '=', self.manufacturer_id.id)])
             #_logger.info("Manufacturer %s:%s" % (manufacturer.supplierinfo_ids.ids, self.id))
             if not manufacturer:

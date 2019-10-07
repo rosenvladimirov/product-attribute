@@ -3,7 +3,7 @@
     <data>
         <template id="l10n_bg_report_invoice_document_properties" inherit_id="l10n_bg_extend.report_invoice_document">
             <xpath expr="//td[@name='description']" position="replace">
-                <t t-if="l.use_product_description">
+                <t t-if="o.use_product_description">
                     <td name="description">
                         <span t-if="l.discount==0.0">
                             <span t-field="l.name"/>
@@ -24,6 +24,9 @@
                 </t>
                 <t t-else="">
                     <td name="description">
+                        <t t-set="line" t-value="l"/>
+                        <t t-set="properties_print" t-value="l.invoice_id.print_properties"/>
+                        <t t-set="lot_ids" t-value="l.move_lines.filtered(lambda r: r.lot_id != False)"/>
                         <t t-call="product_properties.product_properties_description"/>
                     </td>
                 </t>
@@ -31,7 +34,7 @@
         </template>
         <template id="report_invoice_document_properties" inherit_id="report_theming.report_invoice_document">
             <xpath expr="//td[@name='description']" position="replace">
-                <t t-if="l.use_product_description">
+                <t t-if="o.use_product_description">
                     <td name="description">
                         <span t-if="l.discount==0.0">
                             <span t-field="l.name"/>
@@ -52,6 +55,9 @@
                 </t>
                 <t t-else="">
                     <td name="description">
+                        <t t-set="line" t-value="l"/>
+                        <t t-set="properties_print" t-value="l.invoice_id.print_properties"/>
+                        <t t-set="lot_ids" t-value="l.move_lines.filtered(lambda r: r.lot_id != False)"/>
                         <t t-call="product_properties.product_properties_description"/>
                     </td>
                 </t>

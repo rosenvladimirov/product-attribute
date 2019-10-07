@@ -18,7 +18,7 @@ _img_path = os.path.abspath(os.path.join(os.path.dirname(os.path.dirname(__file_
 
 class ProductManufacturer(models.Model):
     _name = "product.manufacturer"
-    _description = "Information about a product manufacturer"
+    _description = "Information about a factory product"
 
     @api.depends('manufacturer', 'manufacturer_pref')
     def _compute_display_name(self):
@@ -79,7 +79,7 @@ class ProductManufacturer(models.Model):
                                         relation="rel_mnf_suppinfo",
                                         column1="manufacturer_id",
                                         column2="supplierinfo_id",
-                                        string='Product destributor')
+                                        string='Product destributor', copy=False)
     #notified_body_ids = fields.Many2many('res.partner', string='Sertificates Notified Body', related='manufacturer.notified_body_ids')
 
     product_variant_count = fields.Integer('Variant Count', related='product_tmpl_id.product_variant_count')
@@ -96,17 +96,26 @@ class ProductManufacturer(models.Model):
     # datasheet = fields.Binary(string="Datasheet", track_visibility="onchange")
     # fname = fields.Char(string="File Name", track_visibility="onchange")
 
-    @api.depends('manufacturer', 'product_tmpl_id')
+    @api.depends('manufacturer', 'product_tmpl_id', 'manufacturer_pref')
     def name_get(self):
         result = []
         for manufacturer in self:
             if self._context.get('display_code', False):
                 name = "%s%s" % (manufacturer.product_tmpl_id and "[%s] " % manufacturer.product_tmpl_id.name or "",
-                                 manufacturer.manufacturer.name)
+                                 manufacturer.manufacturer_pname or manufacturer.manufacturer.name)
             else:
-                name = manufacturer.manufacturer.name
+                product_name = manufacturer.product_tmpl_id.default_code and "[%s] " % manufacturer.product_tmpl_id.default_code or False
+                product_name = product_name and product_name or manufacturer.product_id.default_code and "[%s] " % manufacturer.product_id.default_code or ''
+                name = "%s%s" % (manufacturer.manufacturer_pref and "[%s] " % manufacturer.manufacturer_pref or product_name, manufacturer.manufacturer_pname or manufacturer.manufacturer.name)
             result.append((manufacturer.id, name))
         return result
+
+    @api.onchange('supplierinfo_ids')
+    def _onchange_supplierinfo_ids(self):
+        if self.product_tmpl_id and self.supplierinfo_ids:
+            self.product_tmpl_id.seller_ids = (6, False, self.supplierinfo_ids.ids)
+        if self.product_id and self.supplierinfo_ids:
+            self.product_id.product_tmpl_id.variant_seller_ids = (6, False, self.supplierinfo_ids.ids)
 
     @api.depends('product_variant_ids', 'product_variant_ids.packaging_ids', 'product_id', 'product_id.packaging_ids')
     def _compute_packaging_ids(self):
@@ -195,7 +204,7 @@ class ProductManufacturer(models.Model):
                         Use this feature to store any files, like drawings or specifications.
                     </p>'''),
             'limit': 80,
-            'context': "{'default_res_model': '%s','default_res_id': %d, 'default_manufacturer_id': %d}" % (
+            'context': "{'default_res_model': '%s','default_res_id': %d, 'default_manufacturer_id': %d, 'hide_manufacturer': True}" % (
             'product.product',
             (self.product_variant_count > 1 and self.product_id) and self.product_id.id or self.product_variant_id.id,
             self.id)
@@ -212,8 +221,10 @@ class ProductManufacturerDatasheets(models.Model):
 
     ir_attachment_id = fields.Many2one('ir.attachment', string='Related attachment', required=True, ondelete='cascade')
     active = fields.Boolean('Active', default=True)
+    #res_view_id = fields.Many2many(compute='_compute_res_view_id')
     version = fields.Char('Version')
-    manufacturer_id = fields.Many2one('product.manufacturer', 'Manufacturer')
+    manufacturer_id = fields.Many2one('product.manufacturer', string='Product Manufacturer')
+    manufacturer_ids = fields.Many2many('product.manufacturer', string='Products Manufacturer')
     manufacturer = fields.Many2one('res.partner', string='Manufacturer', related="manufacturer_id.manufacturer", store=True)
     product_brand_id = fields.Many2one('product.brand', string='Brand', help='Select a brand for this product')
     product_tmpl_id = fields.Many2one('product.template', 'Product Template')

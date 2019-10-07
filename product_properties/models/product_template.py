@@ -38,13 +38,15 @@ class ProductTemplate(models.Model):
     def _compute_datasheet_ids(self):
         for product in self:
             if self.product_variant_count > 0:
-                domain = ['|',
+                domain = ['|','|',
                           '&', ('res_model', '=', 'product.product'), ('res_id', 'in', product.product_variant_ids.ids),
+                          '&', ('res_model', '=', 'res.partner'), ('res_id', '=', self.manufacturer_id.id),
                           '&', ('res_model', '=', 'product.brand'), ('res_id', '=', product.product_brand_id.id)
                           ]
             else:
-                domain = ['|',
+                domain = ['|','|',
                           '&', ('res_model', '=', 'product.product'), ('res_id', '=', product.product_variant_id.id),
+                          '&', ('res_model', '=', 'res.partner'), ('res_id', '=', self.manufacturer_id.id),
                           '&', ('res_model', '=', 'product.brand'), ('res_id', '=', product.product_brand_id.id)
                           ]
             product.datasheet_ids = [x['id'] for x in self.env['product.manufacturer.datasheets'].search_read(domain, ['name'])]
@@ -83,6 +85,25 @@ class ProductTemplate(models.Model):
             self.curr_categ_ids = [(4, id, False) for id in ids]
         else:
             self.curr_categ_ids = False
+
+    @api.onchange('manufacturer')
+    def _onchange_manufacturer(self):
+        for rec in self:
+            if rec.manufacturer:
+                for product in rec.product_variant_ids:
+                    product.manufacturer = rec.manufacturer
+            else:
+                for product in rec.product_variant_ids:
+                    product.manufacturer = False
+
+    @api.onchange('manufacturer_ids')
+    def _onchange_manufacturer_ids(self):
+        for rec in self:
+            if rec.manufacturer_ids:
+                if len(rec.manufacturer_ids.ids) > 0:
+                    rec.manufacturer = rec.manufacturer_ids[0]
+                else:
+                    rec.manufacturer = False
 
     @api.onchange('categ_ids')
     def _onchange_categ_ids(self):
@@ -168,13 +189,15 @@ class ProductTemplate(models.Model):
     @api.one
     def _compute_get_domain(self):
         if self.product_variant_count > 0:
-            domain = ['|',
+            domain = ['|','|',
                         '&', ('res_model', '=', 'product.product'), ('res_id', 'in', self.product_variant_ids.ids),
+                        '&', ('res_model', '=', 'res.partner'), ('res_id', '=', self.manufacturer_id.id),
                         '&', ('res_model', '=', 'product.brand'), ('res_id', '=', self.product_brand_id.id)
                       ]
         else:
-            domain = ['|',
+            domain = ['|','|',
                         '&', ('res_model', '=', 'product.product'), ('res_id', '=', self.product_variant_id.id),
+                        '&', ('res_model', '=', 'res.partner'), ('res_id', '=', self.manufacturer_id.id),
                         '&', ('res_model', '=', 'product.brand'), ('res_id', '=', self.product_brand_id.id)
                       ]
         return domain
@@ -182,13 +205,15 @@ class ProductTemplate(models.Model):
     @api.one
     def _compute_has_datasheets(self):
         if self.product_variant_count > 0:
-            domain = ['|',
+            domain = ['|','|',
                         '&', ('res_model', '=', 'product.product'), ('res_id', 'in', self.product_variant_ids.ids),
+                        '&', ('res_model', '=', 'res.partner'), ('res_id', '=', self.manufacturer_id.id),
                         '&', ('res_model', '=', 'product.brand'), ('res_id', '=', self.product_brand_id.id)
                       ]
         else:
-            domain = ['|',
+            domain = ['|','|',
                         '&', ('res_model', '=', 'product.product'), ('res_id', '=', self.product_variant_id.id),
+                        '&', ('res_model', '=', 'res.partner'), ('res_id', '=', self.manufacturer_id.id),
                         '&', ('res_model', '=', 'product.brand'), ('res_id', '=', self.product_brand_id.id)
                       ]
         nbr_datasheet = self.env['product.manufacturer.datasheets'].search_count(domain)
@@ -197,13 +222,15 @@ class ProductTemplate(models.Model):
     @api.multi
     def action_see_datasheets(self):
         if self.product_variant_count > 0:
-            domain = ['|',
+            domain = ['|','|',
                         '&', ('res_model', '=', 'product.product'), ('res_id', 'in', self.product_variant_ids.ids),
+                        '&', ('res_model', '=', 'res.partner'), ('res_id', '=', self.manufacturer_id.id),
                         '&', ('res_model', '=', 'product.brand'), ('res_id', '=', self.product_brand_id.id)
                       ]
         else:
-            domain = ['|',
+            domain = ['|','|',
                         '&', ('res_model', '=', 'product.product'), ('res_id', '=', self.product_variant_id.id),
+                        '&', ('res_model', '=', 'res.partner'), ('res_id', '=', self.manufacturer_id.id),
                         '&', ('res_model', '=', 'product.brand'), ('res_id', '=', self.product_brand_id.id)
                       ]
 
@@ -223,7 +250,7 @@ class ProductTemplate(models.Model):
                         Use this feature to store any files, like drawings or specifications.
                     </p>'''),
             'limit': 80,
-            'context': "{'default_res_model': '%s','default_res_id': %d, 'default_manufacturer': %d}" % ('product.product', self.product_variant_id.id, self.manufacturer.id)
+            'context': "{'default_res_model': '%s','default_res_id': %d, 'default_manufacturer': %d, 'partner_id': %d}" % ('product.product', self.product_variant_id.id, self.manufacturer.id, self.manufacturer_id)
             }
 
     @api.model
@@ -258,7 +285,7 @@ class ProductTemplate(models.Model):
     def write(self, vals):
         if vals.get('massedit') and vals.get('categ_ids'):
             category = self.env['product.properties.category'].search([('id', 'in', [x[1] for x in vals.get('categ_ids')])])
-            _logger.info("LINE 1 %s:%s" % (vals.get('categ_ids'), category))
+            #_logger.info("LINE 1 %s:%s" % (vals.get('categ_ids'), category))
             #del vals['massedit']
             for prod in self:
                 ret = []

@@ -10,9 +10,9 @@ _logger = logging.getLogger(__name__)
 class Product(models.Model):
     _inherit = 'product.product'
 
-    specifications = fields.Text('Specification', translate=True, help="Plase fill the specifications for this product variant")
+    specifications = fields.Text('Specification', translate=True, help="Please fill the specifications for this product variant")
 
     #@api.onchange('specifications')
     #def _on_change_specifications(self):
-    #    if self.product_tmpl_id.specifications:
-    #        self.product_tmpl_id.specifications =
+    #    if self.product_tmpl_id.specifications and not self.specifications:
+    #        self.specifications = self.product_tmpl_id.specifications

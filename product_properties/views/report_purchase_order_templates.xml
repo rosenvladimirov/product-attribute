@@ -2,9 +2,35 @@
 <odoo>
     <template id="report_purchaseorder_document_properties" inherit_id="purchase.report_purchaseorder_document">
         <xpath expr="//td[@name='linename']" position="replace">
-            <td name="linename">
-                <t t-call="product_properties.product_properties_description"/>
-            </td>
+            <t t-if="o.use_product_description">
+                <td name="linename">
+                    <t t-if="line.manufacturer_id">
+                        <p align="left">
+                            <t t-if="line.manufacturer_id.manufacturer_pref and line.manufacturer_id.manufacturer_pname">
+                                [<span t-esc="line.manufacturer_id.manufacturer_pref"/>] <span t-esc="line.manufacturer_id.manufacturer_pname"/>
+                            </t>
+                            <t t-if="not line.manufacturer_id.manufacturer_pref and not line.manufacturer_id.manufacturer_pname">
+                                <span t-field="line.manufacturer_id"/>
+                            </t>
+                            <t t-if="line.manufacturer_id.manufacturer_pname and not line.manufacturer_id.manufacturer_pref">
+                                <span t-esc="line.manufacturer_id.manufacturer_pname"/>
+                            </t>
+                            <br/>
+                            [<span t-esc="line.product_id.default_code"/>] by <span t-field="line.product_uom.name" groups="product.group_uom"/>
+                        </p>
+                    </t>
+                    <t t-else="">
+                        <span t-field="line.name"/>
+                    </t>
+                </td>
+            </t>
+            <t t-else="">
+                <td name="linename">
+                    <t t-set="properties_print" t-value="o.print_properties"/>
+                    <t t-set="lot_ids" t-value="False"/>
+                    <t t-call="product_properties.product_properties_description"/>
+                </td>
+            </t>
         </xpath>
     </template>
     <template id="report_purchaseorder_html">
@@ -32,7 +58,8 @@
                                 <td><span t-esc="line_index+1"/></td>
                                 <td name="linename">
                                     <t t-set="properties_print" t-value="line.order_id.print_properties"/>
-                                    <t t-call="product_properties.product_properties_description"/>
+                                    <t t-set="lot_ids" t-value="False"/>
+                                    <t t-call="product_properties.product_properties_description_force_print"/>
                                 </td>
                                 <td class="text-center" groups="l10n_bg_extend.group_show_date_planned">
                                     <span t-field="line.date_planned" t-field-options="{&quot;format&quot;: &quot;dd/MM/yyyy&quot;}"/>

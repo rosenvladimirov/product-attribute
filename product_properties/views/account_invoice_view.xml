@@ -7,7 +7,7 @@
             <field name="inherit_id" ref="account.invoice_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//notebook" position="inside">
-                    <page name="print_properties" string="Properties for Print">
+                    <page name="print_properties" string="Properties for Print" groups="product_properties.group_properties_print">
                         <field name="print_properties">
                             <form string="Properties for print">
                                 <group>
@@ -23,6 +23,9 @@
                             </tree>
                         </field>
                     </page>
+                </xpath>
+                <xpath expr="//page[@name='other_info']//field[@name='name']" position="after">
+                    <field name="use_product_description"/>
                 </xpath>
             </field>
         </record>

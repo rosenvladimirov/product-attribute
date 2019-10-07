@@ -2,17 +2,33 @@
 <odoo>
     <template id="report_saleorder_document_inherit_sale_properties" inherit_id="l10n_bg_extend.report_saleorder_document">
         <xpath expr="//td[@name='linename']" position="replace">
-            <td name="linename">
-                <t t-set="line" t-value="l"/>
-                <t t-set="properties_print" t-value="l.order_id.print_properties"/>
-                <t t-call="product_properties.product_properties_description"/>
-            </td>
+            <t t-if="l.order_id.use_product_description">
+                <td name="linename">
+                    <span t-field="l.name"/>
+                    <t t-if="has_hscode">
+                        <t t-if="l.local_code">
+                            <span>(H.S.Intrastat Code: </span><span t-field="l.local_code"/><span>::</span>
+                            <t t-if="l.product_id.origin_country_id">
+                                <span>Origin: </span><span t-esc="l.product_id.origin_country_id.name"/><span>)</span>
+                            </t>
+                        </t>
+                    </t>
+                </td>
+            </t>
+            <t t-else="">
+                <td name="linename">
+                    <t t-set="line" t-value="l"/>
+                    <t t-set="properties_print" t-value="l.order_id.print_properties"/>
+                    <t t-set="lot_ids" t-value="False"/>
+                    <t t-call="product_properties.product_properties_description"/>
+                </td>
+            </t>
         </xpath>
     </template>
     <template id="report_saleorder_html">
         <t t-call="product_properties.internal_layout">
-            <t t-set="doc" t-value="doc.with_context({'lang':doc.partner_id.lang})" />
-            <t t-set="o" t-value="doc.with_context({'lang':doc.partner_id.lang})" />
+            <t t-set="doc" t-value="doc.with_context({'lang':doc.env.user.sudo().lang})" />
+            <t t-set="o" t-value="doc.with_context({'lang':doc.env.user.sudo().lang})" />
             <div class="page">
                 <div class="row" name="salebody">
                     <div class="col-xs-12">
@@ -68,7 +84,8 @@
                                                 <td name="linename">
                                                     <t t-set="line" t-value="l"/>
                                                     <t t-set="properties_print" t-value="l.order_id.print_properties"/>
-                                                    <t t-call="product_properties.product_properties_description"/>
+                                                    <t t-set="lot_ids" t-value="False"/>
+                                                    <t t-call="product_properties.product_properties_description_force_print"/>
                                                 </td>
                                                 <td class="text-right">
                                                     <span t-field="l.product_uom_qty"/>

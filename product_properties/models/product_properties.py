@@ -45,6 +45,7 @@ class ProductPropertiesPrint(models.Model):
     partner_id = fields.Many2one('res.partner', string='Partner', index=True)
     order_id = fields.Many2one("sale.order", string="Sale order", index=True)
     invoice_id = fields.Many2one("account.invoice", string="Invoice", index=True)
+    picking_id = fields.Many2one("stock.picking", string="Transfer Reference", index=True)
     system_properties = fields.Boolean('System used')
     sequence = fields.Integer("Sequence", default=1, help="The first in the sequence is the default one.")
 
@@ -62,6 +63,7 @@ class ProductPropertiesPrint(models.Model):
 class ProductProperties(models.Model):
     _name = "product.properties"
     _description = "Product properties"
+    _order = "sequence, id"
 
     @api.multi
     def _display_type_range(self):
@@ -121,7 +123,7 @@ class ProductProperties(models.Model):
     type_field_target = fields.Many2one('ir.model.fields', string='Target/Source Odoo field',
                                   help="""Choice target/source field for collection data.
                                   target/source in odoo model.""",
-                                  domain="[('model_id', '=', type_field_model_id), ('ttype', 'in', ['char', 'many2one']), ('name', 'not in', ('id', 'create_uid','create_date', 'write_date', 'write_uid', '__last_update', 'lines'))]")
+                                  domain="[('model_id', '=', type_field_model_id), ('ttype', 'in', ['char', 'monetary', 'float', 'many2one']), ('name', 'not in', ('id', 'create_uid','create_date', 'write_date', 'write_uid', '__last_update', 'lines'))]")
 
     type_package_id = fields.Many2one("product.properties.package", string="Value for Package")
     type_package = fields.Char("Value Range", compute='_display_type_package')
@@ -210,13 +212,17 @@ class ProductProperties(models.Model):
                     model_obj = 'product.properties.type'
                     ttype = 'char'
                     name = 'name'
-                model = self.env[model_obj].browse(id)
+                model = self.env[model_obj].with_context(self._context, display_default_code=False).browse(id)
                 if ttype == 'char':
                     field_value.type_field = getattr(model, name)
+                elif ttype == 'float':
+                    field_value.type_field = "%d" % getattr(model, name)
+                elif ttype == 'monetary':
+                    field_value.type_field = "%d" % getattr(model, name)
                 elif ttype == 'many2one':
                     field = getattr(model, name)
                     relation = field_value.type_field_target.relation
-                    model = self.env[relation].browse([field.id])
+                    model = self.env[relation].with_context(self._context, display_default_code=False).browse([field.id])
                     if 'display_name' in model._fields:
                         field_value.type_field = getattr(model, 'display_name')
                     else:
@@ -335,7 +341,7 @@ class ProductPropertiesCategoryLines(models.Model):
     type_field_target = fields.Many2one('ir.model.fields', string='Target/Source Odoo field',
                                   help="""Choice target/source field for collection data.
                                   target/source in odoo model.""",
-                                  domain="[('model_id', '=', type_field_model_id), ('ttype', 'in', ['char', 'many2one']), ('name', 'not in', ('id', 'create_uid','create_date', 'write_date', 'write_uid', '__last_update', 'lines'))]")
+                                  domain="[('model_id', '=', type_field_model_id), ('ttype', 'in', ['char', 'monetary', 'float', 'many2one']), ('name', 'not in', ('id', 'create_uid','create_date', 'write_date', 'write_uid', '__last_update', 'lines'))]")
     type_package_id = fields.Many2one(related="name.type_package_id", string="Value for Package", store=True)
     type_package = fields.Char("Value Range", compute='_display_type_package')
     dimensions_x = fields.Float(related="name.dimensions_x", string="X Dimensions", store=True)
@@ -402,6 +408,7 @@ class ProductPropertiesCategoryLines(models.Model):
 class ProductPropertiesType(models.Model):
     _name = "product.properties.type"
     _description = "The Properties types"
+    _order = "sequence, id"
 
     def _get_type_field_model_id(self):
         return [('model', 'in', ['product.product', 'product.template', 'product.pricelist.item', 'sale.order.line',
@@ -452,54 +459,40 @@ class ProductPropertiesType(models.Model):
             website = url.replace(scheme='http').to_url()
         return website
 
+    def get_product_properties_break(self, row, br):
+        return row % br
+
     def get_product_properties_print(self, line, product, properties_print=False, lot_ids=False, description=False):
         res = {}
         ret = []
         print_ids = [x.name.id for x in properties_print if x.print]
-        for prop_line in product.tproduct_properties_ids:
-            if properties_print and prop_line.name.id in print_ids:
-                if line and prop_line.type_field_name in line._fields:
-                    prop_line.type_field_model = line._name
-                    prop_line.model_obj_id = line.id
-                if lot_ids and prop_line.name.type_fields == 'lot':
-                    res[prop_line.name.name] = {'value': lots_ids and '-'.join([x.name for x in lot_ids]) or '', 'attrs': False, 'image': False}
-                elif lot_ids and line.name.type_fields == 'use_date':
-                    res[prop_line.name.name] = {'value': lots_ids and '-'.join(['%s:%s' % (x.name, x.use_date) for x in lot_ids]) or '', 'attrs': False, 'image': False}
-                elif lot_ids and prop_line.name.type_fields == 'gs1':
-                    res[prop_line.name.name] = {'value': lots_ids and '-'.join([x.gs1 for x in lot_ids]) or '', 'attrs': False, 'image': False}
-                elif prop_line.name.type_fields == 'pricelist':
-                    prop_line.type_field_model = line._name
-                    prop_line.model_obj_id = line.id
-                    prop_line.type_field_ttype = 'many2one'
-                    prop_line.type_field_name = 'pricelist_id'
-                    res[prop_line.name.name] = {'value': prop_line.type_display, 'attrs': prop_line.type_display_attrs,
-                                                'image': prop_line.image_small}
-                else:
-                    res[prop_line.name.name] = {'value': prop_line.type_display, 'attrs': prop_line.type_display_attrs, 'image': prop_line.image_small}
-        for prop_line in product.product_properties_ids:
-            if properties_print and prop_line.name.id in print_ids:
-                if line and prop_line.type_field_name in line._fields:
-                    prop_line.type_field_model = line._name
-                    prop_line.model_obj_id = line.id
-                if lot_ids and prop_line.name.type_fields == 'lot':
-                    res[prop_line.name.name] = {'value': lots_ids and '-'.join([x.name for x in lot_ids]) or '', 'attrs': False, 'image': False}
-                elif lot_ids and prop_line.name.type_fields == 'use_date':
-                    res[prop_line.name.name] = {'value': lots_ids and '-'.join(['%s:%s' % (x.name, x.use_date) for x in lot_ids]) or '', 'attrs': False, 'image': False}
-                elif lot_ids and prop_line.name.type_fields == 'gs1':
-                    res[prop_line.name.name] = {'value': lots_ids and '-'.join([x.gs1 for x in lot_ids]) or '', 'attrs': False, 'image': False}
-                elif prop_line.name.type_fields == 'pricelist':
-                    prop_line.type_field_model = line._name
-                    prop_line.model_obj_id = line.id
-                    prop_line.type_field_ttype = 'many2one'
-                    prop_line.type_field_name = 'pricelist_id'
-                    res[prop_line.name.name] = {'value': prop_line.type_display, 'attrs': prop_line.type_display_attrs,
-                                                'image': prop_line.image_small}
-                else:
-                    res[prop_line.name.name] = {'value': prop_line.type_display, 'attrs': prop_line.type_display_attrs, 'image': prop_line.image_small}
-        for k, v in res.items():
-            if v['value']:
-                ret.append({'label': k, 'value': v})
-        #_logger.info("RETURN %s" % ret)
+        for properties in (product.tproduct_properties_ids, product.product_properties_ids):
+            if self._context.get('force_print'):
+                print_ids = [x.name.id for x in properties]
+            for prop_line in properties.sorted(key=lambda r: r.name.sequence):
+                if properties_print and prop_line.name.id in print_ids:
+                    if line and prop_line.type_field_name in line._fields:
+                        prop_line.type_field_model = line._name
+                        prop_line.model_obj_id = line.id
+                    if lot_ids and not isinstance(lot_ids, pycompat.string_types) and prop_line.name.type_fields == 'lot':
+                        res[prop_line.name.name] = {'value': '-'.join(map(lambda lot: lot.lot_id and lot.lot_id.name or '', lot_ids)), 'attrs': False, 'image': False, 'sequence': prop_line.name.sequence}
+                    elif lot_ids and not isinstance(lot_ids, pycompat.string_types) and prop_line.name.type_fields == 'use_date':
+                        res[prop_line.name.name] = {'value': '-'.join(map(lambda lot: lot.lot_id and '%s:%s' % (x.name, x.use_date) or '', lot_ids)), 'attrs': False, 'image': False, 'sequence': prop_line.name.sequence}
+                    elif lot_ids and not isinstance(lot_ids, pycompat.string_types) and prop_line.name.type_fields == 'gs1':
+                        res[prop_line.name.name] = {'value': '-'.join(map(lambda lot: lot.lot_id and lot.lot_id.gs1 or '', lot_ids)), 'attrs': False, 'image': False, 'sequence': prop_line.name.sequence}
+                    elif lot_ids and isinstance(lot_ids, pycompat.string_types):
+                        res[prop_line.name.name] = {'value': lots_ids and '-'.join([x for x in lot_ids]) or '', 'attrs': False, 'image': False, 'sequence': prop_line.name.sequence}
+                    elif prop_line.name.type_fields == 'pricelist':
+                        prop_line.type_field_model = line._name
+                        prop_line.model_obj_id = line.id
+                        prop_line.type_field_ttype = 'many2one'
+                        prop_line.type_field_name = 'pricelist_id'
+                        res[prop_line.name.name] = {'value': prop_line.type_display, 'attrs': prop_line.type_display_attrs,
+                                                    'image': prop_line.image_small, 'sequence': prop_line.name.sequence}
+                    else:
+                        res[prop_line.name.name] = {'value': prop_line.type_display, 'attrs': prop_line.type_display_attrs, 'image': prop_line.image_small, 'sequence': prop_line.name.sequence}
+        for k, v in dict(sorted(res.items(), key=lambda x: x[1]['sequence'])).items():
+            ret.append({'label': k, 'value': v})
         return ret
 
     @api.model

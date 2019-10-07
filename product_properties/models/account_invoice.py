@@ -13,6 +13,7 @@ class AccountInvoice(models.Model):
 
     use_product_description = fields.Boolean(default=True)
     print_properties = fields.One2many('product.properties.print', 'invoice_id', 'Print properties')
+    #print_properties = fields.One2many('product.properties.print', 'partner_id', related='partner_id.print_properties', string='Print properties')
 
     ## bug Velimira report 26-08-2019
     #@api.multi
@@ -36,3 +37,12 @@ class AccountInvoice(models.Model):
     #            if values:
     #                invoice.update({'print_properties': values})
     #    return super(AccountInvoice, self).ensure_one()._onchange_partner_id()
+
+class AccountInvoiceLine(models.Model):
+    _inherit = "account.invoice.line"
+
+    has_propertis = fields.Boolean(compute="_get_has_propertis")
+
+    def _get_has_propertis(self):
+        for rec in self:
+            rec.has_propertis = len(rec.invoice_id.print_properties.ids) > 0

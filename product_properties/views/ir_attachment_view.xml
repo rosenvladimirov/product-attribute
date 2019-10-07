@@ -92,7 +92,7 @@
                                     </div>
                                     <div class="o_kanban_record_top">
                                         <div class="o_kanban_record_headings">
-                                           <div class="pp_ds_name">
+                                           <div class="pp_ds_name" data-toggle="tooltip" t-attf-title="#{record.name.raw_value}">
                                                 <t name="name" t-esc="record.name.value" />
                                             </div>
                                         </div>
@@ -165,7 +165,9 @@
                             <field name="is_date"/>
                         </group>
                         <group>
-                            <field name="manufacturer_id" domain="[('product_variant_ids', 'in', [res_id])]"/>
+                            <!-- <field name="manufacturer_id" domain="[('product_variant_ids', 'in', [res_id])]"/> -->
+                            <field name="manufacturer_ids" widget="many2many_tags" invisible="context.get('hide_manufacturer')" domain="[('manufacturer', '=', context.get('partner_id'))]"/>
+                            <field name="manufacturer"/>
                             <field name="version"/>
                         </group>
                     </group>
