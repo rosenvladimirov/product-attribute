@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_tax_form" model="ir.ui.view">
+            <field name="name">account.tax.form</field>
+            <field name="model">account.tax</field>
+            <field name="inherit_id" ref="account.view_tax_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//notebook/page[0]/group[1]" position="replace">
+                    <group name="type">
+                        <field name="amount_type" />
+                        <field name="hs_code_id" attrs="{'invisible':[('amount_type','not in', ('percent_taric', 'fixed_taric_base_on_weight'))]}"/>
+                        <label for="amount" attrs="{'invisible':[('amount_type','not in', ('fixed', 'percent', 'division', 'percent_taric', 'fixed_taric_base_on_weight'))]}"/>
+                        <div attrs="{'invisible':[('amount_type','not in', ('fixed', 'percent', 'division', 'percent_taric', 'fixed_taric_base_on_weight'))]}">
+                            <field name="amount" class="oe_inline" />
+                            <label string="%" class="oe_inline" attrs="{'invisible':[('amount_type','in',('fixed', 'fixed_taric_base_on_weight'))]}" />
+                            <label string="p/st" class="oe_inline" attrs="{'invisible':[('amount_type','not in',('fixed_taric_base_on_weight'))]}" />
+                        </div>
+                        <label for="weight" attrs="{'invisible':[('amount_type','not in', ('fixed_taric_base_on_weight'))]}"/>
+                        <div attrs="{'invisible':[('amount_type','not in', ('fixed_taric_base_on_weight'))]}">
+                            <field name="weight" class="oe_inline" />
+                            <label string="kg" class="oe_inline" attrs="{'invisible':[('amount_type','not in',('fixed_taric_base_on_weight'))]}" />
+                        </div>
+                    </group>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

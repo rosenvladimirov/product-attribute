@@ -8,6 +8,19 @@ from odoo import _, api, fields, models
 class ProductPricelistPrint(models.TransientModel):
     _inherit = 'product.pricelist.print'
 
+    base_on = fields.Selection(selection_add=[
+        ('competitorinfo', 'Competitor price')
+        ])
+
+    competitorinfo_ids = fields.Many2many(
+        comodel_name='res.partner',
+        string='Competitor',
+        domain='_get_competitorinfo_domain'
+    )
+    competitor_count = fields.Integer(
+        compute='_compute_competitor_count'
+    )
+
     def _get_competitorinfo_domain(self):
         if self.product_tmpl_ids or self.product_ids:
             competitors = self.env['product.competitorinfo'].search([
@@ -17,19 +30,6 @@ class ProductPricelistPrint(models.TransientModel):
         else:
             return [('name.competitor', '=', True)]
         return [('id', 'in', competitors.ids)]
-
-    base_on = fields.Selection(selection_add=[
-        ('competitorinfo', 'Competitor price')
-        ])
-
-    competitorinfo_ids = fields.Many2many(
-        comodel_name='res.partner',
-        string='Competitor',
-        domain=_get_competitorinfo_domain
-    )
-    competitor_count = fields.Integer(
-        compute='_compute_competitor_count'
-    )
 
     @api.multi
     @api.depends('competitorinfo_ids')

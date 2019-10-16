@@ -1,9 +1,6 @@
 # Copyright 2017 Tecnativa - Carlos Dauden
 # Copyright 2018 Tecnativa - David Vidal
-# Copyright 2019 dXFactory - Rosen Vladimirov
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
-
-from itertools import groupby
 
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
@@ -41,7 +38,6 @@ class ProductPricelistPrint(models.TransientModel):
         comodel_name='product.category',
         string='Categories',
     )
-    product_from_pricelist = fields.Boolean()
     show_variants = fields.Boolean()
     product_tmpl_ids = fields.Many2many(
         comodel_name='product.template',
@@ -87,31 +83,6 @@ class ProductPricelistPrint(models.TransientModel):
         if not self.partner_count:
             self.last_ordered_products = False
 
-    @api.onchange('product_from_pricelist', 'pricelist_id')
-    def _onchange_product_from_pricelist(self):
-        if self.pricelist_id and self.product_from_pricelist:
-            res = self.with_context(from_pricelist_id=self.pricelist_id.item_ids.ids).default_get([])
-            if res.get('product_ids'):
-                self.product_ids = res['product_ids']
-                self.show_variants = True
-                if self.order_field == 'name':
-                    self.product_ids = self.product_ids.sorted(lambda x: x.name)
-                elif self.order_field == 'default_code':
-                    self.product_ids = self.product_ids.sorted(lambda x: x.default_code or '')
-            if res.get('product_tmpl_ids'):
-                self.product_tmpl_ids = res['product_tmpl_ids']
-            if res.get('categ_ids'):
-                self.categ_ids = res['categ_ids']
-        if not self.product_from_pricelist:
-            self.partner_id = False
-
-    @api.onchange('order_field')
-    def _onchange_order_field(self):
-        if self.order_field == 'name':
-            self.product_ids.sorted(lambda x: x.name)
-        elif self.order_field == 'default_code':
-            self.product_ids.sorted(lambda x: x.default_code or '')
-
     @api.model
     def default_get(self, fields):
         res = super(ProductPricelistPrint, self).default_get(fields)
@@ -133,12 +104,9 @@ class ProductPricelistPrint(models.TransientModel):
             if len(active_ids) == 1:
                 partner = self.env['res.partner'].browse(active_ids[0])
                 res['pricelist_id'] = partner.property_product_pricelist.id
-        elif self.env.context.get('active_model') == 'product.pricelist.item' or self.env.context.get('from_pricelist_id'):
-            active_ids = self.env.context.get('from_pricelist_id') or self.env.context.get('active_ids', [])
+        elif self.env.context.get('active_model') == 'product.pricelist.item':
+            active_ids = self.env.context.get('active_ids', [])
             items = self.env['product.pricelist.item'].browse(active_ids)
-            #_logger.info("GET Items %s" % (items))
-            if not items:
-                return {}
             # Set pricelist if all the items belong to the same one
             if len(items.mapped('pricelist_id')) == 1:
                 res['pricelist_id'] = items[0].pricelist_id.id
@@ -175,19 +143,13 @@ class ProductPricelistPrint(models.TransientModel):
         return res
 
     def _get_field_value(self, product, partner, pricelist):
-        price_extra = 0.0
-        for attribute_price in product.mapped('attribute_value_ids.price_ids'):
-            if attribute_price.product_tmpl_id == product.product_tmpl_id:
-                price_extra += attribute_price.price_extra
-        if price_extra == 0.0:
-            product = False
         return {
                 'product_tmpl_id': product.product_tmpl_id.id,
                 'product_id': product.id,
-                'partner_id': partner.id,
-                'pricelist_id': pricelist.id,
                 'quantity': self.quantity,
                 'standard_price': product.standard_price,
+                'partner_id': partner.id,
+                'pricelist_id': pricelist.id,
                 }
 
     @api.multi
@@ -221,22 +183,15 @@ class ProductPricelistPrint(models.TransientModel):
             if not partners:
                 if rec.pricelist_ids:
                     partners = rec.env['res.partner'].search([]).filtered(lambda x: x.property_product_pricelist.id in rec.pricelist_ids.ids)
-            filter_values = {}
+
             for product in products:
                 for partner in partners:
                     for pricelist in rec.pricelist_ids:
                         product_ids = set([x.product_id.id for x in pricelist.mapped('item_ids') if x.product_id])
                         product_tmpl_ids = set([x.product_tmpl_id.id for x in pricelist.mapped('item_ids') if x.product_tmpl_id])
                         if partner.property_product_pricelist.id == pricelist.id and (product.id in list(product_ids) or product.product_tmpl_id.id in list(product_tmpl_ids)):
-                            res = rec._get_field_value(product, partner, pricelist)
-                            if res:
-                                filter_values['%s-%s-%s-%s' % (
-                                res['partner_id'], res['pricelist_id'], res['product_tmpl_id'],
-                                res['product_id'])] = (0, False, res)
-                                #values.append((0, False, res))
-            for curr in filter_values:
-                values.append(curr)
-            rec.update({'report_lines': new_values})
+                            values.append((0, False, rec._get_field_value(product, partner, pricelist)))
+            rec.update({'report_lines': values})
         return {
             'type': 'ir.actions.act_window',
             'name': _('Product prices'),
@@ -249,36 +204,6 @@ class ProductPricelistPrint(models.TransientModel):
             'domain': [('report_id', '=', self.id)],
             'context': {'order_field': self.order_field, 'show_standard_price': self.show_standard_price},
         }
-
-    @api.one
-    def get_price(self, product, pricelist=False, date=False, qty=1.0):
-        fpos = self.partner_id and self.partner_id.property_account_position_id or self.env.user.company_id.partner_id.property_account_position_id
-        line_company_id = self.env.user.company_id
-        taxes = product.taxes_id.filtered(lambda r: not line_company_id or r.company_id == line_company_id)
-        tax_id = fpos.map_tax(taxes, product, self.partner_id) if fpos else taxes
-        unit_price = product.with_context(pricelist=pricelist and pricelist.id,
-                                 date=date,
-                                 quantity=qty,
-                                 partner_id=self.partner_id and self.partner_id.id).price
-        price = self.env['account.tax']._fix_tax_included_price_company(unit_price, product.taxes_id, tax_id, line_company_id)
-        taxes = tax_id.compute_all(price, pricelist.currency_id, qty)
-        return (price > 0.0, sum(t.get('amount', 0.0) for t in taxes.get('taxes', [])), taxes['total_included'], taxes['total_excluded'])
-
-    @api.multi
-    def product_layouted(self, product, pricelist, date):
-        self.ensure_one()
-        report_pages = [[]]
-        for category, lines in groupby(product, lambda l: l.product_tmpl_id):
-            # Append category to current report page
-            #_logger.info("CATEGORY %s" % category)
-            report_pages[-1].append({
-                'name': category and category.display_name or _('Uncategorized'),
-                'lines': list(lines),
-                'has_variant_with_price': category.product_variant_count > 1 and category.check_for_price(pricelist, date),
-                'single_product': category.product_variant_count == 1,
-            })
-            #_logger.info("PAGE %s:%s" % (category.display_name, category.product_variant_count > 1 and category.check_for_price(pricelist, date)))
-        return report_pages
 
     @api.multi
     def print_report(self):

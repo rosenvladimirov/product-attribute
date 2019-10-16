@@ -3,13 +3,12 @@
 
 import itertools
 import psycopg2
-import json
 from werkzeug import urls
 
 from odoo.addons import decimal_precision as dp
 
 from odoo import api, fields, models, tools, _
-from odoo.exceptions import ValidationError, RedirectWarning, UserError, except_orm
+from odoo.exceptions import ValidationError, RedirectWarning, except_orm
 from odoo.tools import pycompat
 
 import logging
@@ -19,11 +18,9 @@ _logger = logging.getLogger(__name__)
 TYPES = [('char', _('String')),
          ('float', _('Float')),
          ('int', _('Integer')),
-         ('date', _('Date')),
          ('range', _('Range')),
-         ('boolean', _('Yes/No')),
+         ('boolean', _('Yse/No')),
          ('package', _('Package')),
-         ('dropdown_id', _('Dropdown menu')),
          ('pricelist', _('Linked width pricelist')),
          ('url', _('Base on URL')),
          ('field', _('Base on field')),
@@ -32,38 +29,22 @@ TYPES = [('char', _('String')),
          ('gs1', _('Base on GS1(UDI)')),
          ]
 
-class ProductPropertiesPrint(models.Model):
+class ProductProperties(models.Model):
     _name = "product.properties.print"
     _description = "Product properties for printing"
-    _order = "system_properties, sequence"
 
     name = fields.Many2one("product.properties.type", string="Property name", required=True, translate=True)
     print = fields.Boolean('Print')
+    partner_id = fields.Many2one('res.partner', string='Partner', required=True, index=True)
     company_id = fields.Many2one('res.company', 'Company', default=lambda self: self.env['res.company']._company_default_get('product.properties.print'))
-    categ_id = fields.Many2one("product.properties.category", "Category", index=True)
-
-    partner_id = fields.Many2one('res.partner', string='Partner', index=True)
-    order_id = fields.Many2one("sale.order", string="Sale order", index=True)
-    invoice_id = fields.Many2one("account.invoice", string="Invoice", index=True)
-    picking_id = fields.Many2one("stock.picking", string="Transfer Reference", index=True)
-    system_properties = fields.Boolean('System used')
-    sequence = fields.Integer("Sequence", default=1, help="The first in the sequence is the default one.")
 
     def get_print_properties(self):
         return [x.name.id for x in self if x.print]
-
-    @api.multi
-    def unlink(self):
-        for properties in self:
-            if properties.system_properties:
-                raise UserError(_('You cannot delete system properties.'))
-        return super(ProductPropertiesPrint, self).unlink()
 
 
 class ProductProperties(models.Model):
     _name = "product.properties"
     _description = "Product properties"
-    _order = "sequence, id"
 
     @api.multi
     def _display_type_range(self):
@@ -78,58 +59,41 @@ class ProductProperties(models.Model):
     @api.multi
     def _display_type(self):
         for record in self:
-            if record.name.type_fields == 'dropdown_id':
-                record.type_display = record.type_dropdown_id and record.type_dropdown_id.name_get()[0][1] or ''
-            elif record.name and "type_%s" % record.type_fields in self._fields:
-                record.type_display = "%s %s" % (getattr(record, "type_%s" % record.type_fields) or '', record.type_uom_id and record.type_uom_id.name or '')
+            if record.name:
+                record.type_display = "%s%s" % (record["type_%s" % record.type_fields] or '', record.type_uom_id and record.type_uom_id.name or '')
             else:
                 record.type_display = ''
             if record.name.type_fields == 'package':
                 record.type_display_attrs = "x".join([str(record.dimensions_x), str(record.dimensions_y), str(record.dimensions_z)])
             else:
                 record.type_display_attrs = ''
-            if record.name.type_fields == 'field' and record.product_id == False:
+            if record.name.type_fields == 'field':
                 record.type_display = record.type_field_target.field_description
 
-    def _get_type_field_model_id(self):
-        return json.dumps(self.env['product.properties.type']._get_type_field_model_id())
-
-    product_tmpl_id = fields.Many2one('product.template', 'Product Template', ondelete='restrict')
-    product_id = fields.Many2one('product.product', 'Product', ondelete='restrict')
-
-    sequence = fields.Integer("Sequence", default=1, help="The first in the sequence is the default one.")
-
+    #product_tmpl_id = fields.Many2one('product.template', 'Product Template', default=lambda self, *a: self._context.get("default_product_tmpl_id", False))
+    product_id = fields.Many2one('product.product', 'Product')
     name = fields.Many2one("product.properties.type", string="Property name", required=True, translate=True)
-    type_fields = fields.Selection(related="name.type_fields", string="Type properties", required=True, store=True)
-
-    categ_id = fields.Many2one('product.properties.category', string='Category Properties')
-
+    sequence = fields.Integer("Sequence", default=1, help="The first in the sequence is the default one.")
+    type_fields = fields.Selection(TYPES, string="Type properties", required=True)
     type_float = fields.Float(string="Value for Float")
     type_char = fields.Char(string="Value for Char")
     type_int = fields.Integer(string="Value for Int")
     type_int_second = fields.Integer("Value for Second Int")
-    type_date = fields.Date(string="Value for Date")
     type_range = fields.Char("Value Range", compute='_display_type_range')
     type_boolean = fields.Boolean("Value for Boolean")
     type_url = fields.Char(help="URL")
-
     type_field = fields.Char(help="Field", compute="_get_type_field")
-    type_field_name = fields.Char(help="Field", compute="_get_type_field_properties", inverse="_set_type_field_name")
-    type_field_ttype = fields.Char(help="Field", compute="_get_type_field_properties", inverse="_set_type_field_ttype")
-    type_field_model = fields.Char(help="Field", compute="_get_type_field_properties", inverse="_set_type_field_model")
-    model_obj_id = fields.Integer('Model object holder id', compute="_get_type_field_properties", inverse="_set_model_obj_id")
-
-    type_field_model_id = fields.Many2one('ir.model', string='Target/Source Odoo model', domain=_get_type_field_model_id)
+    type_field_model_id = fields.Many2one('ir.model', string='Target/Source Odoo model', domain="[('model', 'in', ['product.product'])]")
     type_field_target = fields.Many2one('ir.model.fields', string='Target/Source Odoo field',
                                   help="""Choice target/source field for collection data.
                                   target/source in odoo model.""",
-                                  domain="[('model_id', '=', type_field_model_id), ('ttype', 'in', ['char', 'monetary', 'float', 'many2one']), ('name', 'not in', ('id', 'create_uid','create_date', 'write_date', 'write_uid', '__last_update', 'lines'))]")
-
+                                  domain="[('model_id', '=', type_field_model_id), ('ttype', 'in', ['char', 'many2one']), ('name', 'not in', ('id', 'create_uid','create_date', 'write_date', 'write_uid', '__last_update', 'lines'))]")
     type_package_id = fields.Many2one("product.properties.package", string="Value for Package")
     type_package = fields.Char("Value Range", compute='_display_type_package')
     dimensions_x = fields.Float(string="X Dimensions")
     dimensions_y = fields.Float(string="Y Dimensions")
     dimensions_z = fields.Float(string="Z Dimensions")
+
     # image: all image fields are base64 encoded and PIL-supported
     image = fields.Binary(
         "Image", attachment=True,
@@ -145,7 +109,6 @@ class ProductProperties(models.Model):
              "resized as a 64x64px image, with aspect ratio preserved. "
              "Use this field anywhere a small image is required.")
     type_uom_id = fields.Many2one("product.properties.uom", string="UOM Name", ondelete="restrict")
-    type_dropdown_id = fields.Many2one("product.properties.dropdown", string="Dropdown")
     type_display = fields.Char("Value", compute='_display_type')
     type_display_attrs = fields.Char("Value attrs", compute='_display_type')
 
@@ -158,83 +121,27 @@ class ProductProperties(models.Model):
         return website
 
     @api.multi
-    def _get_type_field_properties(self):
-        for field_name in self:
-            if not field_name.type_field_name:
-                field_name.type_field_name = field_name.type_field_target.name
-            if not field_name.type_field_ttype:
-                field_name.type_field_ttype = field_name.type_field_target.ttype
-            if not field_name.type_field_model:
-                field_name.type_field_model = field_name.type_field_target.model_id.model
-            if not field_name.model_obj_id and field_name.type_field_model == 'product.product':
-                field_name.model_obj_id = field_name.product_id.id
-            elif not field_name.model_obj_id and field_name.type_field_model == 'product.template':
-                field_name.model_obj_id = field_name.product_tmpl_id.id
-
-    def _set_type_field_name(self):
-        for rec in self:
-            if not rec.type_field_name:
-                rec.type_field_name = rec.type_field_target.name
-
-    def _set_type_field_ttype(self):
-        for rec in self:
-            if not rec.type_field_ttype:
-                rec.type_field_ttype = rec.type_field_target.ttype
-
-    def _set_type_field_model(self):
-        for rec in self:
-            if not rec.type_field_model:
-                rec.type_field_model = rec.type_field_target.model_id.model
-
-    def _set_model_obj_id(self):
-        for rec in self:
-            if not rec.model_obj_id and rec.type_field_model == 'product.product':
-                rec.model_obj_id = rec.product_id.id
-            elif not rec.model_obj_id and rec.type_field_model == 'product.template':
-                rec.model_obj_id = rec.product_tmpl_id.id
-
-    @api.one
-    def get_type_field_properties(self, line):
-        if line._name == 'product.pricelist.item':
-            self.model_obj_id = line.pricelist_id.id
-        super(ProductProperties, self).get_type_field_properties(line)
-
-    @api.multi
     def _get_type_field(self):
         for field_value in self:
             if field_value.type_field_target:
-                model_obj = field_value.type_field_model
-                ttype = field_value.type_field_ttype
-                name = field_value.type_field_name
-                id = field_value.model_obj_id
-                if not id:
-                    id = field_value.name.id
-                    model_obj = 'product.properties.type'
-                    ttype = 'char'
-                    name = 'name'
-                model = self.env[model_obj].with_context(self._context, display_default_code=False).browse(id)
-                if ttype == 'char':
-                    field_value.type_field = getattr(model, name)
-                elif ttype == 'float':
-                    field_value.type_field = "%d" % getattr(model, name)
-                elif ttype == 'monetary':
-                    field_value.type_field = "%d" % getattr(model, name)
-                elif ttype == 'many2one':
-                    field = getattr(model, name)
+                if field_value.type_field_target.ttype == 'char':
+                    model = self.env[field_value.type_field_target.model_id.model].browse([field_value.product_id.id])
+                    #_logger.info('FIELDS %s:%s' % (model, field_value.type_field_target.name))
+                    field_value.type_field = getattr(model, field_value.type_field_target.name)
+                elif field_value.type_field_target.ttype == 'many2one':
+                    model = self.env[field_value.type_field_target.model_id.model].browse([field_value.product_id.id])
+                    field = getattr(model, field_value.type_field_target.name)
                     relation = field_value.type_field_target.relation
-                    model = self.env[relation].with_context(self._context, display_default_code=False).browse([field.id])
-                    if 'display_name' in model._fields:
-                        field_value.type_field = getattr(model, 'display_name')
-                    else:
-                        field_value.type_field = getattr(model, 'name')
+                    model = self.env[relation].browse([field.id])
+                    #_logger.info("FIELDS %s:%s:%s" % (field, model, relation))
+                    field_value.type_field = getattr(model, 'name')
             else:
                 field_value.type_field = False
 
     @api.onchange('name')
     def _onchange_name(self):
         if self.name.type_fields == 'field':
-            self.type_field_model_id = self.name.type_field_model_id.id
-            self.type_field_target = self.name.type_field_target.id
+            self.type_field_model_id = self.env['ir.model'].search([('model', '=', 'product.product')]).id
         else:
             self.type_field_model_id = False
 
@@ -265,18 +172,14 @@ class ProductProperties(models.Model):
             vals['type_url'] = self._clean_website(vals['type_url'])
         return super(ProductProperties, self).write(vals)
 
-
 class ProductPropertiesCategory(models.Model):
     _name = "product.properties.category"
     _description = "Product properties"
 
-    name = fields.Char('Property name', required=True, translate=True)
+    name = fields.Char('Property name', required=True)
     lines_ids = fields.One2many(comodel_name='product.properties.category.lines',
         inverse_name="categ_id",
         string='Category properties', ondelete='restrict')
-    print_ids = fields.One2many('product.properties.print', 'categ_id', string='Category print properties')
-    #properties_ids = fields.Many2many('product.properties', relation='product_properties_cat', column1='categ_id', column2='properties_id', string='Product Properties')
-
 
 class ProductCategory(models.Model):
     _inherit = "product.category"
@@ -289,7 +192,6 @@ class ProductCategory(models.Model):
 class ProductPropertiesCategoryLines(models.Model):
     _name = "product.properties.category.lines"
     _description = "Product Category lines properties"
-    _order = "sequence, id"
 
     @api.multi
     def _display_type_range(self):
@@ -304,51 +206,39 @@ class ProductPropertiesCategoryLines(models.Model):
     @api.multi
     def _display_type(self):
         for record in self:
-            if record.name.type_fields == 'dropdown_id':
-                record.type_display = record.type_dropdown_id and record.type_dropdown_id.name_get()[0][1] or ''
-            if record.name and "type_%s" % record.type_fields in self._fields:
-                record.type_display = "%s %s" % (record["type_%s" % record.type_fields] or '', record.type_uom_id and record.type_uom_id.name or '')
+            if record.name:
+                record.type_display = "%s%s" % (record["type_%s" % record.name.type_fields] or '', record.type_uom_id and record.type_uom_id.name or '')
             else:
                 record.type_display = ''
             if record.name.type_fields == 'package':
                 record.type_display_attrs = "x".join([str(record.dimensions_x), str(record.dimensions_y), str(record.dimensions_z)])
             else:
                 record.type_display_attrs = ''
-            if record.name.type_fields == 'field':
-                record.type_display = record.type_field_target.field_description
 
-    def _get_type_field_model_id(self):
-        return self.env['product.properties.type']._get_type_field_model_id()
-
-    categ_id = fields.Many2one("product.properties.category", "Category", index=True)
-    product_categ_id = fields.Many2one("product.category", "Category", index=True)
-
-    sequence = fields.Integer("Sequence", default=1, help="The first in the sequence is the default one.")
-
+    categ_id = fields.Many2one("product.properties.category", "Category", default=lambda self, *a: self._context.get("default_categ_id", False))
+    product_categ_id = fields.Many2one("product.category", "Category", default=lambda self, *a: self._context.get("default_categ_id", False))
     name = fields.Many2one("product.properties.type", string="Property name", required=True)
+    sequence = fields.Integer("Sequence", default=1, help="The first in the sequence is the default one.")
     type_fields = fields.Selection(related="name.type_fields", string="Type properties", required=True, store=True)
-
     type_float = fields.Float(related="name.type_float", string="Value for Float", store=True)
     type_char = fields.Char(related="name.type_char", string="Value for Char", store=True)
     type_int = fields.Integer(related="name.type_int",string="Value for Int", store=True)
     type_int_second = fields.Integer(related="name.type_int_second", string="Value for Second Int")
-    type_date = fields.Date(string="Value for Date")
     type_range = fields.Char("Value Range", compute='_display_type_range')
     type_boolean = fields.Boolean(related="name.type_boolean", string="Value for Boolean")
     type_url = fields.Char(help="URL")
-    type_field = fields.Char(help="Field", compute="_get_type_field")
-    type_field_model_id = fields.Many2one('ir.model', string='Target/Source Odoo model', domain=_get_type_field_model_id)
+    type_field = fields.Char(help="Field")
+    type_field_model_id = fields.Many2one('ir.model', string='Target/Source Odoo model', domain="[('model', '=', 'product.product')]")
     type_field_target = fields.Many2one('ir.model.fields', string='Target/Source Odoo field',
                                   help="""Choice target/source field for collection data.
                                   target/source in odoo model.""",
-                                  domain="[('model_id', '=', type_field_model_id), ('ttype', 'in', ['char', 'monetary', 'float', 'many2one']), ('name', 'not in', ('id', 'create_uid','create_date', 'write_date', 'write_uid', '__last_update', 'lines'))]")
+                                  domain="[('model_id', 'in', model_id), ('name', 'not in', ('id', 'create_uid','create_date', 'write_date', 'write_uid', '__last_update', 'lines'))]")
     type_package_id = fields.Many2one(related="name.type_package_id", string="Value for Package", store=True)
     type_package = fields.Char("Value Range", compute='_display_type_package')
     dimensions_x = fields.Float(related="name.dimensions_x", string="X Dimensions", store=True)
     dimensions_y = fields.Float(related="name.dimensions_y", string="Y Dimensions", store=True)
     dimensions_z = fields.Float(related="name.dimensions_z", string="Z Dimensions", store=True)
     type_uom_id = fields.Many2one(related="name.type_uom_id", string="UOM Name", store=True)
-    type_dropdown_id = fields.Many2one("product.properties.dropdown", string="Dropdown")
     type_display = fields.Char("Value", compute='_display_type')
     type_display_attrs = fields.Char("Value attrs", compute='_display_type')
     image = fields.Binary(
@@ -365,13 +255,11 @@ class ProductPropertiesCategoryLines(models.Model):
              "resized as a 64x64px image, with aspect ratio preserved. "
              "Use this field anywhere a small image is required.")
     print_domain = fields.Text('Print domain')
-    system_properties = fields.Boolean('System used')
 
     @api.onchange('name')
     def _onchange_name(self):
         if self.name.type_fields == 'field':
-            self.type_field_model_id = self.name.type_field_model_id.id
-            self.type_field_target = self.name.type_field_target.id
+            self.type_field_model_id = self.env['ir.model'].search([('model', '=', 'product.product')]).id
         else:
             self.type_field_model_id = False
 
@@ -382,11 +270,6 @@ class ProductPropertiesCategoryLines(models.Model):
                 url = url.replace(netloc=url.path, path='')
             website = url.replace(scheme='http').to_url()
         return website
-
-    @api.multi
-    def _get_type_field(self):
-        for field_value in self:
-            field_value.type_field = False
 
     @api.model
     def create(self, vals):
@@ -408,45 +291,33 @@ class ProductPropertiesCategoryLines(models.Model):
 class ProductPropertiesType(models.Model):
     _name = "product.properties.type"
     _description = "The Properties types"
-    _order = "sequence, id"
 
-    def _get_type_field_model_id(self):
-        return [('model', 'in', ['product.product', 'product.template', 'product.pricelist.item', 'sale.order.line',
-                                 'account.invoice.line', 'purchase.order.line', 'stock.move.line'])]
-
-    name = fields.Char('Type Name', required=True, index=True, translate=True)
-    sequence = fields.Integer("Sequence", default=1, help="The first in the sequence is the default one.")
+    name = fields.Char('Type Name', required=True, index=True)
     type_fields = fields.Selection(TYPES, string="Type properties", required=True, default='char')
     type_float = fields.Float("Value for Float")
     type_char = fields.Char("Value for Char")
     type_int = fields.Integer("Value for Int")
     type_int_second = fields.Integer("Value for Second Int")
-    type_date = fields.Date(string="Value for Date")
     type_boolean = fields.Boolean("Value for Boolean")
     type_url = fields.Char(help="URL")
     type_field = fields.Char(help="Field", compute="_get_type_field")
-    type_field_model_id = fields.Many2one('ir.model', string='Target/Source Odoo model', domain=_get_type_field_model_id)
+    type_field_model_id = fields.Many2one('ir.model', string='Target/Source Odoo model', domain="[('model', 'in', ['product.product'])]")
     type_field_target = fields.Many2one('ir.model.fields', string='Target/Source Odoo field',
                                   help="""Choice target/source field for collection data.
                                   target/source in odoo model.""",
                                   domain="[('model_id', '=', type_field_model_id), ('name', 'not in', ('id', 'create_uid','create_date', 'write_date', 'write_uid', '__last_update', 'lines'))]")
     type_package_id = fields.Many2one("product.properties.package", string="Value for Package")
-    dimensions_x = fields.Float("X Dimensions")
-    dimensions_y = fields.Float("Y Dimensions")
-    dimensions_z = fields.Float("Z Dimensions")
+    dimensions_x = fields.Float(related="type_package_id.dimensions_x", string="X Dimensions")
+    dimensions_y = fields.Float(related="type_package_id.dimensions_y", string="Y Dimensions")
+    dimensions_z = fields.Float(related="type_package_id.dimensions_z", string="Z Dimensions")
     type_uom_id = fields.Many2one("product.properties.uom", string="UOM Name")
-    type_dropdown_id = fields.Many2one("product.properties.dropdown", string="Dropdown")
-
-    def get_type_field_model_id(self, domain=False):
-        if not domain:
-            domain = [('model', 'in', ['product.product', 'product.template', 'product.pricelist.item'])]
-        return super(ProductPropertiesType, self).get_type_field_model_id(domain)
 
     @api.multi
     def _get_type_field(self):
         for field_value in self:
             if field_value.type_field_target:
                 model = self.env[field_value.type_field_target.model_id.model]
+                #_logger.info('FIELDS %s:%s' % (model, field_value.type_field_target.name))
                 field_value.type_field = getattr(model, field_value.type_field_target.name)
             else:
                 field_value.type_field = False
@@ -458,42 +329,6 @@ class ProductPropertiesType(models.Model):
                 url = url.replace(netloc=url.path, path='')
             website = url.replace(scheme='http').to_url()
         return website
-
-    def get_product_properties_break(self, row, br):
-        return row % br
-
-    def get_product_properties_print(self, line, product, properties_print=False, lot_ids=False, description=False):
-        res = {}
-        ret = []
-        print_ids = [x.name.id for x in properties_print if x.print]
-        for properties in (product.tproduct_properties_ids, product.product_properties_ids):
-            if self._context.get('force_print'):
-                print_ids = [x.name.id for x in properties]
-            for prop_line in properties.sorted(key=lambda r: r.name.sequence):
-                if properties_print and prop_line.name.id in print_ids:
-                    if line and prop_line.type_field_name in line._fields:
-                        prop_line.type_field_model = line._name
-                        prop_line.model_obj_id = line.id
-                    if lot_ids and not isinstance(lot_ids, pycompat.string_types) and prop_line.name.type_fields == 'lot':
-                        res[prop_line.name.name] = {'value': '-'.join(map(lambda lot: lot.lot_id and lot.lot_id.name or '', lot_ids)), 'attrs': False, 'image': False, 'sequence': prop_line.name.sequence}
-                    elif lot_ids and not isinstance(lot_ids, pycompat.string_types) and prop_line.name.type_fields == 'use_date':
-                        res[prop_line.name.name] = {'value': '-'.join(map(lambda lot: lot.lot_id and '%s:%s' % (x.name, x.use_date) or '', lot_ids)), 'attrs': False, 'image': False, 'sequence': prop_line.name.sequence}
-                    elif lot_ids and not isinstance(lot_ids, pycompat.string_types) and prop_line.name.type_fields == 'gs1':
-                        res[prop_line.name.name] = {'value': '-'.join(map(lambda lot: lot.lot_id and lot.lot_id.gs1 or '', lot_ids)), 'attrs': False, 'image': False, 'sequence': prop_line.name.sequence}
-                    elif lot_ids and isinstance(lot_ids, pycompat.string_types):
-                        res[prop_line.name.name] = {'value': lots_ids and '-'.join([x for x in lot_ids]) or '', 'attrs': False, 'image': False, 'sequence': prop_line.name.sequence}
-                    elif prop_line.name.type_fields == 'pricelist':
-                        prop_line.type_field_model = line._name
-                        prop_line.model_obj_id = line.id
-                        prop_line.type_field_ttype = 'many2one'
-                        prop_line.type_field_name = 'pricelist_id'
-                        res[prop_line.name.name] = {'value': prop_line.type_display, 'attrs': prop_line.type_display_attrs,
-                                                    'image': prop_line.image_small, 'sequence': prop_line.name.sequence}
-                    else:
-                        res[prop_line.name.name] = {'value': prop_line.type_display, 'attrs': prop_line.type_display_attrs, 'image': prop_line.image_small, 'sequence': prop_line.name.sequence}
-        for k, v in dict(sorted(res.items(), key=lambda x: x[1]['sequence'])).items():
-            ret.append({'label': k, 'value': v})
-        return ret
 
     @api.model
     def create(self, vals):
@@ -511,42 +346,14 @@ class ProductPropertiesType(models.Model):
 class ProductPropertiesUom(models.Model):
     _name = "product.properties.uom"
     _description = "The properties units"
-    _corder = "name_id, sequence"
 
-    sequence = fields.Integer("Sequence", default=1, help="The first in the sequence is the default one.")
     name = fields.Char('UOM Name', required=True, index=True)
-    name_id = fields.Many2one("product.properties.type", string="Property name", required=True)
-
-
-class ProductPropertiesUom(models.Model):
-    _name = "product.properties.dropdown"
-    _description = "The properties dropdown"
-    _corder = "name_id, sequence, code"
-
-    sequence = fields.Integer("Sequence", default=1, help="The first in the sequence is the default one.")
-    name = fields.Char('Name', required=True, index=True, translate=True)
-    code = fields.Char('code')
-    name_id = fields.Many2one("product.properties.type", string="Property name", required=True)
-
-    @api.depends('name', 'code')
-    def name_get(self):
-        result = []
-        for dropdown in self:
-            if dropdown.code:
-                name = "[%s] %s" % (dropdown.code, dropdown.name)
-            else:
-                name = dropdown.name
-            result.append((dropdown.id, name))
-        return result
-
 
 class ProductPropertiesPackage(models.Model):
     _name = "product.properties.package"
     _description = "The properteis packages/corpuses"
 
-    name = fields.Char('Package Name', required=True, index=True, translate=True)
-    name_id = fields.Many2one("product.properties.type", string="Property name", required=True)
-
+    name = fields.Char('Package Name', required=True, index=True)
     dimensions_x = fields.Float("X Dimensions")
     dimensions_y = fields.Float("Y Dimensions")
     dimensions_z = fields.Float("Z Dimensions")

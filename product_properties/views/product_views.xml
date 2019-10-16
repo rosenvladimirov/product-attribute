@@ -40,8 +40,6 @@
                                     <field name="product_variant_ids" invisible="1"/>
                                     <field name="product_tmpl_id" string="Product" invisible="context.get('visible_product_tmpl_id', True)"/>
                                     <field name="product_id" groups="product.group_product_variant" domain="[('product_tmpl_id', '=', product_tmpl_id)]" options="{'no_create_edit': True}"/>
-                                </group>
-                                <group>
                                     <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
                                 </group>
                                 <group>
@@ -68,7 +66,6 @@
                                         <field name="product_id" invisible="1"/>
                                         <field name="product_tmpl_id" string="Product" invisible="1"/>
                                         <field name="min_qty"/>
-                                        <field name="divide_qty"/>
                                         <field name="price" string="Price"/>
                                         <field name="date_start"/>
                                         <field name="date_end"/>
@@ -116,7 +113,7 @@
         </record>
 
         <record id="product_manufacturer_action" model="ir.actions.act_window">
-            <field name="name">Factory Product Info</field>
+            <field name="name">Product manufacturer</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">product.manufacturer</field>
             <field name="view_type">form</field>
@@ -125,8 +122,9 @@
             <field name="context">{'visible_product_tmpl_id':False}</field>
         </record>
 
-        <menuitem action="product_manufacturer_action" id="menu_product_manufacturer_purchase"
-                parent="purchase.menu_procurement_management" sequence="18" groups="purchase.group_manage_vendor_price"/>
+        <menuitem
+           action="product_manufacturer_action" id="menu_product_manufacturer_purchase"
+                parent="purchase.menu_procurement_management" sequence="17" groups="purchase.group_manage_vendor_price"/>
 
         <record id="product_template_manufacturer_form_view" model="ir.ui.view">
             <field name="name">product.template.manufacturer.common.form</field>
@@ -138,23 +136,11 @@
                         <field string="Datasheets" name="count_datasheets" widget="statinfo"/>
                     </button>
                 </xpath>
-                <page name="general_information" position="inside">
-                    <group name="manufacturer" string="Manufacturer">
-                        <group>
-                            <field name="manufacturer_id" context="{'default_supplier':True, 'default_customer':False}"/>
-                            <field name="manufacturer_pname" />
-                        </group>
-                        <group>
-                            <field name="manufacturer_pref" />
-                            <field name="manufacturer_purl" widget="url"/>
-                        </group>
-                    </group>
-                </page>
                 <xpath expr="//page[@name='inventory']" position="before">
                     <page string="Manufacturer" name="manufacturer">
                         <div name="manufacturer_ids" groups="product.group_product_pricelist">
                             <separator string="Manufacturers"/>
-                            <field name="manufacturer_ids" nolabel="1" context="{'search_default_product_tmpl_id': active_id, 'search_default_product_id': False, 'default_product_id':False, 'default_product_tmpl_id': active_id}">
+                            <field name="manufacturer_ids" nolabel="1" context="{'search_default_product_tmpl_id': active_id, 'default_product_id':False, 'default_product_tmpl_id': active_id}">
                                 <tree string="Manufacturers" editable="bottom">
                                     <field name="manufacturer"/>
                                     <field name="product_id" invisible="1"/>
@@ -165,11 +151,34 @@
                                 </tree>
                             </field>
                         </div>
-                        <div name="datasheet_ids">
-                            <separator string="Datasheets"/>
-                            <field name="datasheet_ids" mode="kanban"/>
-                        </div>
                     </page>
+                </xpath>
+            </field>
+        </record>
+        <record id="view_product_manufacturer_inherit" model="ir.ui.view">
+            <field name="name">product.template.manufacturer.form.inherit</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="purchase.view_product_supplier_inherit"/>
+            <field name="arch" type="xml">
+                <page name="general_information" position="inside">
+                    <group name="manufacturer" string="Manufacturer">
+                        <group>
+                            <field name="manufacturer" context="{'default_supplier':True, 'default_customer':False}"/>
+                            <field name="manufacturer_pname" />
+                        </group>
+                        <group>
+                            <field name="manufacturer_pref" />
+                            <field name="manufacturer_purl" widget="url"/>
+                        </group>
+                    </group>
+                </page>
+                <xpath expr="//page[@name='purchase']" position="inside">
+                    <group string="Manufacturer" name="manufacturer" attrs="{'invisible': [('product_variant_count','&gt;',1)]}">
+                        <field name="manufacturer_ids" context="{'default_product_tmpl_id':context.get('product_tmpl_id',active_id), 'product_template_invisible_variant': True}" nolabel="1"/>
+                    </group>
+                    <group string="Manufacturer" name="variant_manufacturer" attrs="{'invisible': [('product_variant_count','&lt;=',1)]}">
+                        <field name="variant_manufacturer_ids" context="{'default_product_tmpl_id': context.get('product_tmpl_id', active_id)}" nolabel="1"/>
+                    </group>
                 </xpath>
             </field>
         </record>
@@ -200,17 +209,13 @@
             <field name="inherit_id" ref="product.product_supplierinfo_form_view"/>
             <field name="arch" type="xml">
                 <field name="name" position="before">
-                    <!--  widget="selection" -->
-                    <field name="manufacturer_id"/>
+                    <field name="manufacturer_id" widget="selection"/>
                 </field>
                 <field name="product_name" position="after">
                     <field name="manufacturer_pname" readonly="1"/>
                 </field>
                 <field name="product_code" position="after">
                     <field name="manufacturer_pref" readonly="1"/>
-                </field>
-                <field name="min_qty" position="before">
-                    <field name="divide_qty"/>
                 </field>
             </field>
         </record>
@@ -221,9 +226,6 @@
             <field name="arch" type="xml">
                 <field name="name" position="after">
                     <field name="manufacturer_id"/>
-                </field>
-                <field name="min_qty" position="after">
-                    <field name="divide_qty"/>
                 </field>
             </field>
         </record>

@@ -6,14 +6,13 @@ from odoo import api, fields, models, _
 class ProductBrand(models.Model):
     _inherit = 'product.brand'
 
-    manufacturer = fields.Many2one('product.manufacturer', string="Product Manufacturer")
 
     @api.multi
     def action_see_datasheets(self):
         domain = [
             '&', ('res_model', '=', 'product.brand'), ('res_id', '=', self.id)
         ]
-        attachment_view = self.env.ref('product_properties.view_product_manufacturer_datasheets_eazy_kanban')
+        attachment_view = self.env.ref('product_properties.view_datasheets_file_kanban_properties')
         return {
             'name': _('Datasheets'),
             'domain': domain,

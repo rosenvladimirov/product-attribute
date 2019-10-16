@@ -13,8 +13,6 @@
                    invisible="context.get('active_model') == 'product.pricelist'"
                    attrs="{'invisible':[('partner_count', '!=', 0)]}">
                 <field name="pricelist_id" options="{'no_create': True, 'no_create_edit': True}" attrs="{'invisible':[('only_product_pricelist', '=', True)]}"/>
-                <field name="product_from_pricelist" string="Get products from pricelist"/>
-                <field name="partner_id" attrs="{'invisible':[('product_from_pricelist', '=', False)]}"/>
             </group>
             <group string="Filter Options">
                 <field name="base_on" groups="product.group_sale_pricelist" options="{'horizontal': true}" widget="radio"/>
@@ -45,7 +43,6 @@
                            attrs="{'invisible':[('show_variants','=',False)]}">
                         <tree>
                             <field name="name"/>
-                            <field name="attribute_value_ids" widget="many2many_tags"/>
                         </tree>
                     </field>
                 </page>

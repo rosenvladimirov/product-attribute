@@ -8,28 +8,9 @@ from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
 class PurchaseOrder(models.Model):
     _inherit = "purchase.order"
 
-    use_product_description = fields.Boolean(default=True)
-    print_properties = fields.One2many('product.properties.print', 'order_id', 'Print properties')
-    #print_properties = fields.One2many('product.properties.print', 'partner_id', related='partner_id.print_properties', string='Print properties')
-    products_properties = fields.Html('Products properties', compute="_get_products_properties")
+    use_product_description = fields.Boolean()
+    print_properties = fields.One2many('product.properties.print.purchase', 'order_id', 'Print poperties')
 
-    @api.multi
-    @api.onchange('partner_id')
-    def onchange_partner_id(self):
-        for order in self:
-            if order.partner_id.print_properties:
-                values = []
-                for line in order.partner_id.print_properties:
-                    compare = order.print_properties.filtered(lambda r: r.name == line.name)
-                    if compare:
-                        values.append((1, compare.id, {'name': line.name, 'print': line.print}))
-                    else:
-                        values.append((0, False, {'name': line.name, 'print': line.print, 'order_id': order.id}))
-                if values:
-                    order.update({'print_properties': values})
-                else:
-                    order.update({'print_properties': False})
-        return super(PurchaseOrder, self).onchange_partner_id()
 
     @api.multi
     def copy(self, default=None):
@@ -79,36 +60,12 @@ class PurchaseOrder(models.Model):
                 except AccessError:  # no write access rights -> just ignore
                     break
 
-    def _get_html(self):
-        result = {}
-        rcontext = {}
-        context = dict(self.env.context)
-        rcontext['o'] = self
-        result['html'] = self.env.ref(
-            'product_properties.report_purchaseorder_html').with_context(context).render(
-                rcontext)
-        return result
-
-    @api.multi
-    def _get_products_properties(self):
-        for rec in self:
-            if len(rec.order_line.ids) > 0:
-                rec.products_properties = rec._get_html()['html']
-
 
 class PurchaseOrderLine(models.Model):
     _inherit = 'purchase.order.line'
 
-    def _get_domain_manufacturer_id(self):
-        return self.product_id and ['|', ('product_id', '=', self.product_id.id), ('product_id', '=', False), ('product_tmpl_id', '=', self.product_id.product_tmpl_id.id)] or []
-
-    manufacturer_id = fields.Many2one("product.manufacturer", "Factory Product", domain=_get_domain_manufacturer_id)
+    manufacturer_id = fields.Many2one("product.manufacturer", "Manufacturer")
     supplierinfo_id = fields.Many2one("product.supplierinfo", "Supplierinfo")
-    has_propertis = fields.Boolean(compute="_get_has_propertis")
-
-    def _get_has_propertis(self):
-        for rec in self:
-            rec.has_propertis = len(rec.order_id.print_properties.ids) > 0
 
     @api.onchange('product_id')
     def onchange_product_id(self):
@@ -147,6 +104,19 @@ class PurchaseOrderLine(models.Model):
 
         self.price_unit = price_unit
         if seller:
+            self.manufacturer_id = seller.manufacturer_id.id
             self.supplierinfo_id = seller.id
-            # self.manufacturer_id = seller.manufacturer_id.id
 
+
+class ProductProperties(models.Model):
+    _name = "product.properties.print.purchase"
+    _description = "Product properties for printing in purchase"
+
+    name = fields.Many2one("product.properties.type", string="Property name", required=True, translate=True)
+    print = fields.Boolean('Print')
+    order_id = fields.Many2one("purchase.order", string="Purchase order", index=True)
+
+    def get_print_properties(self):
+        if use_product_description:
+            return False
+        return [x.name.id for x in self if x.print]

@@ -21,7 +21,7 @@ Add information for Competitor prices in sales and product. Allows to create pri
         'views/res_partner_view.xml',
         'views/product_views.xml',
         'views/sale_views.xml',
-        #'wizards/product_pricelist_print_view.xml',
+        'wizards/product_pricelist_print_view.xml',
     ],
     'license': 'AGPL-3',
     "installable": True,

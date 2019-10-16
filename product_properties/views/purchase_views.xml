@@ -14,27 +14,6 @@
                 <field name="invoice_status" position="after">
                     <field name="use_product_description" string="Use product description"/>
                 </field>
-                <xpath expr="//notebook" position="inside">
-                    <page name="print_properties" string="Properties for Print" groups="product_properties.group_properties_print">
-                        <field name="print_properties">
-                            <form string="Properties for print">
-                                <group>
-                                    <group>
-                                        <field name="name"/>
-                                        <field name="print"/>
-                                    </group>
-                                </group>
-                            </form>
-                            <tree string="Properties for print">
-                                <field name="name"/>
-                                <field name="print"/>
-                            </tree>
-                        </field>
-                    </page>
-                    <page name="printpreview" string="Prodcuts properties">
-                        <field name="products_properties" col="4" colspan="4" nolabel="1"/>
-                    </page>
-                </xpath>
             </field>
         </record>
 </odoo>

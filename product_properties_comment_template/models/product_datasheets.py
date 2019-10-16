@@ -24,8 +24,6 @@ class AccountDocuments(models.Model):
     def _onchange_manufacturer_id(self):
         if not self.name and self.comment_template_id and self.manufacturer_id:
             self.name = "%s_%s" % (self.comment_template_id.name, self.manufacturer_id.manufacturer_pref)
-        if not self.name and self.is_date and self.comment_template_id and self.manufacturer_id:
-            self.name = "%s: %s/%s expr. %s" % (self.comment_template_id.name, self.iso_number, self.date_issue, self.date_expiry)
 
 
 class BaseCommentTemplate(models.Model):

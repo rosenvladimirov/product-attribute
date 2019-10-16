@@ -4,11 +4,11 @@
     <record model="ir.ui.view" id="view_datasheets_file_kanban_properties">
         <field name="name">product.manufacturer.datasheets.kanban</field>
         <field name="model">product.manufacturer.datasheets</field>
-        <field name="inherit_id" ref="product_properties.view_product_manufacturer_datasheets_eazy_kanban"/>
+        <field name="inherit_id" ref="product_properties.view_datasheets_file_kanban_properties"/>
         <field name="arch" type="xml">
-            <xpath expr="//div[@name='body']" position="inside">
+            <field name="name" position="after">
                 <field name="comment_template_id"/>
-            </xpath>
+            </field>
         </field>
     </record>
     <!-- <field name="mode">primary</field> -->
