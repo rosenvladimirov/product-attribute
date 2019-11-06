@@ -3,7 +3,7 @@
 
 {
     'name': 'Product Attribute Image',
-    'version': '11.0.1.0.0',
+    'version': '12.0.1.0.0',
     'category': 'Product',
     'summary': "Product Attribute Image",
     'author': 'Rosen Vladimirov',
@@ -11,7 +11,6 @@
     'depends': [
         'product',
         'website_sale',
-        'web_tree_image'
         ],
     'data': [
         'views/product_attribute_views.xml',

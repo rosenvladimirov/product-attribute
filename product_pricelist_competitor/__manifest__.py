@@ -3,8 +3,8 @@
 
 {
     "name" : "Competitor info prices in sales",
-    "version" : "11.0.1.0",
-    "author" : "Rosen Vladimirov",
+    "version" : "12.0.1.0",
+    "author" : "Rosen Vladimirov, dxFactory Ltd.",
     'category': 'Sales',
     "description": """
 Add information for Competitor prices in sales and product. Allows to create priceslists based on Competitor info.

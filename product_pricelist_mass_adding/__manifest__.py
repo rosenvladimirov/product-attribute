@@ -3,7 +3,7 @@
 {
     "name": "Product Pricelist Mass adding",
     "summary": "Add to many products price list from menu option, product templates",
-    "version": "11.0.1.0.0",
+    "version": "12.0.1.0.0",
     "category": "Product",
     "website": "https://www.github.com/rosenvladimirov/product-attribute",
     "author": "Rosen Vladimirov, "

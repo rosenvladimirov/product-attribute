@@ -31,7 +31,7 @@ the new value will also be set on the variant
 
 Packaging dimensions are independent from product template/variant dimensions.
  """,
-    'version' : '11.0.1.0.0',
+    'version' : '12.0.1.0.0',
     'license': 'AGPL-3',
     'author' : 'Niboo',
     'website': 'https://www.niboo.be',

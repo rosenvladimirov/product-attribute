@@ -3,8 +3,8 @@
 
 {
     "name" : "Add GS1, UDI and hibc standarts",
-    "version" : "11.0.1.0",
-    "author" : "Rosen Vladimirov",
+    "version" : "12.0.1.0",
+    "author" : "Rosen Vladimirov, dXFactory Ltd.",
     'category': 'hidden',
     "description": """
 Add support for GS1 [GTIN+AI(n)], UDI and HIBC standarts in barcode nomenclature

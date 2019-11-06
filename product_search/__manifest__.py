@@ -1,9 +1,9 @@
 {
     'name': 'Product attribute search',
     'category': 'Sales',
-    "author" : "Rosen Vladimirov",
+    "author" : "Rosen Vladimirov, dXFactory ltd.",
     'summary': 'Add search engin in product by attributes',
-    'version': '11.0.1.0',
+    'version': '12.0.1.0',
     'description': "",
     'depends': ['product'],
     'data': [
