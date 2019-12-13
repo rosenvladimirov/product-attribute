@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<odoo>
-    <template id="assets_backend" name="product_properties_assets" inherit_id="web.assets_backend">
-        <xpath expr="//link[last()]" position="after">
-            <link rel="stylesheet" href="/product_properties/static/src/less/datasheets_views_file_kanban.less" />
-            <link rel="stylesheet" href="/product_properties/static/src/less/layout_product_properties.less" />
-        </xpath>
-    </template>
-</odoo>
