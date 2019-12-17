@@ -10,7 +10,7 @@
         'mrp',
     ],
     'data': [
-        'wizard/product_bruto_weight_update_view.xml',
+        'wizard/product_weight_update_view.xml',
         'views/product_view.xml',
     ],
     'installable': True,
