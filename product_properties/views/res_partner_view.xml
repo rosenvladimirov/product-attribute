@@ -13,10 +13,10 @@
                 </xpath>
                 <field name="lang" position="after">
                     <field name="product_brand_ids" widget="many2many_tags" attrs="{'invisible': [('is_company','=',False),('parent_id','!=',False),('is_manufacturier','=',False)]}"/>
-                    <field name="authorised_id" context="{'type_company': 1}"/>
-                    <field name="qc_manager_id" domain="[('parent_id', '=', active_id)]"/>
-                    <field name="req_manager_id" domain="[('parent_id', '=', active_id)]"/>
-                    <field name="compl_manager_id" domain="[('parent_id', '=', active_id)]"/>
+                    <field name="authorised_id" context="{'type_company': 1}" attrs="{'invisible': [('is_company','=',False)]}"/>
+                    <field name="qc_manager_id" domain="[('parent_id', '=', active_id)]" attrs="{'invisible': [('is_company','=',False)]}"/>
+                    <field name="req_manager_id" domain="[('parent_id', '=', active_id)]" attrs="{'invisible': [('is_company','=',False)]}"/>
+                    <field name="compl_manager_id" domain="[('parent_id', '=', active_id)]" attrs="{'invisible': [('is_company','=',False)]}"/>
                     <!-- <field name="notified_body_ids" widget="many2many_tags"/> -->
                 </field>
                 <page name="sales_purchases" position="after">
@@ -99,17 +99,24 @@
                         <field name="distributor_ids" widget="one2many_list"/>
                     </page>
                     <page string="Printing properties" name="print_prop" attrs="{'invisible': [('is_company','=',False),('parent_id','!=',False)]}">
+                        <group>
+                        <button name="set_all_print_properties"
+                                string="Load all" type="object"
+                                class="btn-primary"/>
+                        </group>
                         <field name="print_properties" context="{'default_partner_id': active_id}">
                             <form string="Printing properties">
                                 <sheet>
                                     <group>
                                         <field name="name"/>
+                                        <field name="static_field"/>
                                         <field name="print"/>
                                     </group>
                                 </sheet>
                             </form>
                             <tree string="Printing properties">
                                 <field name="name"/>
+                                <field name="static_field"/>
                                 <field name="print"/>
                                 <field name="partner_id" invisible="1"/>
                             </tree>

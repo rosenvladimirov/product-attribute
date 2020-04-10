@@ -1,31 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <record id="view_picking_form" model="ir.ui.view">
-        <field name="name">stock.picking.form</field>
+    <record id="view_picking_print_user_form" model="ir.ui.view">
+        <field name="name">stock.picking.user.form</field>
         <field name="model">stock.picking</field>
-        <field eval="12" name="priority"/>
-        <field name="inherit_id" ref="stock.view_picking_form"/>
+        <field name="inherit_id" ref="report_theming_properties.view_picking_print_user_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//notebook" position="inside">
-                <page name="print_properties" string="Properties for Print" groups="product_properties.group_properties_print">
-                    <field name="print_properties">
-                        <form string="Properties for print">
+            <xpath expr="//notebook/page[@name='print_properties']" position="inside">
+                <field name="print_properties" colspan="4" groups="product_properties.group_properties_print">
+                    <form string="Properties for print">
+                        <group>
                             <group>
-                                <group>
-                                    <field name="name"/>
-                                    <field name="print"/>
-                                </group>
+                                <field name="name"/>
+                                <field name="static_field"/>
+                                <field name="print"/>
                             </group>
-                        </form>
-                        <tree string="Properties for print">
-                            <field name="name"/>
-                            <field name="print"/>
-                        </tree>
-                    </field>
-                </page>
+                        </group>
+                    </form>
+                    <tree editable="bottom" string="Properties for print">
+                        <field name="name"/>
+                        <field name="static_field"/>
+                        <field name="print"/>
+                    </tree>
+                </field>
             </xpath>
-            <xpath expr="//notebook/page[@name='extra']/group/group[2]" position="inside">
-                <field name="use_product_description"/>
+            <xpath expr="//notebook/page[@name='print_properties']" position="inside">
+                <group>
+                    <group>
+                        <field name="use_product_properties" widget="radio" options="{'horizontal': true}"/>
+                        <field name="invoice_sub_type" options="{'no_create_edit': True}" context="{'default_field_name': 'invoice_sub_type'}"/>
+                    </group>
+                    <group>
+                        <button name="set_all_print_properties"
+                            string="Load all" type="object"
+                            class="btn-primary"/>
+                    </group>
+                </group>
             </xpath>
         </field>
     </record>

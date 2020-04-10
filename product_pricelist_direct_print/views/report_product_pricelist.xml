@@ -121,16 +121,18 @@
 <template id="report_product_pricelist_detail">
     <t t-foreach="o.product_layouted(category_products, pricelist, date)" t-as="page">
         <t name="tmpl" t-foreach="page" t-as="product_print">
+            <!--
             <tr t-if="product_print['has_variant_with_price']">
                 <td colspan="100">
                     <i><strong t-esc="'(%s) %s' % (product_print['lines'][0].product_tmpl_id.id, product_print['name'])"/></i>
                 </td>
             </tr>
+            -->
             <t t-if="product_print['single_product']">
                 <t t-foreach="product_print['lines']" t-as="line">
                     <t t-set="price" t-value="o.get_price(line, pricelist=pricelist, date=o.date)[0]"/>
                     <tr t-if="price[0]">
-                        <td>
+                        <td name="linename">
                             <strong t-field="line.display_name"/>
                         </td>
                         <td t-if="o.show_standard_price" class="text-right">

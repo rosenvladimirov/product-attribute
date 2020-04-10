@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="product_properties_description">
+        <t t-if="line and line.has_propertis and line.has_product_properties">
+            <div class="o_bulgaria_table">
+                <t t-foreach="line.env['product.properties.type'].get_product_properties_print(line, properties_print)" t-as="description">
+                        <div class="o_bulgaria_row">
+                            <div class="o_bulgaria_custom_cell">
+                                <t t-1f="description['value']['value']">
+                                    <span t-esc="description['label']"/>
+                                </t>
+                            </div>
+                            <div class="o_bulgaria_cell">
+                                <t t-1f="description['value']['value']">
+                                    <span t-esc="description['value']['value']"/>
+                                </t>
+                            </div>
+                    </div>
+                </t>
+            </div>
+        </t>
+        <t t-else="">
+            <t t-if="line">
+                <span t-field="line.display_name"/>
+            </t>
+        </t>
+    </template>
+</odoo>

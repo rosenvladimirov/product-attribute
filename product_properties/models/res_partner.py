@@ -3,6 +3,9 @@
 
 from odoo import models, api, fields, _
 
+import logging
+_logger = logging.getLogger(__name__)
+
 
 class ResPartner(models.Model):
     _inherit = "res.partner"
@@ -83,6 +86,29 @@ class ResPartner(models.Model):
             ]
         nbr_datasheet = self.env['product.manufacturer.datasheets'].search_count(domain)
         self.count_datasheets = nbr_datasheet
+
+    @api.multi
+    def set_all_print_properties(self):
+        print_ids = False
+        for record in self:
+            static_properties_obj = self.env['product.properties.static']
+            dinamic_properties_obj = self.env['product.properties.category']
+            print_properties = []
+            for categ in dinamic_properties_obj.search([]):
+                for line in categ.lines_ids:
+                    if not print_ids:
+                        print_ids = line.mapped('name')
+                    else:
+                        print_ids |= line.mapped('name')
+            #_logger.info("PUT ALL %s" % print_ids)
+            print_static_ids = filter(lambda r: r not in static_properties_obj.ignore_fields(), static_properties_obj._fields)
+            if (print_ids or print_static_ids) and not record.print_properties:
+                if print_ids:
+                    print_properties += [(0, False, {'name': x.id, 'partner_id': self.id, 'print': True, 'sequence': x.sequence}) for x in print_ids if x.name]
+                if print_static_ids:
+                    print_properties += [(0, False, {'static_field': x, 'partner_id': self.id, 'print': True, 'sequence': 9999}) for x in print_static_ids]
+                #_logger.info("LIST %s" % print_properties)
+                record.print_properties = print_properties
 
     @api.multi
     def action_see_datasheets(self):

@@ -3,32 +3,52 @@
     <record id="view_order_form" model="ir.ui.view">
         <field name="name">sale.order.form</field>
         <field name="model">sale.order</field>
-        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="inherit_id" ref="report_theming_properties.view_order_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//notebook" position="inside">
-                <page name="print_properties" string="Properties for Print" groups="product_properties.group_properties_print">
-                    <field name="print_properties">
-                        <form string="Properties for print">
-                            <group>
-                                <group>
-                                    <field name="name"/>
-                                    <field name="print"/>
-                                </group>
-                            </group>
-                        </form>
-                        <tree string="Properties for print">
-                            <field name="name"/>
-                            <field name="print"/>
-                        </tree>
-                    </field>
-                </page>
+            <xpath expr="//notebook/page[@name='print_properties']/group" position="inside">
+                <group>
+                    <field name="use_product_properties" widget="radio" options="{'horizontal': true}"/>
+                    <field name="invoice_sub_type" context="{'default_field_name': 'invoice_sub_type'}"/>
+                </group>
+                <group>
+                    <button name="set_all_print_properties"
+                        string="Load all" type="object"
+                        class="btn-primary"/>
+                    <button name="set_partner_print_properties"
+                        string="Load all From Partner" type="object"
+                        class="btn-primary"/>
+                </group>
+            </xpath>
+            <xpath expr="//notebook">
                 <page name="printpreview" string="Prodcuts properties">
                     <field name="products_properties" col="4" colspan="4" nolabel="1"/>
                 </page>
             </xpath>
-            <field name="client_order_ref" position="after">
-                <field name="use_product_description"/>
-            </field>
+        </field>
+    </record>
+    <record id="sale_order_print_view" model="ir.ui.view">
+        <field name="name">sale.order.form</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="report_theming_properties.view_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook/page[@name='print_properties']" position="inside">
+                <field name="print_properties" colspan="4" groups="product_properties.group_properties_print">
+                    <form string="Properties for print">
+                        <group>
+                            <group>
+                                <field name="name"/>
+                                <field name="static_field"/>
+                                <field name="print"/>
+                            </group>
+                        </group>
+                    </form>
+                    <tree editable="bottom" string="Properties for print">
+                        <field name="name"/>
+                        <field name="static_field"/>
+                        <field name="print"/>
+                    </tree>
+                </field>
+            </xpath>
         </field>
     </record>
 </odoo>

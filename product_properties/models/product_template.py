@@ -13,14 +13,23 @@ import logging
 _logger = logging.getLogger(__name__)
 
 
+def name_boolean_print(id):
+    return 'static_pp_' + str(id)
+
+
 class ProductTemplate(models.Model):
     _inherit = "product.template"
 
     product_properties_has = fields.Boolean(compute="_compute_product_properties", string="Category Has Product properties")
     product_properties_ids = fields.One2many("product.properties", "product_tmpl_id", string='Product properties', domain=[('product_id', '=', False)])
+    #vproduct_properties_ids = fields.One2many("product.properties", "product_tmpl_id", string='Product properties', domain=lambda self: [('product_tmpl_id', '=', self.id)])
+    product_prop_static_id = fields.Many2one("product.properties.static", 'Static Product properties')
+    product_prop_static_v_id = fields.Many2one('product.product', 'Product', compute='_compute_product_static_variant_id')
+
     has_product_properties = fields.Boolean(compute="_compute_has_product_properties", string="Product has properties")
 
-    categ_ids = fields.Many2many('product.properties.category', relation="product_tmpl_prop", string='Global Category properties')
+    categ_ids = fields.Many2many('product.properties.category', relation="product_tmpl_prop",
+                                 string='Global Category properties', domain="[('applicability', '=', 'template')]")
     curr_categ_ids = fields.Many2many('product.properties.category', string='Category properties', compute='_compute_curr_categ_ids')
 
     manufacturer = fields.Many2one('product.manufacturer', string="Product Manufacturer", compute="_compute_manufacturer", store=True)
@@ -32,8 +41,6 @@ class ProductTemplate(models.Model):
     manufacturer_ids = fields.One2many('product.manufacturer', 'product_tmpl_id', 'Manufacturers', domain=[('product_id', '=', False)])
     count_datasheets = fields.Integer('Count Datasheets', compute='_compute_has_datasheets')
     datasheet_ids = fields.One2many('product.manufacturer.datasheets', compute="_compute_datasheet_ids")
-
-    massedit = fields.Boolean()
 
     def _compute_datasheet_ids(self):
         for product in self:
@@ -86,6 +93,31 @@ class ProductTemplate(models.Model):
         else:
             self.curr_categ_ids = False
 
+    @api.depends('product_variant_ids')
+    def _compute_product_static_variant_id(self):
+        for p in self:
+            p.product_prop_static_v_id = p.product_variant_ids[:1].product_prop_static_id
+
+    #@api.model
+    #def fields_get(self, allfields=None, attributes=None):
+    #    res = super(ProductTemplate, self).fields_get(allfields, attributes=attributes)
+    #    #field_obj = self.env['ir.model.fields']
+    #    model_obj = self.env['product.properties.static']
+    #    # boolean group fields
+    #    for g in filter(lambda r: r[0] not in self.env['product.properties.static'].ignore_fields(), model_obj._fields):
+    #        field_name = name_boolean_print(int.from_bytes(g.encode('utf-8'), 'little'))
+    #        if allfields and field_name not in allfields:
+    #            continue
+    #        #field = field_obj.search([('name', '=', g), ('model_id', '=', model_obj.id)])
+    #        res[field_name] = {
+    #            'type': 'boolean',
+    #            'related': 'product_prop_static_id.%s' % g,
+    #            'exportable': False,
+    #            'selectable': False,
+    #        }
+    #    #_logger.info("FIELDS %s" % res)
+    #    return res
+
     @api.onchange('manufacturer')
     def _onchange_manufacturer(self):
         for rec in self:
@@ -104,6 +136,16 @@ class ProductTemplate(models.Model):
                     rec.manufacturer = rec.manufacturer_ids[0]
                 else:
                     rec.manufacturer = False
+
+    @api.onchange('product_prop_static_id')
+    def _onchange_product_prop_static_id(self):
+        for prod in self:
+            if prod.product_prop_static_id:
+                prod.categ_ids = False
+                applicability = self.env['product.properties.category'].search([('applicability', '=', 'template')])
+                if applicability:
+                    prod.prod.categ_ids = (6, False, [x.id for x in applicability])
+                    prod._onchange_categ_ids()
 
     @api.onchange('categ_ids')
     def _onchange_categ_ids(self):
@@ -269,7 +311,6 @@ class ProductTemplate(models.Model):
             if product_fields:
                 product_field = product_fields[0]
                 product_field.attrib['context'] = "{'default_res_model': '%s','default_res_id': %d, 'default_manufacturer': %d}" % ('product.product', self.product_variant_id.id, self.manufacturer.id)
-                #product_field.attrib['domain'] = json.dumps(self._compute_get_domain())
                 res['arch'] = etree.tostring(product_xml)
         return res
 
@@ -277,25 +318,5 @@ class ProductTemplate(models.Model):
     def create(self, vals):
         res = super(ProductTemplate, self).create(vals)
         if vals.get('manufacturer_id'):
-            #_logger.info('VALS %s' % vals)
-            res.manufacturer_ids = [(0, False, {'manufacturer': res.manufacturer_id.id, 'product_tmpl_id': res.id})]
+            res.manufacturer_ids = [(0, False, {'manufacturer': self.manufacturer_id.id, 'product_tmpl_id': self.id})]
         return res
-
-    @api.multi
-    def write(self, vals):
-        if vals.get('massedit') and vals.get('categ_ids'):
-            category = self.env['product.properties.category'].search([('id', 'in', [x[1] for x in vals.get('categ_ids')])])
-            #_logger.info("LINE 1 %s:%s" % (vals.get('categ_ids'), category))
-            #del vals['massedit']
-            for prod in self:
-                ret = []
-                for categ in category:
-                    ret += prod._get_default_product_properties_ids(categ.lines_ids, categ_id=categ, product=prod)
-                    #_logger.info("LINE %s" % ret)
-                if ret:
-                    vals['product_properties_ids'] = ret
-        for prod in self:
-            if vals.get('manufacturer_id') and vals.get('manufacturer_id') not in [x.id for x in prod.manufacturer_ids.mapped('manufacturer')]:
-                #_logger.info('VALS %s' % vals)
-                prod.manufacturer_ids = [(0, False, {'manufacturer': prod.manufacturer_id.id, 'product_tmpl_id': prod.id})]
-        return super(ProductTemplate, self).write(vals)

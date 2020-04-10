@@ -1,0 +1,3 @@
+"id","name","model_id:id","group_id:id","perm_read","perm_write","perm_create","perm_unlink"
+access_product_label_prefix_stock_user,product.template.label.prefix stock user,product_label_prefix.model_product_template_label_prefix,stock.group_stock_user,1,0,0,0
+access_product_label_prefix_stock_manager,product.template.label.prefix stock_manager,product_label_prefix.model_product_template_label_prefix,stock.group_stock_manager,1,1,1,1

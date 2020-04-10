@@ -1,31 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
-        <record id="invoice_form" model="ir.ui.view">
-            <field name="name">account.invoice.form</field>
+        <record id="invoice_properties_form_print" model="ir.ui.view">
+            <field name="name">account.invoice.sets.print.form</field>
             <field name="model">account.invoice</field>
-            <field name="inherit_id" ref="account.invoice_form"/>
+            <field name="inherit_id" ref="report_theming_properties.invoice_theming_form"/>
             <field name="arch" type="xml">
-                <xpath expr="//notebook" position="inside">
-                    <page name="print_properties" string="Properties for Print" groups="product_properties.group_properties_print">
-                        <field name="print_properties">
-                            <form string="Properties for print">
-                                <group>
-                                    <group>
-                                        <field name="name"/>
-                                        <field name="print"/>
-                                    </group>
-                                </group>
-                            </form>
-                            <tree string="Properties for print">
-                                <field name="name"/>
-                                <field name="print"/>
-                            </tree>
-                        </field>
-                    </page>
+                <xpath expr="//notebook/page[@name='print_properties']" position="inside">
+                    <group>
+                        <group>
+                            <field name="use_product_properties" widget="radio" options="{'horizontal': true}"/>
+                            <field name="invoice_sub_type" context="{'default_field_name': 'invoice_sub_type'}"/>
+                        </group>
+                        <group>
+                            <button name="set_all_print_properties"
+                                string="Load all" type="object"
+                                class="btn-primary"/>
+                            <button name="set_partner_print_properties"
+                                string="Load all From Partner" type="object"
+                                class="btn-primary"/>
+                        </group>
+                    </group>
                 </xpath>
-                <xpath expr="//page[@name='other_info']//field[@name='name']" position="after">
-                    <field name="use_product_description"/>
+                <xpath expr="//notebook/page[@name='print_properties']" position="inside">
+                    <field name="print_properties" colspan="4" groups="product_properties.group_properties_print">
+                        <form string="Properties for print">
+                            <group>
+                                <group>
+                                    <field name="name"/>
+                                    <field name="static_field"/>
+                                    <field name="print"/>
+                                </group>
+                            </group>
+                        </form>
+                        <tree editable="bottom" string="Properties for print">
+                            <field name="name"/>
+                            <field name="static_field"/>
+                            <field name="print"/>
+                        </tree>
+                    </field>
                 </xpath>
             </field>
         </record>

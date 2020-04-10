@@ -3,7 +3,7 @@
     <data>
         <template id="accepted_delivery_report_document_properties" inherit_id="l10n_bg_extend.accepted_delivery_report_document">
             <xpath expr="//t[@name='description']" position="replace">
-                <t t-if="move_line.picking_id.use_product_description">
+                <t t-if="move_line.picking_id.use_product_properties == 'description'">
                     <t name="description">
                         <span t-field="move_line.product_id"/>
                         <p t-if="o.picking_type_code == 'outgoing'">
@@ -27,7 +27,7 @@
                 </t>
             </xpath>
             <xpath expr="//t[@t-if='has_serial_number']" position="replace">
-                <t t-if="move_line.picking_id.use_product_description">
+                <t t-if="move_line.picking_id.use_product_properties == 'description'">
                     <t t-if="has_serial_number">
                        <td>
                             <table width="100%" style="background-color: transparent !important;">

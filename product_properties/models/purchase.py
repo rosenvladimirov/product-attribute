@@ -8,7 +8,13 @@ from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
 class PurchaseOrder(models.Model):
     _inherit = "purchase.order"
 
-    use_product_description = fields.Boolean(default=True)
+    #use_product_description = fields.Boolean(default=True)
+    use_product_properties = fields.Selection([
+        ('description', _('Use descriptions')),
+        ('properties', _('Use properties')),],
+        string="Type product description",
+        help="Choice type of the view for product description",
+        default="description")
     print_properties = fields.One2many('product.properties.print', 'order_id', 'Print properties')
     #print_properties = fields.One2many('product.properties.print', 'partner_id', related='partner_id.print_properties', string='Print properties')
     products_properties = fields.Html('Products properties', compute="_get_products_properties")

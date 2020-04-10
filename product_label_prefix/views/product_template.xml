@@ -1,0 +1,96 @@
+<?xml version="1.0"?>
+<odoo>
+    <data>
+    <!-- Product Template Label Prefix -->
+    <record id="product_template_label_prefix_view_form" model="ir.ui.view">
+        <field name="name">product.template.label.prefix.view.form</field>
+        <field name="model">product.template.label.prefix</field>
+        <field name="arch" type="xml">
+            <form string="Product label prefix">
+                <sheet>
+                    <group>
+                        <group name="label_prefix">
+                            <field name="code"/>
+                            <field name="separator"/>
+                            <field name="name"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="product_template_label_prefix_view_tree" model="ir.ui.view">
+        <field name="name">product.template.label.prefix.view.tree</field>
+        <field name="model">product.template.label.prefix</field>
+        <field name="priority" eval="1"/>
+        <field name="arch" type="xml">
+            <tree string="Product label prefix">
+                <field name="code"/>
+                <field name="separator"/>
+                <field name="name"/>
+            </tree>
+        </field>
+    </record>
+    <record id="product_template_label_prefix_action" model="ir.actions.act_window">
+        <field name="name">Product label prefix</field>
+        <field name="res_model">product.template.label.prefix</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p>
+              Create Product label prefix
+            </p>
+        </field>
+    </record>
+
+    <!-- Product base form view -->
+    <record id="product_template_only_form_prefix_view" model="ir.ui.view">
+        <field name="name">product.template.product.form</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_only_form_view"/>
+        <field name="arch" type="xml">
+            <!--
+            <button name="toggle_active" position="before">
+                <button class="oe_stat_button" name="error_message" type="object"
+                    icon="fa-list"/>
+            </button>
+            -->
+            <xpath expr="//group[@name='group_lots_and_weight']" position="inside">
+                <field name="label_prefix_id"/>
+            </xpath>
+            <xpath expr="//group[@name='packaging']" position="before">
+                <group name="alternatives" string="Component alternatives" colspan="4">
+                    <field name="alternative_component_ids" nolabel="1" placeholder="Fill alternatives for this component."/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+    <record id="product_template_only_prefix_form" model="ir.ui.view">
+            <field name="name">product.template.product.prefix.form</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="product.product_template_only_form_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//h1" position="after">
+                    <h2>
+                        <field name="description_short"/>
+                    </h2>
+                </xpath>
+                <!--
+                <field name="barcode" position="after">
+                    <field name="description_short"/>
+                </field>
+                -->
+            </field>
+    </record>
+    <record model="ir.ui.view" id="product_template_kanban_prefix_view">
+        <field name="name">Product Template Kanban Prefix</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_kanban_view"/>
+        <field name="arch" type="xml">
+            <strong position="inside">
+                <small t-if="record.description_short.value"><br/>(<field name="description_short"/>)</small>
+            </strong>
+        </field>
+    </record>
+    </data>
+</odoo>

@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 {
     'name': 'Product properties',
-    'version': '11.0.2.0.9',
+    'version': '11.0.4.0.0',
     'category': 'Product',
     'sequence': 5,
     'summary': 'Product properties',
@@ -13,7 +13,8 @@ T
 
 T
 """,
-    'author': 'Rosen Vladimirov, dXFactory Ltd.',
+    'author': 'Rosen Vladimirov, '
+              'BioPrint Ltd.',
     'depends': [
                 'base',
                 'product',
@@ -41,8 +42,9 @@ T
             'views/report_sale_templates.xml',
             'views/report_purchase_order_templates.xml',
             'views/report_invoice.xml',
-            'views/report_accepted_delivery.xml',
+            #'views/report_accepted_delivery.xml',
             ],
     'demo': [],
     'installable': True,
+    'license': 'Other proprietary',
 }

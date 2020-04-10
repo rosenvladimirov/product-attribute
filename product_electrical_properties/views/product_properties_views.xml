@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="product_electrical_properties_package_tree_view" model="ir.ui.view">
+            <field name="name">product.electrical.properties.package.tree.view</field>
+            <field name="model">product.electrical.properties.package</field>
+            <field name="arch" type="xml">
+                <tree string="Package-Corpus">
+                    <field name="name"/>
+                    <field name="dimensions_x"/>
+                    <field name="dimensions_y"/>
+                    <field name="dimensions_z"/>
+                    <field name="image_small" widget="image"/>
+                </tree>
+            </field>
+        </record>
+        <record id="product_electrical_properties_package_form_view" model="ir.ui.view">
+            <field name="name">product.electrical.properties.package.form.view</field>
+            <field name="model">product.electrical.properties.package</field>
+            <field name="arch" type="xml">
+                <form string="Package-Corpus">
+                    <sheet>
+                        <field name="image_medium" widget="image" class="oe_avatar"/>
+                        <div class="oe_title">
+                            <label class="oe_edit_only" for="name" string="Package Name"/>
+                            <h1>
+                                <field name="name"/>
+                            </h1>
+                        </div>
+                        <group>
+                            <group string="Dimensions">
+                                <field name="dimensions_x"/>
+                                <field name="dimensions_y"/>
+                                <field name="dimensions_z"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="product_electrical_properties_tree_view" model="ir.ui.view">
+            <field name="name">product.electrical.properties.view</field>
+            <field name="model">product.electrical.properties</field>
+            <field name="arch" type="xml">
+                <tree string="Electrical properties">
+                    <field name="sequence" widget="handle"/>
+                    <field name="name"/>
+                    <field name="type_display"/>
+                    <field name="type_display_attrs"/>
+                    <field name="type_fields" invisible="1"/>
+                    <field name="image_small" widget="image"/>
+                </tree>
+            </field>
+        </record>
+        <record id="product_electrical_properties_form_view" model="ir.ui.view">
+            <field name="name">product.electrical.properties.form.view</field>
+            <field name="model">product.electrical.properties</field>
+            <field name="arch" type="xml">
+                <form string="Electical properties">
+                    <sheet>
+                        <field name="image_medium" widget="image" class="oe_avatar" attrs="{'invisible':[('type_fields', '!=', 'package')]}"/>
+                        <div class="oe_title">
+                            <label class="oe_edit_only" for="name" string="Properties Name"/>
+                            <h1>
+                                <field name="name"/>
+                            </h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="type_fields"/>
+                            </group>
+                            <group name="properties">
+                                <field name="type_float" attrs="{'invisible':[('type_fields', '!=', 'float')]}"/>
+                                <field name="type_char" attrs="{'invisible':[('type_fields', '!=', 'char')]}"/>
+                                <field name="type_int" attrs="{'invisible':[('type_fields', '!=', 'int')]}"/>
+                                <field name="type_boolean" attrs="{'invisible':[('type_fields', '!=', 'boolean')]}"/>
+                                <field name="type_msl" attrs="{'invisible':[('type_fields', '!=', 'msl')]}"/>
+                                <field name="type_uom_id" attrs="{'invisible':[('type_fields', 'in', ('char', 'package', 'msl'))]}"/>
+                            </group>
+                            <group string="Range" attrs="{'invisible':[('type_fields', '!=', 'range')]}">
+                                <field name="type_int" attrs="{'invisible':[('type_fields', 'not in', ('int', 'range'))]}"/>
+                                <field name="type_int_second" attrs="{'invisible':[('type_fields', 'not in', ('int', 'range'))]}"/>
+                            </group>
+                            <group string="Dimensions" attrs="{'invisible':[('type_fields', '!=', 'package')]}">
+                                <field name="type_package_id" attrs="{'invisible':[('type_fields', '!=', 'package')]}"/>
+                                <field name="dimensions_x"/>
+                                <field name="dimensions_y"/>
+                                <field name="dimensions_z"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="action_product_electrical_properties_view">
+            <field name="name">Electical properties</field>
+            <field name="res_model">product.electrical.properties</field>
+            <field name="view_ids" eval="[(5, 0, 0),
+                (0, 0, {'view_mode': 'tree', 'view_id': ref('product_electrical_properties_tree_view')}),
+                (0, 0, {'view_mode': 'form', 'view_id': ref('product_electrical_properties_form_view')})]"/>
+        </record>
+
+        <record id="product_electrical_form_view" model="ir.ui.view">
+            <field name="name">product.electrical.form.view</field>
+            <field name="model">product.electrical</field>
+            <field name="arch" type="xml">
+                <form string="Electical properties">
+                    <sheet>
+                        <div class="oe_title">
+                            <label class="oe_edit_only" for="name" string="Properties Name"/>
+                            <h1>
+                                <field name="name"/>
+                            </h1>
+                        </div>
+                        <field name="lines_ids" context="{'default_categ_id': active_id}">
+                            <form string="Electical properties">
+                                <sheet>
+                                    <field name="image_medium" widget="image" class="oe_avatar" attrs="{'invisible':[('type_fields', '!=', 'package')]}"/>
+                                    <div class="oe_title">
+                                        <label class="oe_edit_only" for="name" string="Properties Name"/>
+                                        <h1>
+                                            <field name="name"/>
+                                        </h1>
+                                    </div>
+                                    <group>
+                                        <group>
+                                            <field name="type_fields"/>
+                                        </group>
+                                        <group name="properties">
+                                            <field name="type_float" attrs="{'invisible':[('type_fields', '!=', 'float')]}"/>
+                                            <field name="type_char" attrs="{'invisible':[('type_fields', '!=', 'char')]}"/>
+                                            <field name="type_int" attrs="{'invisible':[('type_fields', '!=', 'int')]}"/>
+                                            <field name="type_boolean" attrs="{'invisible':[('type_fields', '!=', 'boolean')]}"/>
+                                            <field name="type_msl" attrs="{'invisible':[('type_fields', '!=', 'msl')]}"/>
+                                            <field name="type_uom_id" attrs="{'invisible':[('type_fields', 'in', ('char', 'package', 'msl'))]}"/>
+                                        </group>
+                                        <group string="Range" attrs="{'invisible':[('type_fields', '!=', 'range')]}">
+                                            <field name="type_int" attrs="{'invisible':[('type_fields', 'not in', ('int', 'range'))]}"/>
+                                            <field name="type_int_second" attrs="{'invisible':[('type_fields', 'not in', ('int', 'range'))]}"/>
+                                        </group>
+                                        <group string="Dimensions" attrs="{'invisible':[('type_fields', '!=', 'package')]}">
+                                            <field name="type_package_id" attrs="{'invisible':[('type_fields', '!=', 'package')]}"/>
+                                            <field name="dimensions_x"/>
+                                            <field name="dimensions_y"/>
+                                            <field name="dimensions_z"/>
+                                        </group>
+                                    </group>
+                                </sheet>
+                            </form>
+                            <tree string="Electrical properties">
+                                <field name="sequence" widget="handle"/>
+                                <field name="name"/>
+                                <field name="type_display"/>
+                                <!-- <field name="type_range"/> -->
+                                <field name="type_display_attrs"/>
+                                <field name="type_fields" invisible="1"/>
+                                <field name="image_small" widget="image" attrs="{'invisible':[('type_fields', '!=', 'package')]}"/>
+                            </tree>
+                        </field>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record id="product_electrical_tree_view" model="ir.ui.view">
+            <field name="name">product.electrical.tree.view</field>
+            <field name="model">product.electrical</field>
+            <field name="arch" type="xml">
+                <tree string="Electrical properties">
+                    <field name="name"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="product_electrical_action" model="ir.actions.act_window">
+            <field name="name">The Category electrical properties</field>
+            <field name="res_model">product.electrical</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p>
+                  Create The Category electrical Properties.
+                </p>
+            </field>
+        </record>
+
+        <!-- Product base form view -->
+        <record id="product_template_only_form_el_properties_view" model="ir.ui.view">
+            <field name="name">product.template.product.form</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="product.product_template_only_form_view"/>
+            <field name="arch" type="xml">
+                <data>
+                    <xpath expr="//field[@name='categ_id']" position="after">
+                        <field name="electrical_properties_id"
+                                string="Electrical properties"
+                                context="{'default_categ_id': electrical_properties_id}"/>
+                    </xpath>
+                    <xpath expr="//page[@name='notes']" position="before">
+                        <page name="el_properties" string="Electical properties" attrs="{'invisible':[('electrical_properties_id', '=', False)]}">
+                            <group name="electrical_properties" colspan="4">
+                                <field name="electrical_properties_ids" nolabel="1"
+                                    context="{'default_product_tmpl_id': active_id}">
+                                    <tree>
+                                        <field name="sequence" widget="handle"/>
+                                        <field name="name"/>
+                                        <field name="type_display"/>
+                                        <!-- <field name="type_range"/> -->
+                                        <field name="type_display_attrs"/>
+                                        <field name="type_fields" invisible="1"/>
+                                        <field name="image_small" widget="image" attrs="{'invisible':[('type_fields', '!=', 'package')]}"/>
+                                    </tree>
+                                </field>
+                            </group>
+                        </page>
+                    </xpath>
+                </data>
+            </field>
+        </record>
+        <!--
+        <record id="product_template_ep_search_form_view_stock" model="ir.ui.view">
+            <field name="name">product.template.search.ep.form</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="product.product_template_search_view"/>
+            <field name="arch" type="xml">
+                <field name="pricelist_id" position="after">
+                    <field name="electrical_properties_msl"/>
+                    <group expand="0" string="Group By">
+                        <filter name="group_by_electrical_properties_msl" string="By MSL" domain="[]" context="{'group_by':'electrical_properties_msl'}"/>
+                    </group>
+                </field>
+            </field>
+        </record>
+        -->
+    </data>
+</odoo>

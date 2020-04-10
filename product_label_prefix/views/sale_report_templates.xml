@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_saleorder_document_discription_short" inherit_id="sale.report_saleorder_document">
+        <xpath expr="//td/span[@t-field='l.name']" position="replace">
+            <p>
+                <span t-field="l.name"/>
+                <t t-if="l.product_id.description_short or l.product_id.product_tmpl_id.description_short">
+                    <br/>
+                    <t t-if="l.product_id.description_short">
+                        (<span t-field="l.product_id.description_short"/>)
+                    </t>
+                    <t t-else="">
+                        (<span t-field="l.product_id.product_tmpl_id.description_short"/>)
+                    </t>
+                </t>
+            </p>
+        </xpath>
+    </template>
+    <template id="report_saleorder_document" inherit_id="report_theming.report_saleorder_document">
+        <xpath expr="//tr/th[@name='count']" position="after">
+            <th name="short">Short description</th>
+        </xpath>
+        <xpath expr="//tr/td[@name='count']" position="after">
+            <t t-if="l.product_id.description_short or l.product_id.product_tmpl_id.description_short">
+                <td>
+                    <t t-if="l.product_id.description_short">
+                        <span t-field="l.product_id.description_short"/>
+                    </t>
+                    <t t-else="">
+                        <span t-field="l.product_id.product_tmpl_id.description_short"/>
+                    </t>
+                </td>
+            </t>
+            <t t-else=""><td/></t>
+        </xpath>
+    </template>
+</odoo>

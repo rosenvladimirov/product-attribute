@@ -1,21 +1,46 @@
+page[size="A4"] {
+  background: white;
+  width: 21cm;
+  height: 29.7cm;
+  display: block;
+  margin: 0 auto;
+  margin-bottom: 0.5cm;
+  box-shadow: 0 0 0.5cm rgba(0,0,0,0.5);
+}
+@media print {
+  body, page[size="A4"] {
+    margin: 0;
+    box-shadow: 0;
+  }
+}
+@media screen {
+  body, page[size="A4"] {
+  }
+}
 .o_bulgaria_table {
-    display: table;
-    width: 100%;
-    page-break-after: always !important;
+    display: table !important;
+    width: 100% !important;
 }
 .o_bulgaria_row {
-    display: table-row;
-    page-break-inside: inherit !important;
+    display: table-row !important;
+    page-break-inside: avoid;
+}
+.o_bulgaria_thead {
+    display: table-header-group !important;
+}
+.o_bulgaria_tbody {
+    display: table-row-group !important;
 }
 .o_bulgaria_custom_cell {
-    font-weight: bold;
-    display: table-cell;
+    display: table-cell !important;
+    width: 15% !important;
     padding: 3px 3px;
-    width: 25%;
+    word-wrap: break-word;
+    font-weight: bold;
 }
 .o_bulgaria_cell {
-    display: table-cell;
+    display: table-cell !important;
     padding: 3px 5px;
+    word-wrap: break-word;
     font-weight: normal;
-    width: 75%;
 }

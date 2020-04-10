@@ -114,6 +114,7 @@ class ProductPricelistPrint(models.TransientModel):
 
     @api.model
     def default_get(self, fields):
+        active_ids = self._context.get('active_ids') and self._context['active_ids'] or self._context.get('active_id') and [self._context['active_id']] or self.id
         res = super(ProductPricelistPrint, self).default_get(fields)
         if self.env.context.get('active_model') == 'product.template':
             res['product_tmpl_ids'] = [

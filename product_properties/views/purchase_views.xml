@@ -12,7 +12,7 @@
                     <field name="manufacturer_id" context="{'default_product_id': product_id, 'supplierinfo_ids': parent.partner_id}"/>
                 </xpath>
                 <field name="invoice_status" position="after">
-                    <field name="use_product_description" string="Use product description"/>
+                    <field name="use_product_properties" widget="radio" options="{'horizontal': true}" string="Use product description"/>
                 </field>
                 <xpath expr="//notebook" position="inside">
                     <page name="print_properties" string="Properties for Print" groups="product_properties.group_properties_print">
@@ -21,12 +21,14 @@
                                 <group>
                                     <group>
                                         <field name="name"/>
+                                        <field name="static_field"/>
                                         <field name="print"/>
                                     </group>
                                 </group>
                             </form>
-                            <tree string="Properties for print">
+                            <tree editable="bottom" string="Properties for print">
                                 <field name="name"/>
+                                <field name="static_field"/>
                                 <field name="print"/>
                             </tree>
                         </field>

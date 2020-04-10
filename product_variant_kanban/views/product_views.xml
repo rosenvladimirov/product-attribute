@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="product_kanban_view" model="ir.ui.view">
+            <field name="name">Product Kanban</field>
+            <field name="model">product.product</field>
+            <field name="inherit_id" ref="product.product_kanban_view"/>
+            <field name="arch" type="xml">
+                <field name="lst_price" position="after">
+                    <field name="default_code"/>
+                    <field name="barcode"/>
+                </field>
+                <xpath expr="//div[@name='tags']" position="before">
+                    <ul t-if="record.default_code.raw_value or record.barcode.raw_value">
+                        <li t-if="record.default_code.raw_value"><strong>Int Ref.: <field name="default_code"></field></strong></li>
+                        <li t-if="record.barcode.raw_value"><strong>Barcode: <field name="barcode"></field></strong></li>
+                    </ul>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

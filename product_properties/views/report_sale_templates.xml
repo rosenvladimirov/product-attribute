@@ -1,8 +1,9 @@
 <?xml version="1.0"?>
 <odoo>
+    <!--
     <template id="report_saleorder_document_inherit_sale_properties" inherit_id="l10n_bg_extend.report_saleorder_document">
         <xpath expr="//td[@name='linename']" position="replace">
-            <t t-if="l.order_id.use_product_description">
+            <t t-if="l.order_id.use_product_properties == 'description'">
                 <td name="linename">
                     <span t-field="l.name"/>
                     <t t-if="has_hscode">
@@ -25,6 +26,7 @@
             </t>
         </xpath>
     </template>
+    -->
     <template id="report_saleorder_html">
         <t t-call="product_properties.internal_layout">
             <t t-set="doc" t-value="doc.with_context({'lang':doc.env.user.sudo().lang})" />
@@ -58,12 +60,12 @@
                                         <t t-if="layout_category_size > 1 or page_size > 1" groups="sale.group_sale_layout">
                                             <tr class="active">
                                                 <t t-if="display_pictures">
-                                                    <td colspan="9" style="font-weight: bold; border-bottom: 1px solid black;">&amp;bull;
+                                                    <td colspan="9" class="o_bulgaria_cells_bottom">&amp;bull;
                                                         <t t-esc="layout_category['name']"/>
                                                     </td>
                                                 </t>
                                                 <t t-else="">
-                                                    <td colspan="8" style="font-weight: bold; border-bottom: 1px solid black;">&amp;bull;
+                                                    <td colspan="8" class="o_bulgaria_cells_bottom">&amp;bull;
                                                         <t t-esc="layout_category['name']"/>
                                                     </td>
                                                 </t>

@@ -20,6 +20,9 @@ from odoo.tools import float_compare, pycompat
 import logging
 _logger = logging.getLogger(__name__)
 
+def name_boolean_print(id):
+    return 'static_pp_' + str(id)
+
 
 class ProductProduct(models.Model):
     _inherit = 'product.product'
@@ -29,10 +32,16 @@ class ProductProduct(models.Model):
 
     product_properties_has = fields.Boolean(compute="_compute_product_properties", string="Category Has Product properties")
     product_properties_ids = fields.One2many("product.properties", "product_id", string='Product properties')
-    has_product_properties = fields.Boolean(compute="_compute_has_product_properties", string="Product has properties")
-    tproduct_properties_ids = fields.Many2many("product.properties", compute="_compute_tproduct_properties_ids", string='Product properties')
+    product_prop_static_id = fields.Many2one("product.properties.static", 'Static Product properties')
+    tproduct_prop_static_id = fields.Many2one("product.properties.static", related="product_tmpl_id.product_prop_static_id")
 
-    categ_ids = fields.Many2many('product.properties.category', relation="product_prod_prop", string='Global Category properties')
+    has_product_properties = fields.Boolean(compute="_compute_has_product_properties", string="Product has properties")
+    tproduct_properties_ids = fields.Many2many("product.properties", compute="_compute_tproduct_properties_ids", string='Product template properties')
+
+    categ_ids = fields.Many2many('product.properties.category', relation="product_prod_prop",
+                                 string='Global Category properties', domain="[('applicability', '=', 'product')]")
+    tcateg_ids = fields.Many2many('product.properties.category', relation="product_prod_prop",
+                                 string='Global Category properties', domain="[('applicability', '=', 'template')]")
     curr_categ_ids = fields.Many2many('product.properties.category', string='Category properties', compute='_compute_curr_categ_ids')
 
     manufacturer = fields.Many2one('product.manufacturer', string="Product Manufacturer")
@@ -41,8 +50,6 @@ class ProductProduct(models.Model):
     manufacturer_purl = fields.Char(string='Manuf. Product URL', related='manufacturer.manufacturer_purl')
 
     manufacturer_id = fields.Many2one('res.partner', string='Manufacturer', compute="_compute_manufacturer", store=True)
-
-    massedit = fields.Boolean()
 
     @api.multi
     def _compute_product_properties(self):
@@ -86,38 +93,61 @@ class ProductProduct(models.Model):
                                             'manufacturer_pname': self.manufacturer_pname, 'manufacturer_pref': self.manufacturer_pref,
                                             'manufacturer_purl': self.manufacturer_purl}]})
 
-    @api.model
-    def fields_view_get(self, view_id=None, view_type='form',
-                        toolbar=False, submenu=False):
-        """ Custom redefinition of fields_view_get to adapt the context
-            to product variants.
-        """
-        res = super().fields_view_get(view_id=view_id,
-                                      view_type=view_type,
-                                      toolbar=toolbar,
-                                      submenu=submenu)
-        if view_type == 'form':
-            update = False
-            product_xml = etree.XML(res['arch'])
-            manufacturer_path = "//field[@name='manufacturer_ids']"
-            manufacturer_fields = product_xml.xpath(manufacturer_path)
-            if manufacturer_fields:
-                update = True
-                manufacturer_field = manufacturer_fields[0]
-                manufacturer_field.attrib['readonly'] = "0"
-                manufacturer_field.attrib['context'] = \
-                    "{'search_default_product_id': active_id, 'default_product_tmpl_id': product_tmpl_id," \
-                    "'default_product_id': active_id}"
-            properties_path = "//field[@name='product_properties_ids']"
-            properties_fields = product_xml.xpath(properties_path)
-            if properties_fields:
-                #parent = properties_fields.getparent()
-                #copy = deepcopy(properties_fields)
-                #etree.SubElement(parent, copy)
-                _logger.info("VIEWS %s" % properties_fields)
-            if update:
-                res['arch'] = etree.tostring(product_xml)
-        return res
+    #@api.model
+    #def fields_get(self, allfields=None, attributes=None):
+    #    res = super(ProductProduct, self).fields_get(allfields, attributes=attributes)
+    #    #field_obj = self.env['ir.model.fields']
+    #    model_obj = self.env['product.properties.static']
+    #    # boolean group fields
+    #    for g in filter(lambda r: r[0] not in self.env['product.properties.static'].ignore_fields(), model_obj._fields):
+    #        field_name = name_boolean_print(int.from_bytes(g.encode('utf-8'), 'little'))
+    #        if allfields and field_name not in allfields:
+    #            continue
+    #        #field = field_obj.search([('name', '=', g), ('model_id', '=', model_obj.id)])
+    #        res[field_name] = {
+    #            'type': 'boolean',
+    #            'related': 'product_prop_static_id.%s' % g,
+    #            'exportable': False,
+    #            'selectable': False,
+    #        }
+    #    #_logger.info("FIELDS %s" % res)
+    #    return res
+
+    #@api.model
+    #def fields_view_get(self, view_id=None, view_type='form',
+    #                    toolbar=False, submenu=False):
+    #    """ Custom redefinition of fields_view_get to adapt the context
+    #        to product variants.
+    #    """
+    #    res = super().fields_view_get(view_id=view_id,
+    #                                  view_type=view_type,
+    #                                  toolbar=toolbar,
+    #                                  submenu=submenu)
+    #    if view_type == 'form':
+    #        update = False
+    #        product_xml = etree.XML(res['arch'])
+    #        manufacturer_path = "//field[@name='manufacturer_ids']"
+    #        manufacturer_fields = product_xml.xpath(manufacturer_path)
+    #        if manufacturer_fields:
+    #            update = True
+    #            manufacturer_field = manufacturer_fields[0]
+    #            manufacturer_field.attrib['readonly'] = "0"
+    #            manufacturer_field.attrib['context'] = \
+    #                "{'search_default_product_id': active_id, 'default_product_tmpl_id': product_tmpl_id," \
+    #                "'default_product_id': active_id}"
+    #        properties_path = "//field[@name='product_prop_static_id']"
+    #        properties_fields = product_xml.xpath(properties_path)
+    #        _logger.info("VIEWS1 %s" % etree.tostring(properties_fields[0], pretty_print=True, encoding="unicode"))
+    #        if properties_fields:
+    #            update = True
+    #            view = self.env.ref('product_properties.product_variant_easy_edit_manufacturer_view',
+    #                                raise_if_not_found=False)
+    #            properties_views = self.env['product.properties.static']._properties_print_view(view)
+    #            _logger.info("VIEWS2 %s" % etree.tostring(properties_fields[0], pretty_print=True, encoding="unicode"))
+    #        if update:
+    #            res['arch'] = etree.tostring(product_xml)
+    #            _logger.info("VIEWS3 %s" % etree.tostring(product_xml, pretty_print=True, encoding="unicode").replace(etree.tostring(properties_fields[0]), etree.tostring(properties_views)))
+    #    return res
 
     @api.multi
     def _select_seller(self, partner_id=False, quantity=0.0, date=None, uom_id=False):
@@ -156,12 +186,35 @@ class ProductProduct(models.Model):
             break
         return res
 
+    @api.onchange('product_prop_static_id')
+    def _onchange_product_prop_static_id(self):
+        for prod in self:
+            if prod.product_prop_static_id:
+                prod.categ_ids = False
+                if prod.product_tmpl_id.product_variant_count == 1:
+                    prod.categ_ids = (6, False, [x.id for x in self.env['product.properties.category'].search([('applicability', '=', 'template')])])
+                else:
+                    prod.categ_ids = (6, False, [x.id for x in self.env['product.properties.category'].search([('applicability', '=', 'product')])])
+                prod._onchange_categ_ids()
+
     @api.onchange('categ_ids')
     def _onchange_categ_ids(self):
         for prod in self:
+            if prod.product_tmpl_id.product_variant_count == 1:
+                ret = []
+                for categ in prod.categ_ids:
+                    ret += prod._get_default_product_properties_ids(categ.lines_ids, categ_id=categ, product=prod.product_tmpl_id)
+            else:
+                ret = []
+                for categ in prod.categ_ids:
+                    ret += prod._get_default_product_properties_ids(categ.lines_ids, categ_id=categ, product=prod)
+
+    @api.onchange('tcateg_ids')
+    def _onchange_tcateg_ids(self):
+        for prod in self:
             ret = []
-            for categ in prod.categ_ids:
-                ret += prod._get_default_product_properties_ids(categ.lines_ids, categ_id=categ, product=prod)
+            for categ in prod.tcateg_ids:
+                ret += prod.product_tmpl_id._get_default_product_properties_ids(categ.lines_ids, categ_id=categ, product=prod.product_tmpl_id)
 
     def _get_default_product_properties_ids(self, properties, categ_id=False, product=False, default={}):
         system = False
@@ -208,7 +261,7 @@ class ProductProduct(models.Model):
                 #_logger.info("LINE %s" % categ_id.id)
                 #'product_id': product.product_variant_id.id,
                 value = {'product_id': product.id,
-                          'product_tmpl_id': product.product_tmpl_id.id,
+                          'product_tmpl_id': 'product_tmpl_id' in product._fields and product.product_tmpl_id.id or False,
                           'sequence': sequence,
                           'name': system and rec.id or rec.name.id,
                           'categ_id': categ_id.id,
@@ -237,7 +290,22 @@ class ProductProduct(models.Model):
             if product.product_properties_has:
                 ret = product._get_default_product_properties_ids(default=default)
                 product.product_properties_ids = ret
-                #product.write({'product_properties_ids': ret})
+
+    @api.model
+    def create(self, vals):
+        res = super(ProductProduct, self).create(vals)
+        if len(res.product_properties_ids.ids) == 0:
+            applicability = self.env['product.properties.category'].search([('applicability', '=', 'product')])
+            #_logger.info("PRODUCT PROPERTIES %s:%s" % (applicability, res))
+            if applicability:
+                res.categ_ids = [(6, False, [x.id for x in applicability])]
+            if len(res.product_tmpl_id.attribute_line_ids.ids) > 0:
+                applicability = self.env['product.properties.category'].search([('applicability', '=', 'template')])
+            else:
+                applicability = self.env['product.properties.category'].search([('applicability', '=', 'templateoo')])
+            if applicability:
+                res.product_tmpl_id.categ_ids = [(6, False, [x.id for x in applicability])]
+        return res
 
     @api.multi
     def write(self, vals):
@@ -254,14 +322,6 @@ class ProductProduct(models.Model):
             manufacturer.update(product_id=self.id)
             res = self.env['product.manufacturer'].create(manufacturer)
             vals['manufacturer'] = res.id
-        if vals.get('massedit') and vals.get('categ_ids'):
-            category = self.env['product.properties.category'].search([('id', 'in', [x[1] for x in vals.get('categ_ids')])])
-            for prod in self:
-                ret = []
-                for categ in category:
-                    ret += prod._get_default_product_properties_ids(categ.lines_ids, categ_id=categ, product=prod)
-                if ret:
-                    vals['product_properties_ids'] = ret
         return super(ProductProduct, self).write(vals)
 
     def _compute_datasheet_ids(self):
@@ -324,7 +384,6 @@ class SupplierInfo(models.Model):
     def _onchange_manufacturer_id(self):
         if self.manufacturer_id and not self._context.get('default_manufacturer_id', False):
             manufacturer = self.env['product.manufacturer'].search([('id', '=', self.manufacturer_id.id)])
-            #_logger.info("Manufacturer %s:%s" % (manufacturer.supplierinfo_ids.ids, self.id))
             if not manufacturer:
                 manufacturer.write({
                     'supplierinfo_ids': (6, False, [manufacturer.supplierinfo_ids.ids] + [self.id])
