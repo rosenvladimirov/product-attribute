@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_purchaseorder_document_no_second_unit" inherit_id="purchase.report_purchaseorder_document">
+        <xpath expr="//table[hasclass('table','table-sm','o_main_table')]//th[count(//span[@t-field='line.name']/../preceding-sibling::*) + 1]" position="before">
+            <th class="text-left">Main Description</th>
+            <!--
+            <th class="text-right">Nett Weight</th>
+            <th class="text-right">Bruto Weight</th>
+            <th class="text-right">Consumable products/tray</th>
+            <th class="text-right">Trays per layer</th>
+            <th class="text-right">Layers per europallet</th>
+            -->
+        </xpath>
+        <xpath expr="//span[@t-field='line.name']/.." position="before">
+            <td>
+                <span t-field="line.product_id.display_name"/>
+            </td>
+            <!--
+            <td class="text-right">
+                <span t-field="line.weight"/>
+            </td>
+            <td class="text-right">
+                <span t-field="line.bruto_weight"/>
+            </td>
+            <td class="text-right">
+                <span t-field="line.product_tray"/>
+            </td>
+            <td class="text-right">
+                <span t-field="line.per_layrs"/>
+            </td>
+            <td class="text-right">
+                <span t-field="line.europallet_lears"/>
+            </td>
+            -->
+        </xpath>
+    </template>
+</odoo>

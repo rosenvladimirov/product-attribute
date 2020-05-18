@@ -17,6 +17,7 @@ class StockProductionLot(models.Model):
     _inherit = 'stock.production.lot'
 
     gs1 = fields.Char("GS1 (GTIN + AI(s)", index=True, compute="_get_from_name_gs", inverse="_set_from_gs", search='_search_gs1', store=True)
+    hr_gs1 = fields.Char("Human GS1 (GTIN + AI(s)", index=True, compute="_get_from_name_hr_gs", search='_search_hr_gs1')
     hibc = fields.Char("Health Inventory Barcode", index=True, compute="_get_from_name_hibc", inverse="_set_from_hibc", search='_search_hibc', store=True)
 
 
@@ -38,6 +39,25 @@ class StockProductionLot(models.Model):
                 record.gs1 = "10%s" % record.name
             elif record.product_id.tracking in ('serial', 'serialrange'):
                 record.gs1 = "21%s" % record.name
+
+    @api.multi
+    @api.depends('name', 'use_date', 'product_id.barcode', 'product_id.tracking')
+    def _get_from_name_hr_gs(self):
+        for record in self:
+            if record.name and len(record.product_id.barcode or []) in (8, 12, 13, 14) and record.product_id.tracking == 'lot':
+                if record.use_date:
+                    record.hr_gs1 = "(01)%s(17)%s(10)%s" % (record.product_id.barcode, datetime.strptime(record.use_date, DEFAULT_SERVER_DATETIME_FORMAT).strftime("%Y%m%d"), record.name)
+                else:
+                    record.hr_gs1 = "(01)%s(10)%s" % (record.product_id.barcode, record.name)
+            elif record.name and len(record.product_id.barcode or []) in (8, 12, 13, 14) and record.product_id.tracking in ('serial', 'serialrange'):
+                if record.use_date:
+                    record.hr_gs1 = "(01)%s(17)%s(21)%s" % (record.product_id.barcode, datetime.strptime(record.use_date, DEFAULT_SERVER_DATETIME_FORMAT).strftime("%Y%m%d"), record.name)
+                else:
+                    record.hr_gs1 = "(01)%s(21)%s" % (record.product_id.barcode, record.name)
+            elif record.product_id.tracking == 'lot':
+                record.hr_gs1 = "(10)%s" % record.name
+            elif record.product_id.tracking in ('serial', 'serialrange'):
+                record.hr_gs1 = "(21)%s" % record.name
 
     @api.multi
     @api.onchange('gs1')
@@ -72,6 +92,8 @@ class StockProductionLot(models.Model):
         else:
             return
 
+    def _search_hr_gs1(self, operator, value):
+        return [('hr_gs1', operator, value)]
 
     @api.multi
     @api.depends('name', 'use_date', 'product_id.barcode', 'product_id.tracking')

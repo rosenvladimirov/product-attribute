@@ -16,7 +16,23 @@
         <field name="inherit_id" ref="product.product_template_form_view"/>
         <field name="arch" type="xml">
             <xpath expr="//group[@name='group_lots_and_weight']" position="inside">
+                <field name="is_single_variant" invisible="1"/>
+                <field name="is_multi_variant" invisible="1"/>
+                <label for="weight" string="Net weight" attrs="{'invisible':[('is_multi_variant', '=', 0), ('product_variant_count', '&gt;', 1)]}"/>
+                <div class="o_row" name="weight" attrs="{'invisible':[('is_multi_variant', '=', 0), ('product_variant_count', '&gt;', 1)]}">
+                    <field name="weight"/>
+                    <span><field name="weight_uom_name"/></span>
+                </div>
+                <label for="volume" attrs="{'invisible':[('is_multi_variant', '=', 0), ('product_variant_count', '&gt;', 1)]}"/>
+                <div class="o_row" name="volume" attrs="{'invisible':[('is_multi_variant', '=', 0), ('product_variant_count', '&gt;', 1)]}">
+                    <field name="volume" string="Volume"/>
+                    <span>m³</span>
+                </div>
+                <label for="bruto_weight" attrs="{'invisible':[('is_multi_variant', '=', 0)]}"/>
+                <div class="o_row" attrs="{'invisible':[('is_multi_variant', '=', 0)]}">
                     <field name="bruto_weight"/>
+                    <span><field name="weight_uom_name"/></span>
+                </div>
             </xpath>
         </field>
     </record>
@@ -25,9 +41,95 @@
         <field name="model">product.product</field>
         <field name="inherit_id" ref="product.product_variant_easy_edit_view"/>
         <field name="arch" type="xml">
-            <xpath expr="//group[@name='weight']" position="inside">
-                    <field name="bruto_weight"/>
+            <xpath expr="//group[@name='weight']/group[@name='weight']" position="inside">
+                    <label for="bruto_weight"/>
+                    <div class="o_row">
+                        <field name="bruto_weight"/>
+                        <span><field name="weight_uom_name"/></span>
+                    </div>
             </xpath>
+        </field>
+    </record>
+    <record id="product_packaging_tree_view" model="ir.ui.view">
+        <field name="name">product.packaging.tree.view</field>
+        <field name="model">product.packaging</field>
+        <field name="inherit_id" ref="product.product_packaging_tree_view"/>
+        <field name="arch" type="xml">
+            <field name="name" positiopn="after">
+                <field name="nett_weight"/>
+                <field name="weight" string="Net weight"/>
+                <field name="bruto_weight"/>
+                <field name="product_tray"/>
+                <field name="per_layrs"/>
+                <field name="europallet_lears"/>
+            </field>
+            <xpath expr="//field[@name='qty']" position="replace">
+                <field name="secondary_uom_id"/>
+                <field name="secondary_qty"/>
+            </xpath>
+        </field>
+    </record>
+    <record id="product_packaging_form_view" model="ir.ui.view">
+        <field name="name">product.packaging.form.view</field>
+        <field name="model">product.packaging</field>
+        <field name="inherit_id" ref="product.product_packaging_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='group_product']" position="after">
+                <group name="group_product_weight">
+                    <field name="nett_weight"/>
+                    <field name="weight" string="Net weight"/>
+                    <field name="bruto_weight"/>
+                </group>
+                <group name="delivery">
+                    <field name="product_tray"/>
+                    <field name="per_layrs"/>
+                    <field name="europallet_lears"/>
+                </group>
+            </xpath>
+            <xpath expr="//group[@name='qty']" position="after">
+                <group name="qty_secondary">
+                    <label for="secondary_qty" string="Contained quantity"/>
+                    <div class="o_row">
+                        <field name="secondary_uom_id"/>
+                        <field name="secondary_qty"/>
+                    </div>
+                    <field name="barcode"/>
+                </group>
+            </xpath>
+            <xpath expr="//group[@name='qty']" position="replace"/>
+        </field>
+    </record>
+    <record id="product.product_packaging_form_view2" model="ir.ui.view">
+        <field name="name">product.packaging.form.view2</field>
+        <field name="model">product.packaging</field>
+        <field name="mode">primary</field>
+        <field name="inherit_id" ref="product.product_packaging_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='group_product']" position="after">
+                <group name="group_product_weight">
+                    <field name="nett_weight"/>
+                    <field name="weight" string="Net weight"/>
+                    <field name="bruto_weight"/>
+                </group>
+                <group name="delivery">
+                    <field name="product_tray"/>
+                    <field name="per_layrs"/>
+                    <field name="europallet_lears"/>
+                </group>
+            </xpath>
+            <xpath expr="//group[@name='qty']" position="after">
+                <group name="qty_secondary">
+                    <label for="secondary_qty" string="Contained quantity"/>
+                    <div class="o_row">
+                        <field name="secondary_uom_id" string="Package Type"/>
+                        <field name="secondary_qty"/>
+                    </div>
+                    <field name="barcode"/>
+                </group>
+            </xpath>
+            <xpath expr="//group[@name='group_product']" position="replace"/>
+            <xpath expr="//field[@name='id']" position="replace"/>
+            <xpath expr="//group[@name='qty']" position="replace"/>
         </field>
     </record>
 </odoo>

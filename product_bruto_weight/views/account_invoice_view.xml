@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_invoice_line_tree" model="ir.ui.view">
+            <field name="name">account.invoice.line.tree</field>
+            <field name="model">account.invoice.line</field>
+            <field name="inherit_id" ref="account.view_invoice_line_tree"/>
+            <field name="arch" type="xml">
+                <field name="price_unit" position="before">
+                    <field name="bruto_weight"/>
+                    <field name="weight"/>
+                </field>
+            </field>
+        </record>
+        <record id="view_invoice_line_form" model="ir.ui.view">
+            <field name="name">account.invoice.line.form</field>
+            <field name="model">account.invoice.line</field>
+            <field name="inherit_id" ref="account.view_invoice_line_form"/>
+            <field name="arch" type="xml">
+                <field name="price_unit" position="before">
+                    <field name="bruto_weight" groups="product.group_stock_packaging"/>
+                    <field name="weight" groups="product.group_stock_packaging"/>
+                </field>
+            </field>
+        </record>
+        <record id="invoice_form" model="ir.ui.view">
+            <field name="name">account.invoice.form</field>
+            <field name="model">account.invoice</field>
+            <field name="inherit_id" ref="account.invoice_form"/>
+            <field name="arch" type="xml">
+                <field name="price_unit" position="before">
+                    <field name="product_packaging" attrs="{'invisible': [('product_id', '=', False)]}" context="{'default_product_id': product_id, 'tree_view_ref':'product.product_packaging_tree_view', 'form_view_ref':'product.product_packaging_form_view'}" domain="[('product_id','=',product_id)]" groups="product.group_stock_packaging" />
+                    <field name="bruto_weight" attrs="{'invisible': [('product_id', '=', False)]}" groups="product.group_stock_packaging"/>
+                    <field name="weight" attrs="{'invisible': [('product_id', '=', False)]}" groups="product.group_stock_packaging"/>
+                    <field name="product_tray" attrs="{'invisible': [('product_id', '=', False)]}" groups="product.group_stock_packaging"/>
+                    <field name="per_layrs" attrs="{'invisible': [('product_id', '=', False)]}" groups="product.group_stock_packaging"/>
+                    <field name="europallet_lears" attrs="{'invisible': [('product_id', '=', False)]}" groups="product.group_stock_packaging"/>
+                </field>
+            </field>
+        </record>
+    </data>
+</odoo>

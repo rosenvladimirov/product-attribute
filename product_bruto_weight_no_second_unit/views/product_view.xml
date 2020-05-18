@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_template_property_form" model="ir.ui.view">
+      <field name="model">product.template</field>
+      <field name="inherit_id" ref="stock.view_template_property_form"/>
+      <field name="arch" type="xml">
+          <field name="weight" positiopn="after">
+                <button name="%(action_view_product_weight_update)d" type="action" string="update weights" class="oe_link" />
+          </field>
+      </field>
+    </record>
+    <record id="product_template_form_view" model="ir.ui.view">
+        <field name="name">product.template.common.form</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='group_lots_and_weight']" position="replace">
+                <group name="group_lots_and_weight" string="Logistics" attrs="{'invisible': [('type', 'not in', ['product', 'consu'])]}">
+                    <field name="is_single_variant" invisible="1"/>
+                    <field name="is_multi_variant" invisible="1"/>
+                    <label for="weight" string="Net weight" attrs="{'invisible':[('is_multi_variant', '=', 0)]}"/>
+                    <div class="o_row" name="weight" attrs="{'invisible':[('is_multi_variant', '=', 0)]}">
+                        <field name="weight"/>
+                        <span><field name="weight_uom_name"/></span>
+                    </div>
+                    <label for="volume" attrs="{'invisible':[('is_multi_variant', '=', 0)]}"/>
+                    <div class="o_row" name="volume" attrs="{'invisible':[('is_multi_variant', '=', 0)]}">
+                        <field name="volume" string="Volume"/>
+                        <span>m³</span>
+                    </div>
+                    <label for="bruto_weight" attrs="{'invisible':[('is_multi_variant', '=', 0)]}"/>
+                    <div class="o_row" attrs="{'invisible':[('is_multi_variant', '=', 0)]}">
+                        <field name="bruto_weight"/>
+                        <span><field name="weight_uom_name"/></span>
+                    </div>
+                    <field name="product_tray" attrs="{'invisible':[('is_multi_variant', '=', 0)]}"/>
+                    <field name="per_layrs" attrs="{'invisible':[('is_multi_variant', '=', 0)]}"/>
+                    <field name="europallet_lears" attrs="{'invisible':[('is_multi_variant', '=', 0)]}"/>
+                </group>
+            </xpath>
+            <xpath expr="//field[@name='type']" position="after">
+                <field name="box_barcode"/>
+            </xpath>
+        </field>
+    </record>
+    <record id="product_normal_form_view" model="ir.ui.view">
+        <field name="name">product.product.form</field>
+        <field name="model">product.product</field>
+        <field name="mode">primary</field>
+        <field eval="7" name="priority"/>
+        <field name="inherit_id" ref="product.product_normal_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='barcode']" position="after">
+                <field name="box_barcode"/>
+            </xpath>
+        </field>
+    </record>
+    <record id="product_variant_easy_edit_view" model="ir.ui.view">
+        <field name="name">product.product.view.form.easy</field>
+        <field name="model">product.product</field>
+        <field name="inherit_id" ref="product.product_variant_easy_edit_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='weight']/group[@name='weight']" position="inside">
+                    <label for="bruto_weight"/>
+                    <div class="o_row">
+                        <field name="bruto_weight"/>
+                        <span><field name="weight_uom_name"/></span>
+                    </div>
+                    <field name="product_tray"/>
+                    <field name="per_layrs"/>
+                    <field name="europallet_lears"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

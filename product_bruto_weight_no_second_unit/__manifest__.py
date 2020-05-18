@@ -1,17 +1,14 @@
 {
-    'name': 'Product Bruto Weight Calculation',
+    'name': 'Product Extra info for FoodArt',
     'version': '12.0.1.0.0',
     'author': 'Rosen Vladimirov, BioPrint Ltd.',
     'website': 'https://github.com/rosenvladimirov/product-attribute',
     'license': 'AGPL-3',
     'category': 'Warehouse',
-    'summary': 'Allows to calculate products bruto weight from its components.',
+    'summary': "Add extra information's for FoodArt.",
     'depends': [
         'product',
         'sale_stock',
-        'product_secondary_unit',
-        'sale_order_secondary_unit',
-        'purchase_order_secondary_unit',
     ],
     'data': [
         'wizard/product_weight_update_view.xml',
@@ -19,7 +16,12 @@
         'views/sale_order_views.xml',
         'views/purchase_views.xml',
         'views/stock_views.xml',
-        'views/account_invoice_view.xml',
+        #'views/account_invoice_view.xml',
+        'views/report_invoice.xml',
+        'report/report_package_barcode.xml',
+        'report/stock_report_views.xml',
+        'report/sale_report_templates.xml',
+        'report/purchase_order_templates.xml',
     ],
     'installable': True,
 }

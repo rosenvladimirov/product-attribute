@@ -1,0 +1,49 @@
+<?xml version="1.0"?>
+<odoo>
+    <data>
+        <record id="view_order_form_inherit_sale_stock" model="ir.ui.view">
+            <field name="name">sale.order.form.sale.stock</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_order_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//page/field[@name='order_line']/form/group/group/field[@name='tax_id']" position="before">
+                    <field name="bruto_weight" attrs="{'invisible': [('product_id', '=', False)]}" groups="product.group_stock_packaging"/>
+                    <field name="weight" attrs="{'invisible': [('product_id', '=', False)]}" groups="product.group_stock_packaging"/>
+                    <field name="product_tray" attrs="{'invisible': [('product_id', '=', False)]}" groups="product.group_stock_packaging"/>
+                    <field name="per_layrs" attrs="{'invisible': [('product_id', '=', False)]}" groups="product.group_stock_packaging"/>
+                    <field name="europallet_lears" attrs="{'invisible': [('product_id', '=', False)]}" groups="product.group_stock_packaging"/>
+                </xpath>
+                <xpath expr="//field[@name='order_line']/tree/field[@name='price_unit']" position="after">
+                    <field name="bruto_weight" groups="product.group_stock_packaging"/>
+                    <field name="weight" groups="product.group_stock_packaging"/>
+                    <field name="product_tray" groups="product.group_stock_packaging"/>
+                    <field name="per_layrs" groups="product.group_stock_packaging"/>
+                    <field name="europallet_lears" groups="product.group_stock_packaging"/>
+                </xpath>
+            </field>
+        </record>
+        <record id="sale_order_secondary_unit.view_order_form" model="ir.ui.view">
+            <field name="name">Sale Order Secondary Unit</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_order_form"/>
+            <field name="groups_id" eval="[(4, ref('uom.group_uom'))]"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='order_line']/form//field[@name='price_subtotal']" position="after">
+                    <field name="secondary_uom_qty" class="oe_inline oe_no_button" string="Package Qty"
+                        attrs="{'readonly': [('state', 'in', ('done', 'cancel'))]}"/>
+                    <field name="secondary_uom_id" class="oe_inline" string="Package Type"
+                           domain="[('product_tmpl_id.product_variant_ids', 'in', [product_id])]"
+                           attrs="{'readonly': [('state', 'in', ('done', 'cancel'))], 'invisible': ('product_packaging', '!=', False)}"/>
+                </xpath>
+                <xpath expr="//field[@name='order_line']/tree//field[@name='product_uom_qty']" position="before">
+                    <field name="secondary_uom_qty" string="Package Qty"
+                           attrs="{'readonly': [('parent.state', 'in', ('done', 'cancel'))]}"/>
+                    <field name="secondary_uom_id" string="Package Type"
+                           domain="[('product_tmpl_id.product_variant_ids', 'in', [product_id])]"
+                           options="{'no_create': True}"
+                           attrs="{'readonly': [('parent.state', 'in', ('done', 'cancel'))]}"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

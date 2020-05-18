@@ -1,0 +1,37 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+#	* product_gs_standard
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 11.0+e-20190711\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2019-08-01 07:41+0000\n"
+"PO-Revision-Date: 2019-08-01 07:41+0000\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: product_gs_standard
+#: model:ir.ui.view,arch_db:product_gs_standard.search_product_lot_filter_inherit_product_gs
+msgid "GTIN (AI)s"
+msgstr "GTIN (AI)s"
+
+#. module: product_gs_standard
+#: model:ir.model,name:product_gs_standard.model_stock_production_lot
+msgid "Lot/Serial"
+msgstr "Партида"
+
+#. module: product_gs_standard
+#: model:ir.model,name:product_gs_standard.model_barcode_nomenclature
+msgid "barcode.nomenclature"
+msgstr "barcode.nomenclature"
+
+#. module: product_gs_standard
+#: model:ir.model,name:product_gs_standard.model_barcode_rule
+msgid "barcode.rule"
+msgstr "barcode.rule"
+

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <report
+            string="Package (SSCC) Barcode with Content"
+            id="action_report_quant_package_barcode_sscc"
+            model="stock.quant.package"
+            report_type="qweb-pdf"
+            name="product_bruto_weight_no_second_unit.report_package_barcode_no_second_unit"
+            file="product_bruto_weight_no_second_unit.report_package_barcode_no_second_unit"/>
+    </data>
+</odoo>

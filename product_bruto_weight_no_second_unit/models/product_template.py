@@ -11,9 +11,14 @@ _logger = logging.getLogger(__name__)
 class ProductProduct(models.Model):
     _inherit = "product.template"
 
-    bruto_weight = fields.Float('Brut weight', compute='_compute_bruto_weight', digits=dp.get_precision('Stock Weight'),
+    bruto_weight = fields.Float('Brut Weight', compute='_compute_bruto_weight', digits=dp.get_precision('Stock Weight'),
         inverse='_set_bruto_weight', store=True,
         help="The bruto weight of the contents in Kg, not including any packaging, etc.")
+    product_tray = fields.Integer('Consumable products/tray')
+    per_layrs = fields.Integer('Trays per layer')
+    europallet_lears = fields.Integer('Layers per europallet')
+    box_barcode = fields.Char("Box EAN14")
+
     is_multi_variant = fields.Boolean(compute="_is_multi_variant")
     is_single_variant = fields.Boolean(compute="_is_single_variant")
 

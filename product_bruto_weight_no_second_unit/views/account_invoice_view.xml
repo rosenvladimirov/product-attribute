@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_invoice_line_tree" model="ir.ui.view">
+            <field name="name">account.invoice.line.tree</field>
+            <field name="model">account.invoice.line</field>
+            <field name="inherit_id" ref="account.view_invoice_line_tree"/>
+            <field name="arch" type="xml">
+                <field name="price_unit" position="before">
+                    <field name="bruto_weight"/>
+                    <field name="weight"/>
+                    <field name="product_tray"/>
+                    <field name="per_layrs"/>
+                    <field name="europallet_lears"/>
+                </field>
+            </field>
+        </record>
+        <record id="view_invoice_line_form" model="ir.ui.view">
+            <field name="name">account.invoice.line.form</field>
+            <field name="model">account.invoice.line</field>
+            <field name="inherit_id" ref="account.view_invoice_line_form"/>
+            <field name="arch" type="xml">
+                <field name="price_unit" position="before">
+                    <field name="bruto_weight"/>
+                    <field name="weight"/>
+                    <field name="product_tray"/>
+                    <field name="per_layrs"/>
+                    <field name="europallet_lears"/>
+                </field>
+            </field>
+        </record>
+        <record id="invoice_form" model="ir.ui.view">
+            <field name="name">account.invoice.form</field>
+            <field name="model">account.invoice</field>
+            <field name="inherit_id" ref="account.invoice_form"/>
+            <field name="arch" type="xml">
+                <field name="price_unit" position="before">
+                    <field name="bruto_weight"/>
+                    <field name="weight"/>
+                    <field name="product_tray"/>
+                    <field name="per_layrs"/>
+                    <field name="europallet_lears"/>
+                </field>
+            </field>
+        </record>
+        <record id="invoice_supplier_form" model="ir.ui.view">
+            <field name="name">account.invoice.supplier.form</field>
+            <field name="model">account.invoice</field>
+            <field name="inherit_id" ref="account.invoice_supplier_form"/>
+            <field name="arch" type="xml">
+                <field name="price_unit" position="before">
+                    <field name="bruto_weight"/>
+                    <field name="weight"/>
+                    <field name="product_tray"/>
+                    <field name="per_layrs"/>
+                    <field name="europallet_lears"/>
+                </field>
+            </field>
+        </record>
+    </data>
+</odoo>

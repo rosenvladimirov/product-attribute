@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="report_package_barcode_no_second_unit">
+            <t t-call="web.basic_layout">
+                <t t-foreach="docs" t-as="o">
+                    <t>
+                        <div class="page">
+                            <div class="oe_structure"/>
+                            <div class="row" t-if="o.partner_info_id">
+                                <div class="col-6 pull-left"/>
+                                <div class="col-6 pull-right">
+                                    <span>To:</span>
+                                    <div t-field="o.partner_info_id"
+                                        t-options='{"widget": "contact", "fields": ["address", "name", "phone"], "no_marker": True, "phone_icons": True}'/>
+                                </div>
+                            </div>
+                            <table class="table table-condensed" style="border-bottom: 0px solid white !important;">
+                                <tr>
+                                    <th style="text-align: center">
+                                        <h1><span>SSCC: </span></h1>
+                                    </th>
+                                    <th style="text-align: center">
+                                        <h1><span t-field="o.name" class="mt0 float-left"/></h1>
+                                    </th>
+                                </tr>
+                                <tr>
+                                    <th colspan="100" style="text-align: center">
+                                        <img t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s' % ('Code128', '00'+o.name, 1200, 200)" alt="Barcode"
+                                          style="width:600px;height:100px"/>
+                                          <p t-esc="'(00)' + o.name"/>
+                                    </th>
+                                </tr>
+                          </table>
+                            <div class="row o_packaging_type" t-if="o.packaging_id">
+                                <div class="col-12" style="font-weight:bold;">Package Type: <span t-field="o.packaging_id.name"/></div>
+                            </div>
+                            <div class="row">
+                                <div class="col-12">
+                                    <h2>Package Content</h2>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-12">
+                                    <table class="table table-sm" style="border-bottom: 0px solid white !important;">
+                                        <thead>
+                                            <tr>
+                                                <th>Product</th>
+                                                <th class="text-right">Quantity</th>
+                                                <th class="text-right">Lot/Serial Number</th>
+                                                <th class="text-right">Net Weight:</th>
+                                                <th class="text-right">Best Before::</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <t t-foreach="o.quant_ids" t-as="l">
+                                                <tr>
+                                                    <td>
+                                                       <span t-field="l.product_id.name"/>
+                                                    </td>
+                                                    <td class="text-right">
+                                                        <span t-field="l.quantity"/>
+                                                        <span groups="uom.group_uom" t-field="l.product_id.uom_id.name"/>
+                                                    </td>
+                                                    <td class="text-right">
+                                                        <t t-if="l.lot_id"><span t-field="l.lot_id.name"/></t>
+                                                    </td>
+                                                    <td class="text-right">
+                                                        <span t-esc="l.quantity*l.product_id.weight" t-options='{"widget": "float", "precision": 3}'/>
+                                                    </td>
+                                                    <td class="text-right">
+                                                        <t t-if="l.lot_id and l.lot_id.use_date">
+                                                            <t t-value="'15'+o._format_date(l.lot_id.use_date, lang_code=o.partner_info_id and o.partner_info_id.lang or env.user.lang)" t-set="use"/>
+                                                            <t t-value="'10'+l.lot_id.name" t-set="lot"/>
+                                                            <t t-value="'(15)'+o._format_date(l.lot_id.use_date, lang_code=o.partner_info_id and o.partner_info_id.lang or env.user.lang)" t-set="huse"/>
+                                                            <t t-value="'(10)'+l.lot_id.name" t-set="hlot"/>
+                                                        </t>
+                                                        <t t-else="">
+                                                            <t t-value="" t-set="use"/>
+                                                            <t t-value="" t-set="lot"/>
+                                                            <t t-value="" t-set="huse"/>
+                                                            <t t-value="" t-set="hlot"/>
+                                                        </t>
+                                                        <t t-if="l.lot_id"><span t-field="l.lot_id.use_date"/></t>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td colspan="100" style="text-align: center">
+                                                        <t t-if="l.product_id.barcode">
+                                                            <img t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s' % ('Code128', '02'+l.product_id.barcode+use+'37'+str(int(l.quantity))+lot, 1200, 200)" alt="GS1/AI"
+                                                              style="width:900px;height:150px"/>
+                                                            <p t-esc="'(02)'+l.product_id.barcode+huse+'(37)'+str(int(l.quantity))+hlot"/>
+                                                        </t>
+                                                    </td>
+                                                </tr>
+                                            </t>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </t>
+            </t>
+        </template>
+    </data>
+</odoo>

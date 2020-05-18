@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_move_line_tree" model="ir.ui.view">
+            <field name="name">stock.move.line.tree</field>
+            <field name="model">stock.move.line</field>
+            <field name="inherit_id" ref="stock.view_move_line_tree"/>
+            <field name="arch" type="xml">
+                <field name="state" position="before">
+                    <field name="product_tray" domain="[('product_id', '=', product_id)]"/>
+                    <field name="per_layrs" domain="[('product_id', '=', product_id)]"/>
+                    <field name="europallet_lears" domain="[('product_id', '=', product_id)]"/>
+                </field>
+            </field>
+        </record>
+        <record id="view_move_line_form" model="ir.ui.view">
+            <field name="name">stock.move.line.form</field>
+            <field name="model">stock.move.line</field>
+            <field name="inherit_id" ref="stock.view_move_line_form"/>
+            <field name="arch" type="xml">
+                <field name="package_id" position="before">
+                    <field name="product_tray" domain="[('product_id', '=', product_id)]"/>
+                    <field name="per_layrs" domain="[('product_id', '=', product_id)]"/>
+                    <field name="europallet_lears" domain="[('product_id', '=', product_id)]"/>
+                </field>
+            </field>
+        </record>
+    </data>
+</odoo>
