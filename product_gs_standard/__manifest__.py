@@ -3,7 +3,7 @@
 
 {
     "name" : "Add GS1, UDI and hibc standarts",
-    "version" : "11.0.1.0",
+    "version" : "12.0.1.0",
     "author" : "Rosen Vladimirov",
     'category': 'hidden',
     "description": """
