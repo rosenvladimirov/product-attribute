@@ -3,6 +3,7 @@
 
 from odoo import _, api, fields, models
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
+from odoo.exceptions import AccessError
 
 
 class PurchaseOrder(models.Model):

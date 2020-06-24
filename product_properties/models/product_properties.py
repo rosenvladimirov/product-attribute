@@ -16,7 +16,6 @@ from lxml import etree
 from lxml.builder import E
 
 import logging
-
 _logger = logging.getLogger(__name__)
 
 TYPES = [('char', _('String')),
@@ -189,6 +188,42 @@ class ProductPropertiesPrint(models.Model):
             new_context['lang'] = None
             view.with_context(new_context).write({'arch': xml_content})
         return False
+
+
+class ProductPropertiesPrintCategory(models.Model):
+    _name = "product.properties.print.category"
+    _description = "Category Product properties for default printing"
+
+    name = fields.Char('Property name', required=True, translate=True)
+    type_ids = fields.One2many("product.properties.print.line.category", inverse_name="print_id", string="Property name")
+    type_static_id = fields.Many2one("product.properties.static", 'Static Product properties')
+
+
+class ProductPropertiesLineCategory(models.Model):
+    _name = "product.properties.print.line.category"
+    _description = "Category lines Product properties for default printing"
+
+    def _get_field_name_filter(self):
+        static_properties_obj = self.env['product.properties.static']
+        ret = []
+        for g in filter(lambda r: r not in static_properties_obj.ignore_fields(), static_properties_obj._fields):
+            field = static_properties_obj.fields_get(g)[g]
+            ret.append((g, field['string']))
+        return ret
+
+    print_id = fields.Many2one('Property name', required=True,  index=True)
+    sequence = fields.Integer("Sequence", default=1, index=True, help="The first in the sequence is the default one.")
+    type_id = fields.Many2one("product.properties.type", string="Property name")
+    static_field = fields.Selection(selection="_get_field_name_filter", string="Static Properties Field name")
+    display_name = fields.Char(compute='_compute_display_name')
+
+    @api.depends('type_id', 'print_id')
+    def _compute_display_name(self):
+        for type in self:
+            if type.type_id:
+                type.display_name = "[%s] %s" % (type.type_id.sequence, type.type_id.name)
+            else:
+                type.display_name = "%s" % type.static_field
 
 
 class ProductPropertiesStatic(models.Model):
@@ -413,6 +448,8 @@ class ProductProperties(models.Model):
                         field_value.type_field = variant and "%s (%s)" % (model.name, variant) or model.name
                     else:
                         field_value.type_field = getattr(model, name)
+                if ttype == 'text':
+                    field_value.type_field = getattr(model, name)
                 elif ttype == 'float':
                     field_value.type_field = "%d" % getattr(model, name)
                 elif ttype == 'monetary':
@@ -438,6 +475,62 @@ class ProductProperties(models.Model):
                     field_value.type_field = False
             else:
                 field_value.type_field = False
+
+    @api.model
+    def set_all_print_properties(self, res, lines, mode=['standard']):
+        def add_exluded(x, ids):
+            ids.update([x])
+            return x
+
+        mode = self._context.get('mode_print_properties') and self._context['mode_print_properties'] or mode
+        _logger.info("MODE %s:%s:%s" % (self._context, mode, 'partner_id' in res._fields))
+
+        if res._name == 'stock.picking':
+            res_model_id = 'picking_id'
+        elif res._name == 'sale.order':
+            res_model_id = 'order_id'
+        elif res._name == 'account.invoice':
+            res_model_id = 'invoice_id'
+        elif res._name == 'res.partner':
+            res_model_id = 'partner_id'
+        else:
+            return False
+        for record in res:
+            static_properties_obj = self.env['product.properties.static']
+            print_properties = []
+            ids = set([])
+            print_ids = False
+            partner_print_ids = False
+            default_print_ids = False
+            print_static_ids = False
+
+            if 'category' in mode and 'category_print_properties' in res._fields:
+                print_static_ids = [x.static_field for x in record.category_print_properties.mapped('type_ids') if not x.type_id and x.static_field]
+                default_print_ids = [x for x in record.category_print_properties.mapped('type_ids') if x.type_id and not x.static_field]
+            if 'partner' in mode and 'partner_id' in res._fields:
+                partner_print_ids = [x for x in record.partner_id.print_properties if x.print]
+                _logger.info("PARTNER %s:%s" % (partner_print_ids, record.partner_id))
+            if 'standard' in mode:
+                print_static_ids = filter(lambda r: r not in static_properties_obj.ignore_fields(),
+                                          static_properties_obj._fields)
+                for r in lines.mapped('product_id'):
+                    if not print_ids:
+                        print_ids = r.product_properties_ids | r.tproduct_properties_ids
+                    else:
+                        print_ids |= r.product_properties_ids | r.tproduct_properties_ids
+            if (print_ids or print_static_ids or partner_print_ids or default_print_ids) and not record.print_properties:
+                if default_print_ids:
+                    print_properties += [(0, False, {'name': add_exluded(x.type_id.id, ids), res_model_id: res.id, 'print': True, 'sequence': x.sequence}) for x in default_print_ids if x.type_id and x.type_id.id not in list(ids)]
+                if partner_print_ids:
+                    print_properties += [(0, False, {'name': add_exluded(x.name.id, ids), res_model_id: res.id, 'print': True, 'sequence': x.sequence}) for x in partner_print_ids if x.name and x.name.id not in list(ids) and not x.static_field]
+                    print_properties += [(0, False, {'static_field': x.static_field, res_model_id: res.id, 'print': True, 'sequence': 9999}) for x in partner_print_ids if not x.name and x.static_field]
+                if print_ids:
+                    print_properties += [(0, False, {'name': add_exluded(x.name.id, ids), res_model_id: res.id, 'print': True, 'sequence': x.sequence}) for x in print_ids if x.name and x.name.id not in list(ids)]
+                if print_static_ids:
+                    print_properties += [(0, False, {'static_field': x, res_model_id: res.id, 'print': True, 'sequence': 9999}) for x in print_static_ids]
+                _logger.info("LIST %s:%s:%s:%s" % (self._context.get('mode_print_properties'), lines.mapped('product_id'), print_properties, ids))
+            return print_properties
+        return False
 
     @api.onchange('name')
     def _onchange_name(self):
@@ -696,7 +789,8 @@ class ProductPropertiesType(models.Model):
     def _get_defult_currency_id(self, properties, field_name):
         return properties.currency_id
 
-    def get_product_properties_print(self, product, properties_print=False, line=False, lot_ids=False, description=False, codes=False):
+    def get_product_properties_print(self, product, properties_print=False, line=False, lot_ids=False, description=False, codes=False, rcontext=False):
+        ctx = rcontext and rcontext or self._context.copy()
         res = {}
         ret = []
         print_ids = []
@@ -722,6 +816,7 @@ class ProductPropertiesType(models.Model):
             #else:
             #    print_ids = list(set([x.name.id for x in properties]) - set(print_ids))
             for prop_line in properties.sorted(key=lambda r: r.name.sequence):
+                color = 0
                 if properties_print and prop_line.name.id in print_ids:
                     if line and prop_line.type_field_name in line._fields:
                         prop_line.type_field_model = line._name
@@ -736,7 +831,8 @@ class ProductPropertiesType(models.Model):
                         res[prop_line.name.name] = {'value': '-'.join(map(lambda lot: lot.lot_id.use_date and "%s" % fields.Date.from_string(lot.lot_id.use_date) or '', lot_ids)),
                                                     'attrs': False, 'image': False, 'sequence': prop_line.name.sequence,
                                                     'type': prop_line.name.type_fields,
-                                                    'currency_id': self._get_defult_currency_id(prop_line, prop_line.name)}
+                                                    'currency_id': self._get_defult_currency_id(prop_line, prop_line.name),
+                                                    'color': color}
                     elif lot_ids and not isinstance(lot_ids, pycompat.string_types) and prop_line.name.type_fields == 'gs1':
                         res[prop_line.name.name] = {
                             'value': '-'.join(map(lambda lot: lot.lot_id and lot.lot_id.hr_gs1 or '', lot_ids)),
@@ -748,16 +844,19 @@ class ProductPropertiesType(models.Model):
                         res[prop_line.name.name] = {'value': lot_ids and '-'.join([x for x in lot_ids]) or '',
                                                     'attrs': False, 'image': False, 'sequence': prop_line.name.sequence,
                                                     'type': prop_line.name.type_fields,
-                                                    'currency_id': self._get_defult_currency_id(prop_line, prop_line.name)}
+                                                    'currency_id': self._get_defult_currency_id(prop_line, prop_line.name),
+                                                    'color': color}
                     elif not line and codes and prop_line.name.type_fields == 'pricelist':
-                        value = ", ".join(codes)
+                        value = codes and ", ".join(map(str, codes))
                         res[prop_line.name.name] = {'value': value,
                                                     'attrs': prop_line.with_context(
                                                         force_display=True).type_display_attrs,
                                                     'image': prop_line.image_small, 'sequence': prop_line.name.sequence,
                                                     'type': prop_line.name.type_fields,
-                                                    'currency_id': self._get_defult_currency_id(prop_line, prop_line.name)}
+                                                    'currency_id': self._get_defult_currency_id(prop_line, prop_line.name),
+                                                    'color': color}
                     elif line and prop_line.name.type_fields == 'pricelist':
+                        #_logger.info("CODES %s" % codes)
                         prop_line.type_field_model = line._name
                         if codes:
                             value = ", ".join(codes)
@@ -767,45 +866,51 @@ class ProductPropertiesType(models.Model):
                             prop_line.model_obj_id = line.id
                             prop_line.type_field_ttype = 'many2one'
                             prop_line.type_field_name = 'pricelist_rule_id'
-                            value = prop_line.with_context(force_display=True).type_display
+                            value = prop_line.with_context(dict(ctx, force_display=True)).type_display
                         res[prop_line.name.name] = {'value': value,
                                                     'attrs': prop_line.with_context(
                                                         force_display=True).type_display_attrs,
                                                     'image': prop_line.image_small, 'sequence': prop_line.name.sequence,
                                                     'type': prop_line.name.type_fields,
-                                                    'currency_id': self._get_defult_currency_id(prop_line, prop_line.name)}
+                                                    'currency_id': self._get_defult_currency_id(prop_line, prop_line.name),
+                                                    'color': color}
                     else:
-                        res[prop_line.name.name] = {'value': prop_line.with_context(force_display=True).type_display,
+                        res[prop_line.name.name] = {'value': prop_line.with_context(dict(ctx, force_display=True)).type_display,
                                                     'attrs': prop_line.with_context(
                                                         force_display=True).type_display_attrs,
                                                     'image': prop_line.image_small, 'sequence': prop_line.name.sequence,
                                                     'type': prop_line.name.type_fields,
-                                                    'currency_id': self._get_defult_currency_id(prop_line, prop_line.name)}
+                                                    'currency_id': self._get_defult_currency_id(prop_line, prop_line.name),
+                                                    'color': color}
 
         for g in filter(lambda r: r not in static_properties_obj.ignore_fields(), static_properties_obj._fields):
             if properties_print and g in print_static_ids:
+                color = 0
                 prop_line = product.product_prop_static_id
                 if not prop_line:
                     continue
                 field = static_properties_obj.fields_get(g)[g]
-                field_value = getattr(prop_line, g)
+                field_value = getattr(prop_line.with_context(dict(ctx, force_display=True)), g)
                 if not field_value:
                     continue
                 #_logger.info("STATIC %s::%s:%s:%s" % (g,field_value,field,prop_line._fields))
                 if field['type'] == 'many2one':
                     field_relation = field_value
                     field_name = 'id'
+                    if 'color' in field_relation._fields:
+                        color = getattr(field_relation, 'color')
                     if 'name' in field_relation._fields:
                         field_name = 'name'
                     if 'display_name' in field_relation._fields:
                         field_name = 'display_name'
-                    field_value = getattr(field_relation, field_name)
+                    field_value = getattr(field_relation.with_context(dict(ctx, force_display=True)), field_name)
                 res[field['string']] = {'value': field_value,
                                         'attrs': False,
                                         'image': False,
                                         'sequence': prop_line.sequence,
                                         'type': field['type'],
-                                        'currency_id': self._get_defult_currency_id(prop_line, g)}
+                                        'currency_id': self._get_defult_currency_id(prop_line, g),
+                                        'color': color}
         for k, v in dict(sorted(res.items(), key=lambda x: x[1]['sequence'])).items():
             if v['value']:
                 #_logger.info("K:V: %s:%s" % (k,v))

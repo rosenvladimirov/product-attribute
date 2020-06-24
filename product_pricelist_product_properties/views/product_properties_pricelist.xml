@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <template id="product_properties_description">
-        <t t-if="line and line.has_propertis and line.has_product_properties">
+        <t t-if="o.use_product_properties == 'properties' and line and line.has_product_properties">
             <div class="o_bulgaria_table">
-                <t t-foreach="line.env['product.properties.type'].get_product_properties_print(line, properties_print)" t-as="description">
+                <t t-foreach="o.env['product.properties.type'].get_product_properties_print(line, properties_print, codes=[line.with_context(dict(o._context, pricelist=pricelist.id)).pricelist_code], rcontext=dict(o._context, pricelist=pricelist.id, force_price=force_price))" t-as="description">
                         <div class="o_bulgaria_row">
                             <div class="o_bulgaria_custom_cell">
                                 <t t-1f="description['value']['value']">
@@ -12,7 +12,17 @@
                             </div>
                             <div class="o_bulgaria_cell">
                                 <t t-1f="description['value']['value']">
-                                    <span t-esc="description['value']['value']"/>
+                                    <!--
+                                    <t t-if="description['value']['color'] != 0">
+                                        <span t-att-class="'o_bulgaria_color_%s' % description['value']['color']">&amp;bull;</span>
+                                    </t>
+                                    -->
+                                    <t t-if="description['value']['type'] in ('currency', 'monetary')">
+                                        <span t-esc="description['value']['value']" t-options="{'widget': 'monetary', 'display_currency': description['value']['currency_id']}"/>
+                                    </t>
+                                    <t t-else="">
+                                        <span t-esc="description['value']['value']"/>
+                                    </t>
                                 </t>
                             </div>
                     </div>
@@ -21,8 +31,44 @@
         </t>
         <t t-else="">
             <t t-if="line">
-                <span t-field="line.display_name"/>
+                <t t-if="intalic == 0">
+                    <strong t-field="line.display_name"/>
+                </t>
+                <t t-else="">
+                    <i><span t-field="line.display_name"/></i>
+                </t>
             </t>
+        </t>
+    </template>
+    <template id="product_set_properties_description">
+        <t t-if="o.use_product_properties == 'properties' and any(x.has_product_properties for x in product_set_print['lines']) and product_set_print['pset']">
+            <div class="o_bulgaria_table">
+                <t style="border:0;" t-foreach="o.env['product.properties.type'].get_product_properties_print(product_set_print['pset'], properties_print, codes=product_set_print['codes'], rcontext=dict(o._context, pricelist=pricelist.id, product_set_id=product_set_print['pset'].id, force_price=force_price))" t-as="set_description">
+                    <div class="o_bulgaria_row">
+                        <div class="o_bulgaria_custom_cell">
+                            <span t-esc="set_description['label']"/>
+                        </div>
+                        <div class="o_bulgaria_cell">
+                            <!--
+                            <t t-if="description['value']['color'] != 0">
+                                <span t-att-class="'o_bulgaria_color_%s' % description['value']['color']">&amp;bull;</span>
+                            </t>
+                            -->
+                            <t t-if="set_description['value']['type'] in ('currency', 'monetary')">
+                                <span t-esc="set_description['value']['value']" t-options="{'widget': 'monetary', 'display_currency': set_description['value']['currency_id']}"/>
+                            </t>
+                            <t t-else="">
+                                <span t-esc="set_description['value']['value']"/>
+                            </t>
+                            <span t-1f="set_description['value']['attrs']" t-esc="set_description['value']['attrs']"/>
+                            <span t-1f="set_description['value']['image']" t-esc="set_description['value']['image']"/>
+                        </div>
+                    </div>
+                </t>
+            </div>
+        </t>
+        <t t-else="">
+            <strong t-esc="product_set_print['pset'].display_name"/>
         </t>
     </template>
 </odoo>

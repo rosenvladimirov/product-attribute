@@ -47,6 +47,7 @@
                 </page>
             </notebook>
             <footer>
+                <button name="analize_report" string="Pricelists" type="object" class="btn-primary"/>
                 <button name="print_report" string="Print" type="object" class="btn-primary"/>
                 <button name="action_pricelist_send" string="Send by email"
                         type="object" class="btn-primary" attrs="{'invisible':[('pricelist_id','=',False)]}"/>

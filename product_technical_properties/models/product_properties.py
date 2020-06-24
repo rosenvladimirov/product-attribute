@@ -93,6 +93,7 @@ class ProductTechnicalProperties(models.Model):
         return EUROCOM3
 
 
+    #categ_id = fields.Many2one("product.electrical", "Category", default=lambda self, *a: self._context.get("default_categ_id", False))
     product_tmpl_id = fields.Many2one('product.template', 'Product Template', default=lambda self, *a: self._context.get("default_product_tmpl_id", False))
     name = fields.Many2one("product.technical.properties.type", string="Property name", required=True)
     sequence = fields.Integer("Sequence", default=1, help="The first in the sequence is the default one.")

@@ -22,7 +22,7 @@ class BarcodeNomenclature(models.Model):
                     or re.match(r'^(01)[0-9]{14}(240\w*)$', barcode):
                 return True
         elif encoding == 'hibc':
-            if re.match(r'^(01)[0-9]{14}(11[0-9]{6}|10\w*|17[0-9]{6}|17[0-9]{8})(10\w*|17[0-9]{6}|17[0-9]{8})$', barcode) \
+            if re.match(r'^(01)[0-9]{14}(10\w*|17[0-9]{6}|17[0-9]{8})(10\w*|17[0-9]{6}|17[0-9]{8})$', barcode) \
                     or re.match(r'^(01)[0-9]{14}(21\w*|17\d{6})(21\w*|17\d{6})$', barcode) \
                     or re.match(r'^(01)[0-9]{14}(21\w*)$', barcode) \
                     or re.match(r'^(01)[0-9]{14}(10\w*)$', barcode):
@@ -44,7 +44,7 @@ class BarcodeNomenclature(models.Model):
         }
         _bcde_n = re.sub(r'[^A-Za-z0-9]+', '', barcode)
         #_logger.info("CHECK MATCH %s" % _bcde_n)
-        if re.match(r'^(01)[0-9]{14}(10\w*|17[0-9]{6}|17[0-9]{8})(|17[0-9]{6}|17[0-9]{8}|10\w*|240\w*)$', _bcde_n) \
+        if re.match(r'^(01)[0-9]{14}(11[0-9]{6}|10\w*|17[0-9]{6}|17[0-9]{8})(|17[0-9]{6}|17[0-9]{8}|10\w*|240\w*)$', _bcde_n) \
             or re.match(r'^(01)[0-9]{14}(21\w*|17\d{6}|17\d{8})(21\w*|17\d{6}|17\d{8})$', _bcde_n) \
             or re.match(r'^(01)[0-9]{14}(21\w*)$', _bcde_n) \
             or re.match(r'^(01)[0-9]{14}(10\w*)$', _bcde_n) \

@@ -56,7 +56,7 @@ class ProductTemplate(models.Model):
                           '&', ('res_model', '=', 'res.partner'), ('res_id', '=', self.manufacturer_id.id),
                           '&', ('res_model', '=', 'product.brand'), ('res_id', '=', product.product_brand_id.id)
                           ]
-            product.datasheet_ids = [x['id'] for x in self.env['product.manufacturer.datasheets'].search_read(domain, ['name'])]
+            product.datasheet_ids = [x['id'] for x in self.env['product.manufacturer.datasheets'].sudo().search_read(domain, ['name'])]
 
     @api.depends('manufacturer_ids')
     def _compute_manufacturer(self):
@@ -96,7 +96,7 @@ class ProductTemplate(models.Model):
     @api.depends('product_variant_ids')
     def _compute_product_static_variant_id(self):
         for p in self:
-            p.product_prop_static_v_id = p.product_variant_ids[:1].product_prop_static_id
+            p.product_prop_static_v_id = p.product_variant_ids[:1].product_prop_static_id.id
 
     #@api.model
     #def fields_get(self, allfields=None, attributes=None):
@@ -258,7 +258,7 @@ class ProductTemplate(models.Model):
                         '&', ('res_model', '=', 'res.partner'), ('res_id', '=', self.manufacturer_id.id),
                         '&', ('res_model', '=', 'product.brand'), ('res_id', '=', self.product_brand_id.id)
                       ]
-        nbr_datasheet = self.env['product.manufacturer.datasheets'].search_count(domain)
+        nbr_datasheet = self.env['product.manufacturer.datasheets'].sudo().search_count(domain)
         self.count_datasheets = nbr_datasheet
 
     @api.multi
@@ -275,7 +275,7 @@ class ProductTemplate(models.Model):
                         '&', ('res_model', '=', 'res.partner'), ('res_id', '=', self.manufacturer_id.id),
                         '&', ('res_model', '=', 'product.brand'), ('res_id', '=', self.product_brand_id.id)
                       ]
-
+        _logger.info("DATA %s" % [x.id for x in self.env['res.company'].search([])])
         attachment_view = self.env.ref('product_properties.view_product_manufacturer_datasheets_eazy_kanban')
         return {
             'name': _('Datasheets'),

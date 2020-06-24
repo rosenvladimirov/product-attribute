@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_order_form" model="ir.ui.view">
+        <field name="name">sale.order.form</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="report_theming_properties.view_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook/page[@name='print_properties']/group" position="inside">
+                <group>
+                    <button name="%(product_properties.act_product_properties_set_all)d"
+                        string="Select Properties" type="action"
+                        context="{'active_id': active_id, 'obj_name': 'sale.order'}"
+                        class="btn-primary"/>
+                    <!--
+                    <button name="set_partner_print_properties"
+                        string="Load all From Partner" type="object"
+                        class="btn-primary"/>
+                    -->
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>

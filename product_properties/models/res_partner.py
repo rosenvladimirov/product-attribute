@@ -12,6 +12,8 @@ class ResPartner(models.Model):
 
     count_datasheets = fields.Integer('Count Datasheets', compute='_compute_has_datasheets')
     print_properties = fields.One2many('product.properties.print', 'partner_id', 'Print poperties')
+    product_prop_static_id = fields.Many2one("product.properties.static", 'Static Product properties')
+
     product_manufacture_ids = fields.One2many('product.manufacturer', 'manufacturer', string='Products')
     is_manufacturier = fields.Boolean('Manufacturer', compute='_compute_is_manufacturier')
     #manufacture_ids = fields.Many2many('res.partner', '_compute_manufacture_ids')
@@ -50,6 +52,12 @@ class ResPartner(models.Model):
         if not cr.fetchone():
             cr.execute('ALTER TABLE res_partner '
                        'ADD COLUMN compl_manager_id integer;')
+
+        cr.execute("SELECT column_name FROM information_schema.columns "
+                   "WHERE table_name = 'res_partner' AND column_name = 'product_prop_static_id'")
+        if not cr.fetchone():
+            cr.execute('ALTER TABLE res_partner '
+                       'ADD COLUMN product_prop_static_id integer;')
         return super(ResPartner, self).__init__(pool, cr)
 
     @api.one

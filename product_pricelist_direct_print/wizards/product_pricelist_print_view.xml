@@ -19,6 +19,7 @@
             <group string="Filter Options">
                 <field name="base_on" groups="product.group_sale_pricelist" options="{'horizontal': true}" widget="radio"/>
                 <field name="show_sale_price"/>
+                <field name="show_sale_wh_vat_price"/>
                 <field name="show_standard_price"/>
                 <field name="hide_pricelist_name"/>
                 <field name="only_product_pricelist"/>
@@ -59,6 +60,14 @@
                       attrs="{'invisible':[('pricelist_id', '!=', False)]}">
                     <field name="partner_ids"/>
                     <field name="partner_count" invisible="1"/>
+                </page>
+                <page name="print_properties" string="Properties for Print" groups="report_theming_properties.group_properties_print">
+                    <group>
+                        <group>
+                            <field name="display_pictures"/>
+                            <field name="image_sizes"/>
+                        </group>
+                    </group>
                 </page>
             </notebook>
             <footer>

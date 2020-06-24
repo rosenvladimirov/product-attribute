@@ -19,6 +19,7 @@ class AccountInvoice(models.Model):
         help='Choice type of the view for product description',
         default="description")
     print_properties = fields.One2many('product.properties.print', 'invoice_id', 'Print properties')
+    category_print_properties = fields.Many2one('product.properties.print.category', 'Default Print properties category')
     product_prop_static_id = fields.Many2one("product.properties.static", 'Static Product properties')
     invoice_sub_type = fields.Many2one(related="product_prop_static_id.invoice_sub_type")
 
@@ -30,22 +31,8 @@ class AccountInvoice(models.Model):
 
     @api.multi
     def set_all_print_properties(self):
-        print_ids = False
         for record in self:
-            static_properties_obj = self.env['product.properties.static']
-            print_properties = []
-            print_static_ids = filter(lambda r: r not in static_properties_obj.ignore_fields(), static_properties_obj._fields)
-            partner_print_ids = [x.id for x in record.partner_id.print_properties if x.print]
-            for r in record.invoice_line_ids.mapped('product_id'):
-                print_ids = r.product_properties_ids | r.tproduct_properties_ids
-                if partner_print_ids:
-                    print_ids = print_ids.filtered(lambda r: r.id in partner_print_ids)
-            if (print_ids or print_static_ids) and not record.print_properties:
-                if print_ids:
-                    print_properties += [(0, False, {'name': x.name.id, 'invoice_id': self.id, 'print': True, 'sequence': x.sequence}) for x in print_ids if x.name]
-                if print_static_ids:
-                    print_properties += [(0, False, {'static_field': x, 'invoice_id': self.id, 'print': True, 'sequence': 9999}) for x in print_static_ids]
-                record.print_properties = print_properties
+            record.print_properties = self.env['product.properties'].set_all_print_properties(record, record.invoice_line_ids)
 
     @api.multi
     def set_partner_print_properties(self):

@@ -24,6 +24,7 @@ class SaleOrder(models.Model):
     print_properties = fields.One2many('product.properties.print', 'order_id', 'Print properties')
     #print_properties = fields.One2many('product.properties.print', 'partner_id', related='partner_id.print_properties', string='Print properties')
     products_properties = fields.Html('Products properties', compute="_get_products_properties")
+    category_print_properties = fields.Many2one('product.properties.print.category', 'Default Print properties category')
     product_prop_static_id = fields.Many2one("product.properties.static", 'Static Product properties')
     invoice_sub_type = fields.Many2one(related="product_prop_static_id.invoice_sub_type")
 
@@ -155,31 +156,13 @@ class SaleOrder(models.Model):
     def set_all_print_properties(self):
         print_ids = False
         for record in self:
-            static_properties_obj = self.env['product.properties.static']
-            print_properties = []
-            print_static_ids = filter(lambda r: r not in static_properties_obj.ignore_fields(), static_properties_obj._fields)
-            partner_print_ids = [x.id for x in record.partner_id.print_properties if x.print and x.static_field]
-            #if partner_print_ids:
-            #    print_static_ids = print_static_ids.filtered(lambda r: r.id in partner_print_ids)
-            for r in record.order_line.mapped('product_id'):
-                #_logger.info("LINE %s" % r)
-                print_ids = r.product_properties_ids | r.tproduct_properties_ids
-            for r in record.mapped('product_set_id'):
-                print_ids |= r.product_properties_ids
-            #_logger.info("PROPERTIES %s" % print_ids)
-            if (print_ids or print_static_ids) and not record.print_properties:
-                if print_ids:
-                    print_properties += [(0, False, {'name': x.name.id, 'order_id': self.id, 'print': True, 'sequence': x.sequence}) for x in print_ids if x.name]
-                if print_static_ids:
-                    print_properties += [(0, False, {'static_field': x, 'order_id': self.id, 'print': True, 'sequence': 9999}) for x in print_static_ids]
-                #_logger.info("LIST %s" % print_properties)
-                record.print_properties = print_properties
-                if record.invoice_ids:
-                    for inv in record.invoice_ids:
-                        inv.set_all_print_properties()
-                if record.picking_ids:
-                    for picking in record.picking_ids:
-                        picking.set_all_print_properties()
+            record.print_properties = self.env['product.properties'].set_all_print_properties(record, record.order_line)
+            if record.invoice_ids:
+                for inv in record.invoice_ids:
+                    inv.set_all_print_properties()
+            if record.picking_ids:
+                for picking in record.picking_ids:
+                    picking.set_all_print_properties()
 
     @api.multi
     def set_partner_print_properties(self):

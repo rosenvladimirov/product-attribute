@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="product_static_properties_dropdown_tree_view" model="ir.ui.view">
+            <field name="name">product.properties.static.dropdown.tree.view</field>
+            <field name="model">product.properties.static.dropdown</field>
+            <field name="inherit_id" ref="product_properties.product_static_properties_dropdown_tree_view"/>
+            <field name="arch" type="xml">
+                <field name="is_currency" position="after">
+                    <field name="color" invisible="1"/>
+                </field>
+
+                <xpath expr="//tree" position="attributes">
+                    <attribute name="colors">color_field: color</attribute>
+                </xpath>
+
+            </field>
+        </record>
+        <record id="product_static_properties_dropdown_view" model="ir.ui.view">
+            <field name="name">product.properties.static.dropdown.form.view</field>
+            <field name="model">product.properties.static.dropdown</field>
+            <field name="inherit_id" ref="product_properties.product_static_properties_dropdown_view"/>
+            <field name="arch" type="xml">
+                <field name="is_currency" position="after">
+                    <field name="color" invisible="1"/>
+                    <field name="color_picker"/>
+                </field>
+            </field>
+        </record>
+        <record id="product_properties.product_properties_print_category_form_view" model="ir.ui.view">
+            <field name="name">product.properties.print.category.form.view</field>
+            <field name="model">product.properties.print.category</field>
+            <field name="arch" type="xml">
+                <form string="Category Properties for print">
+                    <sheet>
+                        <group>
+                            <group colspan="2">
+                                <field name="name"/>
+                            </group>
+                            <field name="type_ids" nolabel="1" colspan="4">
+                                <form string="Default properties print">
+                                    <sheet>
+                                        <group>
+                                            <group>
+                                                <field name="type_id"/>
+                                                <field name="static_field"/>
+                                            </group>
+                                        </group>
+                                    </sheet>
+                                </form>
+                                <tree string="Default properties print">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="type_id"/>
+                                    <field name="static_field"/>
+                                </tree>
+                            </field>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record id="product_properties.product_properties_print_category_tree_view" model="ir.ui.view">
+            <field name="name">product.properties.print.category.view</field>
+            <field name="model">product.properties.print.category</field>
+            <field name="arch" type="xml">
+                <tree string="Category Product properties">
+                    <field name="name"/>
+                    <field name="type_ids" widget="many2many_tags"/>
+                </tree>
+            </field>
+        </record>
+        <record id="product_properties_print_category_action" model="ir.actions.act_window">
+            <field name="name">Categories for print defaults</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">product.properties.print.category</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <record id="product_properties.product_manufacturer_datasheets_search_view" model="ir.ui.view">
+            <field name="name">product.manufacturer.datasheets.search.view</field>
+            <field name="model">product.manufacturer.datasheets</field>
+            <field name="arch" type="xml">
+                <search string="Manufacturer">
+                    <field string="Product Manufakturer" name="manufacturer_id" filter_domain="[('manufacturer_id', '=', self)]"/>
+                    <field string="Product template" name="product_tmpl_id" filter_domain="[('product_tmpl_id', '=', self)]"/>
+                    <field string="Manufacturer" name="manufacturer" filter_domain="[('manufacturer', '=', self)]"/>
+                    <group expand="0" string="Group By">
+                        <filter string="Product" name="groupby_product" domain="[]" context="{'group_by': 'product_tmpl_id'}"/>
+                        <filter string="manufacturer" name="groupby_manufacturer" domain="[]" context="{'group_by': 'manufacturer'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <menuitem id="menu_product_properties_print_category_action" parent="product_properties.menu_product_properties_all_action" action="product_properties_print_category_action"
+            sequence="4" groups="base.group_no_one"/>
+    </data>
+</odoo>

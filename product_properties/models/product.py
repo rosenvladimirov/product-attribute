@@ -331,7 +331,7 @@ class ProductProduct(models.Model):
                       '&', ('res_model', '=', 'res.partner'), ('res_id', '=', self.manufacturer_id.id),
                       '&', ('res_model', '=', 'product.brand'), ('res_id', '=', product.product_brand_id.id)
                       ]
-            product.datasheet_ids = [x['id'] for x in self.env['product.manufacturer.datasheets'].search_read(domain, ['name'])]
+            product.datasheet_ids = [x['id'] for x in self.env['product.manufacturer.datasheets'].sudo().search_read(domain, ['name'])]
 
     @api.one
     def _compute_has_datasheets(self):
@@ -340,7 +340,7 @@ class ProductProduct(models.Model):
                     '&', ('res_model', '=', 'res.partner'), ('res_id', '=', self.manufacturer_id.id),
                     '&', ('res_model', '=', 'product.brand'), ('res_id', '=', self.product_brand_id.id)
                   ]
-        nbr_datasheet = self.env['product.manufacturer.datasheets'].search_count(domain)
+        nbr_datasheet = self.env['product.manufacturer.datasheets'].sudo().search_count(domain)
         self.count_datasheets = nbr_datasheet
 
     @api.multi

@@ -11,11 +11,9 @@
                     <field name="invoice_sub_type" context="{'default_field_name': 'invoice_sub_type'}"/>
                 </group>
                 <group>
-                    <button name="set_all_print_properties"
-                        string="Load all" type="object"
-                        class="btn-primary"/>
-                    <button name="set_partner_print_properties"
-                        string="Load all From Partner" type="object"
+                    <button name="%(product_properties.act_product_properties_set_all)d"
+                        string="Select Properties" type="action"
+                        context="{'active_id': active_id, 'obj_name': 'sale.order'}"
                         class="btn-primary"/>
                 </group>
             </xpath>

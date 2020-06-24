@@ -143,6 +143,25 @@
         </field>
     </record>
 
+    <record id="view_product_manufacturer_datasheets_eazy_tree" model="ir.ui.view">
+        <field name="name">product.manufacturer.datasheets.tree</field>
+        <field name="model">product.manufacturer.datasheets</field>
+        <field eval="1" name="priority"/>
+        <field name="arch" type="xml">
+            <tree string="Product Manufacturer">
+                <field name="iso_number"/>
+                <field name="date_issue"/>
+                <field name="date_expiry"/>
+                <field name="qc_manager_id"/>
+                <field name="name" />
+                <field name="datas_fname"/>
+                <field name="manufacturer_id"/>
+                <field name="product_brand_id"/>
+                <field name="version"/>
+            </tree>
+        </field>
+    </record>
+
     <record id="view_datasheets_form" model="ir.ui.view">
         <field name="name">product.manufacturer.datasheets.form</field>
         <field name="model">product.manufacturer.datasheets</field>

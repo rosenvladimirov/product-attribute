@@ -55,7 +55,14 @@ class ProductPricelistPrint(models.TransientModel):
     )
     show_standard_price = fields.Boolean(string='Show Cost Price')
     show_sale_price = fields.Boolean(string='Show Sale Price')
+    show_sale_wh_vat_price = fields.Boolean(string='Show Sale Price without VAT')
     hide_pricelist_name = fields.Boolean(string='Hide Pricelist Name')
+    display_pictures = fields.Boolean(string='Show Product pictures')
+    image_sizes = fields.Selection(
+        [('image', 'Big sized Image'), ('image_medium', 'Medium Sized Image'),
+         ('image_small', 'Small Sized Image')],
+        'Image Sizes', default="image_small",
+        help="Image size to be displayed in report")
 
     multipricelist = fields.Boolean(string='Use Multi Pricelists')
     only_product_pricelist = fields.Boolean(string='Show Products with used Pricelist')
@@ -63,6 +70,7 @@ class ProductPricelistPrint(models.TransientModel):
     order_field = fields.Selection([
         ('name', 'Name'),
         ('default_code', 'Internal Reference'),
+        ('code', 'Price list code'),
     ], string='Order')
     partner_count = fields.Integer(
         compute='_compute_partner_count'
@@ -175,35 +183,54 @@ class ProductPricelistPrint(models.TransientModel):
                     (6, 0, category_items.mapped('categ_id').ids)]
         return res
 
-    def _get_field_value(self, product, partner, pricelist):
-        price_extra = 0.0
-        for attribute_price in product.mapped('attribute_value_ids.price_ids'):
-            if attribute_price.product_tmpl_id == product.product_tmpl_id:
-                price_extra += attribute_price.price_extra
-        if price_extra == 0.0:
-            product = False
+    def _get_field_value(self, product, partner, pricelist, page):
+        #price_extra = 0.0
+        #for attribute_price in product.mapped('attribute_value_ids.price_ids'):
+        #    if attribute_price.product_tmpl_id == product.product_tmpl_id:
+        #        price_extra += attribute_price.price_extra
+        #if price_extra == 0.0:
+        #    return False
+        price, vat, price_vat, price_wh_vat = self.get_price(product, pricelist=pricelist)[0]
+        if not price:
+            return False
         return {
                 'product_tmpl_id': product.product_tmpl_id.id,
                 'product_id': product.id,
                 'partner_id': partner.id,
                 'pricelist_id': pricelist.id,
+                'currency_id': pricelist.currency_id.id,
                 'quantity': self.quantity,
                 'standard_price': product.standard_price,
+                'price_unit': price,
+                'price_tax': vat,
+                'price_subtotal': price_wh_vat,
+                'price_total': price_vat,
+                'company_id': self.env.user.company_id.id,
+                'report_id': self.id,
                 }
+
+    def _get_key_value(self, partner_id, pricelist_id, product_tmpl_id, product_id, page):
+        return '%s-%s-%s-%s' % (partner_id, pricelist_id, product_tmpl_id, product_id)
+
+    def _get_product_layouted(self, products, pricelist, date):
+        return self.product_layouted(products, pricelist, date)
 
     @api.multi
     def analize_report(self):
         for rec in self:
-            if rec.pricelist_id and not rec.pricelist_ids:
-                rec.pricelist_ids = [(6, 0, [rec.pricelist_id.id])]
-            if not(rec.pricelist_ids or rec.partner_count
-                   or rec.show_standard_price or rec.show_sale_price):
-                raise ValidationError(_(
-                    'You must set price list or any customer '
-                    'or any show price option.'))
+            #if rec.pricelist_id and not rec.pricelist_ids:
+            #    rec.pricelist_ids = [(6, 0, [rec.pricelist_id.id])]
+            #if not(rec.pricelist_id or rec.partner_count
+            #       or rec.show_standard_price or rec.show_sale_price):
+            #    raise ValidationError(_(
+            #        'You must set price list or any customer '
+            #        'or any show price option.'))
             values = []
-            ctx_products = self._context.get('ctx_products', False)
-            products = rec.product_ids or ctx_products
+            pricelist = rec.get_pricelist_to_print()
+            products = rec.product_ids
+            #ctx_products = self._context.get('ctx_products', False)
+            #products = rec.product_ids or ctx_products
+            products = rec._get_product_layouted(products, pricelist, rec.date)
             if not products:
                 domain = ["|"]
                 if rec.product_tmpl_ids:
@@ -217,27 +244,39 @@ class ProductPricelistPrint(models.TransientModel):
                         domain += [('product_tmpl_id', 'in', list(product_ids))]
                 products = rec.env['product.product'].search(domain)
 
-            ctx_partners = self._context.get('ctx_partners', False)
-            partners = rec.partner_ids or ctx_partners
-            if not partners:
-                if rec.pricelist_ids:
-                    partners = rec.env['res.partner'].search([]).filtered(lambda x: x.property_product_pricelist.id in rec.pricelist_ids.ids)
+            #ctx_partners = self._context.get('ctx_partners', False)
+            #partners = rec.partner_ids or ctx_partners
+            if rec.pricelist_id:
+                partners = rec.env['res.partner'].search([('property_product_pricelist', '=', rec.pricelist_id.id)])
             filter_values = {}
-            for product in products:
-                for partner in partners:
-                    for pricelist in rec.pricelist_ids:
-                        product_ids = set([x.product_id.id for x in pricelist.mapped('item_ids') if x.product_id])
-                        product_tmpl_ids = set([x.product_tmpl_id.id for x in pricelist.mapped('item_ids') if x.product_tmpl_id])
-                        if partner.property_product_pricelist.id == pricelist.id and (product.id in list(product_ids) or product.product_tmpl_id.id in list(product_tmpl_ids)):
-                            res = rec._get_field_value(product, partner, pricelist)
-                            if res:
-                                filter_values['%s-%s-%s-%s' % (
-                                res['partner_id'], res['pricelist_id'], res['product_tmpl_id'],
-                                res['product_id'])] = (0, False, res)
-                                #values.append((0, False, res))
-            for curr in filter_values:
+            #_logger.info("DATA %s:%s:%s" % (partners, pricelist, products))
+            for partner in partners:
+                for page in products:
+                    for product_add in page:
+                        #_logger.info("PAGE %s" % product_add)
+                        if product_add.get('single_product'):
+                            for product in product_add['lines']:
+                                res = rec._get_field_value(product, partner, pricelist, product_add)
+                                #_logger.info("LINE 1 %s:%s:%s:::%s" % (product, partner, pricelist, res))
+                                if res:
+                                    filter_values[rec._get_key_value(res['partner_id'], res['pricelist_id'], res['product_tmpl_id'], res['product_id'], product_add)] = (0, False, res)
+                        else:
+                            if product_add.get('has_variant_with_price'):
+                                for product in product_add['lines']:
+                                    res = rec._get_field_value(product, partner, pricelist, product_add)
+                                    #_logger.info("LINE 2 %s:%s:%s:::%s" % (product, partner, pricelist, res))
+                                    if res:
+                                        filter_values[rec._get_key_value(res['partner_id'], res['pricelist_id'], res['product_tmpl_id'], res['product_id'], product_add)] = (0, False, res)
+                            elif len(product_add['lines']) > 0:
+                                product = product_add['lines'][0]
+                                res = rec._get_field_value(product, partner, pricelist, product_add)
+                                #_logger.info("LINE 3 %s:%s:%s:::%s" % (product, partner, pricelist, res))
+                                if res:
+                                    filter_values[rec._get_key_value(res['partner_id'], res['pricelist_id'], res['product_tmpl_id'], res['product_id'], product_add)] = (0, False, res)
+            for curr in filter_values.values():
                 values.append(curr)
-            rec.update({'report_lines': new_values})
+                _logger.info("VALUES %s" % curr[2])
+                rec.report_lines = curr
         return {
             'type': 'ir.actions.act_window',
             'name': _('Product prices'),
@@ -272,11 +311,16 @@ class ProductPricelistPrint(models.TransientModel):
         for category, lines in groupby(product, lambda l: l.product_tmpl_id):
             # Append category to current report page
             #_logger.info("CATEGORY %s" % category)
+            codes = set()
+            for line in list(lines):
+                if line.with_context(dict(self._context, pricelist=pricelist.id)).pricelist_code:
+                    codes.update([line.with_context(dict(self._context, pricelist=pricelist.id)).pricelist_code])
             report_pages[-1].append({
                 'name': category and category.display_name or _('Uncategorized'),
                 'lines': list(lines),
                 'has_variant_with_price': category.product_variant_count > 1 and category.check_for_price(pricelist, date),
                 'single_product': category.product_variant_count == 1,
+                'codes': codes and list(codes) or False,
             })
             #_logger.info("PAGE %s:%s" % (category.display_name, category.product_variant_count > 1 and category.check_for_price(pricelist, date)))
         return report_pages
@@ -379,6 +423,7 @@ class ProductPricelistPrint(models.TransientModel):
             pricelist = self.partner_ids[0].property_product_pricelist
         return pricelist
 
+
 class ProductPricelistPrintLine(models.TransientModel):
     _name = 'product.pricelist.print.line'
     _description = 'Product pricelist print line'
@@ -405,110 +450,15 @@ class ProductPricelistPrintLine(models.TransientModel):
         help="Cost used for stock valuation in standard price and as a first price to set in average/fifo. "
              "Also used as a base price for pricelists. "
              "Expressed in the default unit of measure of the product.")
-    price_unit = fields.Monetary(compute='_compute_price_unit', string='Unit price', readonly=True, store=True)
-    price_subtotal = fields.Monetary(compute='_compute_amount', string='Subtotal', readonly=True, store=True)
-    price_tax = fields.Float(compute='_compute_amount', string='Taxes', readonly=True, store=True)
-    price_total = fields.Monetary(compute='_compute_amount', string='Total', readonly=True, store=True)
+    price_unit = fields.Float(string='Unit price', digits=dp.get_precision('Product Price'))
+    price_subtotal = fields.Float(string='Subtotal')
+    price_tax = fields.Float(string='Taxes')
+    price_total = fields.Float(string='Total')
 
     #product_set_id = fields.Many2one('product.set', string='Product Set', ondelete="restrict")
     company_id = fields.Many2one(related='report_id.company_id', string='Company')
     pricelist_id = fields.Many2one('product.pricelist', string='Pricelist', compute_sudo=True, help="Pricelist for current sales order.")
-    currency_id = fields.Many2one(related='pricelist_id.currency_id', string='Currency', store=True)
+    currency_id = fields.Many2one(string='Currency')
     tax_id = fields.Many2many('account.tax', string='Taxes', domain=['|', ('active', '=', False), ('active', '=', True)])
 
     partner_id = fields.Many2one(comodel_name='res.partner', string='Customer')
-
-    @api.depends('report_id', 'tax_id', 'company_id', 'product_id')
-    def _compute_price_unit(self):
-        for line in self:
-            _logger.info("COMPUTE PRICE %s:%s:%s" % (line.product_id, line.pricelist_id, line.partner_id))
-            if line.product_id and line.pricelist_id and line.partner_id:
-                line.update({'price_unit':
-                              self.env['account.tax']._fix_tax_included_price_company(line._get_display_price(line.product_id), line.product_id.taxes_id, line.tax_id, line.company_id)})
-            else:
-                line.update({'price_unit': 0.0})
-
-    @api.depends('quantity', 'price_unit', 'tax_id')
-    def _compute_amount(self):
-        for line in self:
-            price = line.price_unit
-            taxes = line.tax_id.compute_all(price, line.pricelist_id.currency_id, line.quantity, product=line.product_id, partner=line.partner_id)
-            line.update({
-                'price_tax': sum(t.get('amount', 0.0) for t in taxes.get('taxes', [])),
-                'price_total': taxes['total_included'],
-                'price_subtotal': taxes['total_excluded'],
-            })
-
-    def _get_display_price_context(self):
-        #, product_set_id=self.product_set_id.id
-        return dict(self.env.context, partner_id=self.partner_id.id, date=fields.Date.context_today(self),
-                                uom=self.product_uom.id, company_id=self.pricelist_id.company_id.id)
-
-    @api.multi
-    def _get_display_price(self, product):
-        PricelistItem = self.env['product.pricelist.item'].sudo()
-        product_context = self._get_display_price_context()
-        final_price, rule_id = self.pricelist_id.with_context(product_context).get_product_price_rule(self.product_id, self.quantity or 1.0, self.partner_id)
-        base_price, currency_id = self.with_context(product_context)._get_real_price_currency(product, rule_id, self.quantity or 1.0, self.product_uom, self.pricelist_id.id)
-        if currency_id != self.pricelist_id.currency_id.id:
-            base_price = self.env['res.currency'].browse(currency_id).with_context(product_context).compute(base_price, self.pricelist_id.currency_id)
-        if rule_id and PricelistItem.browse(rule_id).compute_price == 'fixed':
-            return final_price
-        elif rule_id and PricelistItem.browse(rule_id).price_discount >= 0.0:
-            return min(base_price, final_price)
-        else:
-            return max(base_price, final_price)
-
-    def _get_real_price_currency_context(self, uom):
-        #, product_set_id=self.product_set_id
-        return dict(uom=uom.id)
-
-    def _get_real_price_currency(self, product, rule_id, qty, uom, pricelist_id):
-        PricelistItem = self.env['product.pricelist.item'].sudo()
-        field_name = 'lst_price'
-        currency_id = None
-        product_currency = None
-        if rule_id:
-            pricelist_item = PricelistItem.browse(rule_id)
-            product_context = self._get_real_price_currency_context(uom)
-            if pricelist_item.pricelist_id.discount_policy == 'without_discount':
-                while pricelist_item.base == 'pricelist' and pricelist_item.base_pricelist_id and pricelist_item.base_pricelist_id.discount_policy == 'without_discount':
-                    price, rule_id = pricelist_item.base_pricelist_id.with_context(product_context).get_product_price_rule(product, qty, self.partner_id)
-                    pricelist_item = PricelistItem.browse(rule_id)
-
-            if pricelist_item.base == 'standard_price':
-                field_name = 'standard_price'
-            if pricelist_item.base == 'pricelist' and pricelist_item.base_pricelist_id:
-                field_name = 'price'
-                product = product.with_context(pricelist=pricelist_item.base_pricelist_id.id)
-                product_currency = pricelist_item.base_pricelist_id.currency_id
-            currency_id = pricelist_item.pricelist_id.currency_id
-
-        product_currency = product_currency or(product.company_id and product.company_id.currency_id) or self.env.user.company_id.currency_id
-        if not currency_id:
-            currency_id = product_currency
-            cur_factor = 1.0
-        else:
-            if currency_id.id == product_currency.id:
-                cur_factor = 1.0
-            else:
-                cur_factor = currency_id._get_conversion_rate(product_currency, currency_id)
-
-        product_uom = self.env.context.get('uom') or product.uom_id.id
-        if uom and uom.id != product_uom:
-            # the unit price is in a different uom
-            uom_factor = uom._compute_price(1.0, product.uom_id)
-        else:
-            uom_factor = 1.0
-        #_logger.info("PRICELIST GET CURRENCY RODUCT:%s:CURRENCY:%s:%s:%s:%s" % (product_currency.name, product.company_id.name, currency_id.name, self.env.user.company_id.name, self.env.user.company_id.currency_id.name))
-        return product[field_name] * uom_factor * cur_factor, currency_id.id
-
-    @api.multi
-    @api.onchange('product_tmpl_id')
-    def onchange_product_tmpl_id(self):
-        for rec in self:
-            if rec.product_tmpl_id:
-                rec.product_id = rec.product_tmpl_id.product_variant_id.id
-                self._compute_tax_id()
-                self._compute_price_unit()
-                return {'domain': {'product_id': [('product_tmpl_id', '=', rec.product_tmpl_id.id)]}}

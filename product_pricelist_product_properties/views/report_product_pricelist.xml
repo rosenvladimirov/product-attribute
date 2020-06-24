@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_product_pricelist_detail_propetries" inherit_id="product_pricelist_direct_print.report_product_pricelist_detail">
+        <xpath expr="//strong[@name='piclinename']" position="replace">
+            <t t-set="properties_print" t-value="o.print_properties"/>
+            <t t-set="intalic" t-value="0"/>
+            <t t-call="product_pricelist_product_properties.product_properties_description"/>
+        </xpath>
+        <xpath expr="//strong[@name='linename']" position="replace">
+            <t t-set="properties_print" t-value="o.print_properties"/>
+            <t t-set="intalic" t-value="0"/>
+            <t t-call="product_pricelist_product_properties.product_properties_description"/>
+        </xpath>
+        <xpath expr="//strong[@name='picvlinename']" position="replace">
+            <t t-set="properties_print" t-value="o.print_properties"/>
+            <t t-set="intalic" t-value="0"/>
+            <t t-call="product_pricelist_product_properties.product_properties_description"/>
+        </xpath>
+        <xpath expr="//strong[@name='vlinename']" position="replace">
+            <t t-set="properties_print" t-value="o.print_properties"/>
+            <t t-set="intalic" t-value="0"/>
+            <t t-call="product_pricelist_product_properties.product_properties_description"/>
+        </xpath>
+        <xpath expr="//strong[@name='pictlinename']" position="replace">
+            <t t-set="properties_print" t-value="o.print_properties"/>
+            <t t-set="intalic" t-value="0"/>
+            <t t-call="product_pricelist_product_properties.product_properties_description"/>
+        </xpath>
+        <xpath expr="//strong[@name='tlinename']" position="replace">
+            <t t-set="properties_print" t-value="o.print_properties"/>
+            <t t-set="intalic" t-value="0"/>
+            <t t-call="product_pricelist_product_properties.product_properties_description"/>
+        </xpath>
+    </template>
+    <template id="report_product_pricelist_detail_propetries" inherit_id="sale_product_set_pricelist_direct_print.report_product_pricelist_detail">
+        <xpath expr="//strong[@name='piclinename']" position="replace">
+            <t t-set="properties_print" t-value="o.print_properties"/>
+            <t t-set="intalic" t-value="0"/>
+            <t t-call="product_pricelist_product_properties.product_properties_description"/>
+        </xpath>
+        <xpath expr="//strong[@name='linename']" position="replace">
+            <t t-set="properties_print" t-value="o.print_properties"/>
+            <t t-set="intalic" t-value="0"/>
+            <t t-call="product_pricelist_product_properties.product_properties_description"/>
+        </xpath>
+        <xpath expr="//strong[@name='picvlinename']" position="replace">
+            <t t-set="properties_print" t-value="o.print_properties"/>
+            <t t-set="intalic" t-value="0"/>
+            <t t-call="product_pricelist_product_properties.product_properties_description"/>
+        </xpath>
+        <xpath expr="//strong[@name='vlinename']" position="replace">
+            <t t-set="properties_print" t-value="o.print_properties"/>
+            <t t-set="intalic" t-value="0"/>
+            <t t-call="product_pricelist_product_properties.product_properties_description"/>
+        </xpath>
+        <xpath expr="//strong[@name='pictlinename']" position="replace">
+            <t t-set="properties_print" t-value="o.print_properties"/>
+            <t t-set="intalic" t-value="0"/>
+            <t t-call="product_pricelist_product_properties.product_properties_description"/>
+        </xpath>
+        <xpath expr="//strong[@name='tlinename']" position="replace">
+            <t t-set="properties_print" t-value="o.print_properties"/>
+            <t t-set="intalic" t-value="0"/>
+            <t t-call="product_pricelist_product_properties.product_properties_description"/>
+        </xpath>
+    </template>
+    <template id="report_product_set_pricelist_detail_properties" inherit_id="sale_product_set_pricelist_direct_print.report_product_set_pricelist_detail">
+        <xpath expr="//strong[@name='picplinename']" position="replace">
+            <t t-set="properties_print" t-value="o.print_properties"/>
+            <t t-call="product_pricelist_product_properties.product_set_properties_description"/>
+        </xpath>
+        <xpath expr="//strong[@name='plinename']" position="replace">
+            <t t-set="properties_print" t-value="o.print_properties"/>
+            <t t-call="product_pricelist_product_properties.product_set_properties_description"/>
+        </xpath>
+        <xpath expr="//i/span[@name='dplinename']" position="replace">
+            <t t-set="properties_print" t-value="o.print_properties"/>
+            <t t-set="intalic" t-value="1"/>
+            <t t-call="product_pricelist_product_properties.product_properties_description"/>
+        </xpath>
+    </template>
+</odoo>
