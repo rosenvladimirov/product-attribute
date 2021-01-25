@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="report_invoice_document_with_gdmn" inherit_id="l10n_bg_extend.report_invoice_document" primary="True">
+            <xpath expr="//span[@t-field='l.name']" position="after">
+                <br/>
+                <t t-if="l.product_id.product_tmpl_id.observe">
+                    <span t-field="l.product_id.product_tmpl_id.observe"/>
+                </t>
+                <t t-if="l.product_id.observe_variant">
+                    <span t-field="l.product_id.observe_variant"/>
+                </t>
+            </xpath>
+        </template>
+    </data>
+</odoo>

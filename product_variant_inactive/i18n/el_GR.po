@@ -18,5 +18,5 @@ msgstr ""
 #. module: product_variant_inactive
 #: model:ir.model,name:product_variant_inactive.model_product_product
 msgid "Product"
-msgstr "Продукт"
+msgstr "Προϊόν"
 

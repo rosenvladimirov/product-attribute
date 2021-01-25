@@ -1,0 +1,285 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+#	* product_pricelist_mass_adding
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 11.0+e-20190711\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2019-08-01 07:43+0000\n"
+"PO-Revision-Date: 2019-08-01 07:43+0000\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: product_pricelist_mass_adding
+#: selection:product.pricelist.item.add,applied_on:0
+msgid " Product Category"
+msgstr "Κατηγορία Eίδους"
+
+#. module: product_pricelist_mass_adding
+#: model:ir.ui.view,arch_db:product_pricelist_mass_adding.view_product_pricelist_adding
+msgid "Add"
+msgstr "Προσθήκη"
+
+#. module: product_pricelist_mass_adding
+#: selection:product.pricelist.adding,update:0
+msgid "Add new price list on selected product[s]"
+msgstr "Add new price list on selected product[s]"
+
+#. module: product_pricelist_mass_adding
+#: model:ir.model.fields,field_description:product_pricelist_mass_adding.field_product_pricelist_item_add_applied_on
+msgid "Apply On"
+msgstr "Apply On"
+
+#. module: product_pricelist_mass_adding
+#: model:ir.model.fields,help:product_pricelist_mass_adding.field_product_pricelist_item_add_base
+msgid "Base price for computation.\n"
+"Public Price: The base price will be the Sale/public Price.\n"
+"Cost Price : The base price will be the cost price.\n"
+"Other Pricelist : Computation of the base price based on another Pricelist."
+msgstr "Base price for computation.\n"
+"Public Price: The base price will be the Sale/public Price.\n"
+"Cost Price : The base price will be the cost price.\n"
+"Other Pricelist : Computation of the base price based on another Pricelist."
+
+#. module: product_pricelist_mass_adding
+#: model:ir.model.fields,field_description:product_pricelist_mass_adding.field_product_pricelist_item_add_base
+msgid "Based on"
+msgstr "Βασισμένο στο"
+
+#. module: product_pricelist_mass_adding
+#: model:ir.ui.view,arch_db:product_pricelist_mass_adding.view_product_pricelist_adding
+msgid "Cancel"
+msgstr "Cancel"
+
+#. module: product_pricelist_mass_adding
+#: model:ir.model.fields,field_description:product_pricelist_mass_adding.field_product_pricelist_item_add_compute_price
+msgid "Compute Price"
+msgstr "Υπολογισμός τιμής"
+
+#. module: product_pricelist_mass_adding
+#: selection:product.pricelist.item.add,base:0
+msgid "Cost"
+msgstr "Κόστος"
+
+#. module: product_pricelist_mass_adding
+#: model:ir.model.fields,field_description:product_pricelist_mass_adding.field_product_pricelist_adding_create_uid
+#: model:ir.model.fields,field_description:product_pricelist_mass_adding.field_product_pricelist_item_add_create_uid
+msgid "Created by"
+msgstr "Δημιουργήθηκε από"
+
+#. module: product_pricelist_mass_adding
+#: model:ir.model.fields,field_description:product_pricelist_mass_adding.field_product_pricelist_adding_create_date
+#: model:ir.model.fields,field_description:product_pricelist_mass_adding.field_product_pricelist_item_add_create_date
+msgid "Created on"
+msgstr "Δημιουργήθηκε στις"
+
+#. module: product_pricelist_mass_adding
+#: selection:product.pricelist.adding,update:0
+msgid "Delet price list for selected product[s]"
+msgstr "Delet price list for selected product[s]"
+
+#. module: product_pricelist_mass_adding
+#: model:ir.ui.view,arch_db:product_pricelist_mass_adding.view_product_pricelist_adding
+msgid "Delete"
+msgstr "Διαγραφή"
+
+#. module: product_pricelist_mass_adding
+#: model:ir.model.fields,field_description:product_pricelist_mass_adding.field_product_pricelist_adding_display_name
+#: model:ir.model.fields,field_description:product_pricelist_mass_adding.field_product_pricelist_item_add_display_name
+msgid "Display Name"
+msgstr "Εμφάνιση Ονόματος"
+
+#. module: product_pricelist_mass_adding
+#: model:ir.model.fields,field_description:product_pricelist_mass_adding.field_product_pricelist_item_add_date_end
+msgid "End Date"
+msgstr "Ημερ. Λήξης"
+
+#. module: product_pricelist_mass_adding
+#: model:ir.model.fields,help:product_pricelist_mass_adding.field_product_pricelist_item_add_date_end
+msgid "Ending valid for the pricelist item validation"
+msgstr "Λήξη ισχύος για το στοιχείο επικύρωσης τιμοκαταλόγου"
+
+#. module: product_pricelist_mass_adding
+#: selection:product.pricelist.item.add,compute_price:0
+msgid "Fix Price"
+msgstr "Σταθερή τιμή"
+
+#. module: product_pricelist_mass_adding
+#: model:ir.model.fields,field_description:product_pricelist_mass_adding.field_product_pricelist_item_add_fixed_price
+msgid "Fixed Price"
+msgstr "Σταθερή τιμή"
+
+#. module: product_pricelist_mass_adding
+#: model:ir.model.fields,help:product_pricelist_mass_adding.field_product_pricelist_item_add_min_quantity
+msgid "For the rule to apply, bought/sold quantity must be greater than or equal to the minimum quantity specified in this field.\n"
+"Expressed in the default unit of measure of the product."
+msgstr "For the rule to apply, bought/sold quantity must be greater than or equal to the minimum quantity specified in this field.\n"
+"Expressed in the default unit of measure of the product."
+
+#. module: product_pricelist_mass_adding
+#: selection:product.pricelist.item.add,compute_price:0
+msgid "Formula"
+msgstr "Τύπος"
+
+#. module: product_pricelist_mass_adding
+#: selection:product.pricelist.item.add,applied_on:0
+msgid "Global"
+msgstr "Παγκόσμια"
+
+#. module: product_pricelist_mass_adding
+#: model:ir.model.fields,field_description:product_pricelist_mass_adding.field_product_pricelist_adding_id
+#: model:ir.model.fields,field_description:product_pricelist_mass_adding.field_product_pricelist_item_add_id
+msgid "ID"
+msgstr "Κωδικός"
+
+#. module: product_pricelist_mass_adding
+#: model:ir.model.fields,field_description:product_pricelist_mass_adding.field_product_pricelist_adding___last_update
+#: model:ir.model.fields,field_description:product_pricelist_mass_adding.field_product_pricelist_item_add___last_update
+msgid "Last Modified on"
+msgstr "Τελευταία τροποποίηση στις"
+
+#. module: product_pricelist_mass_adding
+#: model:ir.model.fields,field_description:product_pricelist_mass_adding.field_product_pricelist_adding_write_uid
+#: model:ir.model.fields,field_description:product_pricelist_mass_adding.field_product_pricelist_item_add_write_uid
+msgid "Last Updated by"
+msgstr "Τελευταία Ενημέρωση από"
+
+#. module: product_pricelist_mass_adding
+#: model:ir.model.fields,field_description:product_pricelist_mass_adding.field_product_pricelist_adding_write_date
+#: model:ir.model.fields,field_description:product_pricelist_mass_adding.field_product_pricelist_item_add_write_date
+msgid "Last Updated on"
+msgstr "Τελευταία Ενημέρωση στις"
+
+#. module: product_pricelist_mass_adding
+#: model:ir.ui.view,arch_db:product_pricelist_mass_adding.view_product_pricelist_adding
+msgid "Mass adding pricelists"
+msgstr "Mass adding pricelists"
+
+#. module: product_pricelist_mass_adding
+#: model:ir.model.fields,field_description:product_pricelist_mass_adding.field_product_pricelist_item_add_min_quantity
+msgid "Min. Quantity"
+msgstr "Ελάχιστη Ποσότητα"
+
+#. module: product_pricelist_mass_adding
+#: selection:product.pricelist.item.add,base:0
+msgid "Other Pricelist"
+msgstr "Άλλος Τιμοκατάλογος"
+
+#. module: product_pricelist_mass_adding
+#: selection:product.pricelist.item.add,compute_price:0
+msgid "Percentage (diapplied_onscount)"
+msgstr "Percentage (diapplied_onscount)"
+
+#. module: product_pricelist_mass_adding
+#: model:ir.ui.view,arch_db:product_pricelist_mass_adding.view_product_pricelist_adding
+msgid "Price"
+msgstr "Τιμή"
+
+#. module: product_pricelist_mass_adding
+#: model:ir.ui.view,arch_db:product_pricelist_mass_adding.view_product_pricelist_adding
+msgid "Price List"
+msgstr "Τιμοκατάλογος"
+
+#. module: product_pricelist_mass_adding
+#: model:ir.actions.act_window,name:product_pricelist_mass_adding.action_product_pricelist_mass_add
+msgid "Price List mass adding"
+msgstr "Price List mass adding"
+
+#. module: product_pricelist_mass_adding
+#: model:ir.model.fields,field_description:product_pricelist_mass_adding.field_product_pricelist_item_add_pricelist_id
+#: model:ir.ui.view,arch_db:product_pricelist_mass_adding.view_product_pricelist_adding
+msgid "Pricelist"
+msgstr "Τιμοκατάλογος"
+
+#. module: product_pricelist_mass_adding
+#: model:ir.model.fields,help:product_pricelist_mass_adding.field_product_pricelist_item_add_applied_on
+msgid "Pricelist Item applicable on selected option"
+msgstr "Στοιχείο Τιμοκαταλόγου που εφαρμόζεται σε επιλεγμένες δυνατότητες"
+
+#. module: product_pricelist_mass_adding
+#: model:ir.model.fields,field_description:product_pricelist_mass_adding.field_product_pricelist_adding_item_ids
+#: model:ir.ui.view,arch_db:product_pricelist_mass_adding.view_product_pricelist_adding
+msgid "Pricelist Items"
+msgstr "Στοιχεία Τιμοκαταλόγου"
+
+#. module: product_pricelist_mass_adding
+#: model:ir.model.fields,field_description:product_pricelist_mass_adding.field_product_pricelist_item_add_product_id
+#: selection:product.pricelist.item.add,applied_on:0
+msgid "Product"
+msgstr "Είδος"
+
+#. module: product_pricelist_mass_adding
+#: model:ir.model.fields,field_description:product_pricelist_mass_adding.field_product_pricelist_item_add_categ_id
+msgid "Product Category"
+msgstr "Κατηγορία Είδους"
+
+#. module: product_pricelist_mass_adding
+#: model:ir.model.fields,field_description:product_pricelist_mass_adding.field_product_pricelist_item_add_product_tmpl_id
+msgid "Product Template"
+msgstr "Πρότυπο Είδους"
+
+#. module: product_pricelist_mass_adding
+#: selection:product.pricelist.item.add,applied_on:0
+msgid "Product Variant"
+msgstr "Μεταβλητή Είδους"
+
+#. module: product_pricelist_mass_adding
+#: selection:product.pricelist.item.add,base:0
+msgid "Public Price"
+msgstr "Λιανική Τιμή"
+
+#. module: product_pricelist_mass_adding
+#: model:ir.model.fields,help:product_pricelist_mass_adding.field_product_pricelist_item_add_categ_id
+msgid "Specify a product category if this rule only applies to products belonging to this category or its children categories. Keep empty otherwise."
+msgstr "Καθορίστε μια κατηγορία είδους εάν αυτός ο κανόνας αναπτύσσεται σε είδη που ανήκουν σε αυτή την κατηγορία ή τις θυγατρικές κατηγορίες της. Κρατήστε κενό αλλιώς."
+
+#. module: product_pricelist_mass_adding
+#: model:ir.model.fields,help:product_pricelist_mass_adding.field_product_pricelist_item_add_product_id
+msgid "Specify a product if this rule only applies to one product. Keep empty otherwise."
+msgstr "Συγκεκριμενοποίησε ένα είδος εάν αυτός ο κανόνας εφαρμόζεται μόνο σε ένα είδος. Αλλιώς κράτησε το κενό."
+
+#. module: product_pricelist_mass_adding
+#: model:ir.model.fields,help:product_pricelist_mass_adding.field_product_pricelist_item_add_product_tmpl_id
+msgid "Specify a template if this rule only applies to one product template. Keep empty otherwise."
+msgstr "Καθορίστε ένα πρότυπο εάν αυτός ο κανόνας εφαρμόζεται μόνο σε ένα πρότυπο είδους. Αλλιώς κρατήστε το κενό."
+
+#. module: product_pricelist_mass_adding
+#: model:ir.model.fields,field_description:product_pricelist_mass_adding.field_product_pricelist_item_add_date_start
+msgid "Start Date"
+msgstr "Ημερομηνία Έναρξης"
+
+#. module: product_pricelist_mass_adding
+#: model:ir.model.fields,help:product_pricelist_mass_adding.field_product_pricelist_item_add_date_start
+msgid "Starting date for the pricelist item validation"
+msgstr "Έναρξη ισχύος για το στοιχείο επικύρωσης τιμοκαταλόγου"
+
+#. module: product_pricelist_mass_adding
+#: model:ir.ui.view,arch_db:product_pricelist_mass_adding.view_product_pricelist_adding
+msgid "Update"
+msgstr "Ενημέρωση"
+
+#. module: product_pricelist_mass_adding
+#: selection:product.pricelist.adding,update:0
+msgid "Update data in price list on selected product[s]"
+msgstr "Update data in price list on selected product[s]"
+
+#. module: product_pricelist_mass_adding
+#: model:ir.model.fields,field_description:product_pricelist_mass_adding.field_product_pricelist_adding_update
+msgid "Update pricelists"
+msgstr "Update pricelists"
+
+#. module: product_pricelist_mass_adding
+#: model:ir.model,name:product_pricelist_mass_adding.model_product_pricelist_adding
+msgid "product.pricelist.adding"
+msgstr "product.pricelist.adding"
+
+#. module: product_pricelist_mass_adding
+#: model:ir.model,name:product_pricelist_mass_adding.model_product_pricelist_item_add
+msgid "product.pricelist.item.add"
+msgstr "product.pricelist.item.add"
+

@@ -1,0 +1,45 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+#	* product_observe
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 11.0+e-20190711\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2019-08-01 07:43+0000\n"
+"PO-Revision-Date: 2019-08-01 07:43+0000\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: product_observe
+#: model:ir.model.fields,field_description:product_observe.field_product_product_observe
+#: model:ir.model.fields,field_description:product_observe.field_product_product_observe_variant
+#: model:ir.model.fields,field_description:product_observe.field_product_template_observe
+msgid "Observe"
+msgstr "Α/Α ΠΑΡΑΤ."
+
+#. module: product_observe
+#: model:ir.model.fields,help:product_observe.field_product_product_observe_variant
+msgid "Plase fill the Observe code"
+msgstr "Plase fill the Observe code"
+
+#. module: product_observe
+#: model:ir.model.fields,help:product_observe.field_product_product_observe
+#: model:ir.model.fields,help:product_observe.field_product_template_observe
+msgid "Plase fill the observe code"
+msgstr "Plase fill the observe code"
+
+#. module: product_observe
+#: model:ir.model,name:product_observe.model_product_product
+msgid "Product"
+msgstr "Προϊόν"
+
+#. module: product_observe
+#: model:ir.model,name:product_observe.model_product_template
+msgid "Product Template (Multi-Company)"
+msgstr "Product Template (Multi-Company)"
+

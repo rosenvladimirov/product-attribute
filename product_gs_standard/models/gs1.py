@@ -40,7 +40,9 @@ class GS1:
         return sub(r'[^\w\d]+', '', _bcde_n)
 
     def __verify_gs1(cls, barcode):
-        if match(r'^(01)\d{14}(11\d{6}|10\w*|17\d{6}|17\d{8})(10\w*|17\d{6}|17\d{8}:240\w*)$', barcode):
+        if match(r'^(01)\d{14}(11\d{6}|10\w*|17\d{6}|17\d{8})(10\w*|17\d{6}|17\d{8}|21\w*|240\w*)$', barcode):
+            return True
+        if match(r'^(01)\d{14}(11[0-9]{6}|17[0-9]{6})(17[0-9]{6}|11[0-9]{6})(10\w*|21\w*|240\w*)$', barcode):
             return True
         if match(r'^(01)\d{14}(10\w*)$', barcode):
             return True
@@ -81,11 +83,21 @@ class GS1:
             lt_nbr_m = search('(?<=17\d{6})(10\w*)$', _bcde_n[16:])
             exp_dte_m = search('(17\d{6})', _bcde_n[16:])
             return ean_nbr_m.group(0), exp_dte_m.group(0), lt_nbr_m.group(0), False, False
+        elif match(r'^(01)\d{14}(17\d{6})(21\w*)$', _bcde_n):
+            lt_nbr_m = search('(?<=17\d{6})(21\w*)$', _bcde_n[16:])
+            exp_dte_m = search('(17\d{6})', _bcde_n[16:])
+            return ean_nbr_m.group(0), exp_dte_m.group(0), lt_nbr_m.group(0), False, False
         elif match(r'^(01)\d{14}(11\d{6})(17\d{6})(10\w*)$', _bcde_n):
             lt_nbr_m = search('(?<=17\d{6})(10\w*)$', _bcde_n[16:])
             exp_dte_m = search('(17\d{6})', _bcde_n[16:])
             exp_dte_p = search('(11\d{6})', _bcde_n[16:])
-            return ean_nbr_m.group(0), exp_dte_m.group(0), lt_nbr_m.group(0), False, exp_dte_p
+            return ean_nbr_m.group(0), exp_dte_m.group(0), lt_nbr_m.group(0), False, exp_dte_p.group(0)
+        elif match(r'^(01)\d{14}(11\d{6})(17\d{6})(21\w*)$', _bcde_n):
+            lt_nbr_m = search('(?<=17\d{6})(21\w*)$', _bcde_n[16:])
+            exp_dte_m = search('(17\d{6})', _bcde_n[16:])
+            exp_dte_p = search('(11\d{6})', _bcde_n[16:])
+            #_logger.info("GRUOPS %s-%s-%s-%s-%s" % (ean_nbr_m.group(0), exp_dte_m.group(0), lt_nbr_m.group(0), False, exp_dte_p.group(0)))
+            return ean_nbr_m.group(0), exp_dte_m.group(0), lt_nbr_m.group(0), False, exp_dte_p.group(0)
         elif match(r'^(01)\d{14}(17\d{8})(10\w*)$', _bcde_n):
             lt_nbr_m = search('(?<=17\d{8})(10\w*)$', _bcde_n[16:])
             exp_dte_m = search('(17\d{8})', _bcde_n[16:])

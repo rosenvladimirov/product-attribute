@@ -458,7 +458,7 @@ class ProductPricelistPrintLine(models.TransientModel):
     #product_set_id = fields.Many2one('product.set', string='Product Set', ondelete="restrict")
     company_id = fields.Many2one(related='report_id.company_id', string='Company')
     pricelist_id = fields.Many2one('product.pricelist', string='Pricelist', compute_sudo=True, help="Pricelist for current sales order.")
-    currency_id = fields.Many2one(string='Currency')
+    currency_id = fields.Many2one('res.currency', string='Currency')
     tax_id = fields.Many2many('account.tax', string='Taxes', domain=['|', ('active', '=', False), ('active', '=', True)])
 
     partner_id = fields.Many2one(comodel_name='res.partner', string='Customer')
