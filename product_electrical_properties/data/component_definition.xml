@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<records>
+    <properties code="CC" name="Capacitor">
+        <items name="mpn">
+            <item name="type">char</item>
+            <item name="default"></item>
+        </items>
+        <items name="Capacitance">
+            <item name="type">char</item>
+            <item name="default"></item>
+        </items>
+        <items name="Case/Package">
+            <item name="type">char</item>
+            <item name="default"></item>
+        </items>
+        <items name="Material">
+            <item name="type">char</item>
+            <item name="default"></item>
+        </items>
+        <items name="Voltage Rating (DC)">
+            <item name="type">char</item>
+            <item name="default"></item>
+        </items>
+        <items name="Tolerance">
+            <item name="type">char</item>
+            <item name="default"></item>
+        </items>
+        <items name="Dielectric">
+            <item name="type">char</item>
+            <item name="default"></item>
+        </items>
+        <items name="Mount">
+            <item name="type">char</item>
+            <item name="default"></item>
+        </items>
+    </properties>
+    <properties code="RC" name="Resistor">
+        <items name="mpn">
+            <item name="type">char</item>
+            <item name="default"></item>
+        </items>
+        <items name="Resistance">
+            <item name="type">char</item>
+            <item name="default"></item>
+        </items>
+        <items name="Case/Package">
+            <item name="type">char</item>
+            <item name="default"></item>
+        </items>
+        <items name="Tolerance">
+            <item name="type">char</item>
+            <item name="default"></item>
+        </items>
+        <items name="Tolerance">
+            <item name="type">char</item>
+            <item name="default"></item>
+        </items>
+        <items name="Power Rating">
+            <item name="type">char</item>
+            <item name="default"></item>
+        </items>
+    </properties>
+</records>
