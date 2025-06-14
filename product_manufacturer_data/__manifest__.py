@@ -11,7 +11,8 @@
     'depends': [
         'product',
         'product_brand',
-        'product_manufacturer'
+        'product_manufacturer',
+        'purchase'
     ],
     'data': [
         'security/ir.model.access.csv',
