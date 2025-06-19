@@ -57,12 +57,10 @@ class ProductManufacturer(models.Model):
         string='Product Variant',
     )
 
-    supplierinfo_ids = fields.Many2many(
-        "product.supplierinfo",
-        "product_supplierinfo_manufacturer_rel",
-        "manufacturer_id",
-        "supplierinfo_id",
-        'Product distributor'
+    supplierinfo_ids = fields.One2many(
+        'product.supplierinfo',
+        'manufacturer_id',
+        'Supplier Information',
     )
 
     @api.depends('manufacturer', 'manufacturer_pref')

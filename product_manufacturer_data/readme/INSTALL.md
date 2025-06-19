@@ -1,7 +1,7 @@
 1. Navigate to Apps menu in Odoo
 2. Remove the Apps filter/condition
 3. Search for "Product Manufacturer Data"
-4. Click Install button
+4. Click the Install button
 
 Dependencies that will be automatically installed:
 - Product

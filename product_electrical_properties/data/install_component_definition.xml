@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <function model="component.definition.properties" name="create_component_properties_definition">
+            <value eval="[]"/>
+        </function>
+    </data>
+</odoo>

@@ -1,107 +1,76 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <odoo>
-
-    <record id="product_packaging_reel_tree_view" model="ir.ui.view">
-        <field name="name">product.packaging.reel.tree.view</field>
-        <field name="model">product.packaging.reel</field>
+    <record id="product_packaging_form_view_inherit_eia481" model="ir.ui.view">
+        <field name="name">product.packaging.form.inherit.eia481</field>
+        <field name="model">product.packaging</field>
+        <field name="inherit_id" ref="product.product_packaging_form_view"/>
         <field name="arch" type="xml">
-            <tree string="Product Packagings" name="packaging">
-                <field name="package_id" column_invisible="1"/>
-                <field name="sequence" widget="handle"/>
-                <field name="manufacturer_id"/>
-                <field name="product_id"/>
-                <field name="name" string="Packaging"/>
-                <field name="qty"/>
-                <field name="product_uom_id" options="{'no_open': True, 'no_create': True}" groups="uom.group_uom"/>
-                <field name="barcode" optional="hide"/>
-                <field name="company_id" groups="base.group_multi_company" optional="hide"/>
-                <field name="company_id" groups="!base.group_multi_company" column_invisible="1"/>
-                <field name="volume_type" readonly="1"/>
-                <field name="diameter" optional="hide"/>
-                <field name="size" optional="hide"/>
-                <field name="step" optional="hide"/>
-                <field name="thickness" optional="hide"/>
-            </tree>
-        </field>
-    </record>
+            <!-- Добавяме EIA-481 полетата след основните полета -->
+            <xpath expr="//group[@name='qty']" position="after">
+                <group name="eia481_package" string="Package Information">
+                    <field name="package_identifier"/>
+                    <field name="quantity_code"/>
+                    <field name="components_per_reel"/>
+                    <field name="reel_diameter" invisible="package_identifier != 'R'"/>
+                </group>
 
-    <record id="product_packaging_reel_tree_view2" model="ir.ui.view">
-        <field name="name">product.packaging.reel.tree.view2</field>
-        <field name="model">product.packaging.reel</field>
-        <field name="mode">primary</field>
-        <field name="inherit_id" ref="product_electrical_properties.product_packaging_reel_tree_view"/>
-        <field name="arch" type="xml">
-            <xpath expr="//field[@name='product_id']" position="replace"/>
-            <xpath expr="//tree[@name='packaging']" position="attributes">
-                <attribute name="editable">bottom</attribute>
+                <group name="eia481_tape" string="Tape Specifications" invisible="package_identifier == 'B'">
+                    <field name="dimensions"/>
+                    <field name="pitch"/>
+                    <field name="cavity_dimensions"/>
+                    <field name="tape_material"/>
+                </group>
+
+                <group name="eia481_component" string="Component Layout" invisible="package_identifier == 'B'">
+                    <field name="component_orientation"/>
+                    <field name="sprocket_holes"/>
+                </group>
+
+                <group name="eia481_cover" string="Cover Tape" invisible="package_identifier == 'B'">
+                    <field name="cover_tape_material"/>
+                    <field name="cover_tape_width"/>
+                    <field name="cover_tape_peel_strength"/>
+                </group>
             </xpath>
         </field>
     </record>
 
-    <record id="product_packaging_reel_form_view" model="ir.ui.view">
-        <field name="name">product.packaging.reel.form.view</field>
-        <field name="model">product.packaging.reel</field>
+    <record id="product_packaging_tree_view_inherit_eia481" model="ir.ui.view">
+        <field name="name">product.packaging.tree.inherit.eia481</field>
+        <field name="model">product.packaging</field>
+        <field name="inherit_id" ref="product.product_packaging_tree_view"/>
         <field name="arch" type="xml">
-            <form string="Manufacture Product Packaging">
-                <sheet>
-                    <label for="name" string="Packaging"/>
-                    <h1>
-                        <field name="name"/>
-                    </h1>
-                    <group>
-                        <field name="id" invisible='1'/>
-                        <field name="package_id" invisible="1"/>
-                        <field name="company_id" invisible="1"/>
-                        <field name="manufacturer_id"/>
-                        <group name="group_product">
-                            <field name="product_id" readonly="id"/>
-                        </group>
-                        <group name="qty">
-                            <label for="qty" string="Contained quantity"/>
-                            <div class="o_row">
-                                <field name="qty"/>
-                                <field name="product_uom_id" options="{'no_open': True, 'no_create': True}" groups="uom.group_uom"/>
-                            </div>
-                            <field name="barcode"/>
-                            <field name="company_id" groups="base.group_multi_company"/>
-                        </group>
-                    </group>
-                </sheet>
-            </form>
+            <field name="name" position="after">
+                <field name="package_identifier" optional="show"/>
+                <field name="dimensions" optional="hide"/>
+                <field name="quantity_code" optional="show"/>
+                <field name="components_per_reel" optional="hide"/>
+                <field name="reel_diameter" optional="hide"/>
+            </field>
         </field>
     </record>
 
-    <record id="product_packaging_reel_form_view2" model="ir.ui.view">
-        <field name="name">product.packaging.reel.form.view2</field>
-        <field name="model">product.packaging.reel</field>
-        <field name="mode">primary</field>
-        <field name="inherit_id" ref="product_electrical_properties.product_packaging_reel_form_view"/>
+    <record id="product_packaging_search_view_inherit_eia481" model="ir.ui.view">
+        <field name="name">product.packaging.search.inherit.eia481</field>
+        <field name="model">product.packaging</field>
+        <field name="inherit_id" ref="product.product_packaging_search_view"/>
         <field name="arch" type="xml">
-            <xpath expr="//group[@name='group_product']" position="replace"/>
-            <xpath expr="//field[@name='id']" position="replace"/>
-        </field>
-    </record>
-    <record id="product_packaging_reel_search_view" model="ir.ui.view">
-        <field name="name">product.packaging.reel.search</field>
-        <field name="model">product.packaging.reel</field>
-        <field name="arch" type="xml">
-            <search string="Product">
-                <field name="name" string="Package" filter_domain="['|', ('name', 'ilike', self), ('product_id', '=', self)]"/>
-                <field name="product_id" string="Product Variant" filter_domain="[('product_id', 'like', self)]"/>
-                <group expand="1" string="Group By">
-                    <filter string="Product Variant" name="product_id" context="{'group_by':'product_id'}"/>
+            <field name="product_id" position="after">
+                <field name="package_identifier"/>
+                <field name="dimensions"/>
+                <field name="quantity_code"/>
+                <field name="reel_diameter"/>
+                <separator/>
+                <filter name="reel_packages" string="Reel Packages" domain="[('package_identifier', '=', 'R')]"/>
+                <filter name="tape_packages" string="Tape Packages" domain="[('package_identifier', '=', 'T')]"/>
+                <filter name="bulk_packages" string="Bulk Packages" domain="[('package_identifier', '=', 'B')]"/>
+                <separator/>
+                <group expand="0" string="Group By">
+                    <filter name="group_by_package_type" string="Package Type" context="{'group_by': 'package_identifier'}"/>
+                    <filter name="group_by_dimensions" string="Tape Width" context="{'group_by': 'dimensions'}"/>
+                    <filter name="group_by_quantity" string="Quantity Code" context="{'group_by': 'quantity_code'}"/>
                 </group>
-            </search>
+            </field>
         </field>
-    </record>>
-
-    <record model="ir.actions.act_window" id="action_packaging_reel_view">
-        <field name="name">Manufacturer Product Packagings</field>
-        <field name="res_model">product.packaging.reel</field>
-        <field name="domain">[]</field>
-        <field name="view_ids" eval="[(5, 0, 0),
-            (0, 0, {'view_mode': 'tree', 'view_id': ref('product_electrical_properties.product_packaging_reel_tree_view')}),
-            (0, 0, {'view_mode': 'form', 'view_id': ref('product_electrical_properties.product_packaging_reel_form_view')})]"/>
     </record>
-
 </odoo>

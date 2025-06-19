@@ -7,12 +7,19 @@
             <field name="inherit_id" ref="product_manufacturer_data.product_manufacturer_form_view"/>
             <field name="arch" type="xml">
                 <xpath expr="//group[@name='manufacturer']" position="after">
-                    <group name="reelpackaging" string="Manufacturer Product Packages" colspan="2" groups="product.group_stock_packaging">
-                        <field name="reelpackaging_ids"
+                    <group name="reel_packaging" string="Manufacturer Product Packages" colspan="2" groups="product.group_stock_packaging">
+                        <field name="packaging_ids"
                                nolabel="1"
                                colspan="2"
-                               mode="tree"
-                               context="{'tree_view_ref':'product_electrical_properties.product_packaging_reel_tree_view2', 'default_product_id': product_variant_id, 'default_manufacturer_id': active_id}"/>
+                               mode="list"
+                               invisible="not product_variant_id"
+                               context="{'list_view_ref':'product.product_packaging_tree_view2', 'default_product_id': product_variant_id}"/>
+                        <field name="tmpl_packaging_ids"
+                               nolabel="1"
+                               colspan="2"
+                               mode="list"
+                               invisible="product_variant_id"
+                               context="{'list_view_ref':'product.product_packaging_tree_view2', 'default_product_id': product_variant_id}"/>
                     </group>
                 </xpath>
             </field>

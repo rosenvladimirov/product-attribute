@@ -64,7 +64,7 @@ Dependencies will be automatically installed:
 * Product Manufacturer
 
 Configuration
-============
+=============
 
 To configure this module, you need to:
 
@@ -106,7 +106,7 @@ To use this module, you need to:
    * Search by manufacturer name or manufacturer code
 
 Known issues / Roadmap
-=====================
+======================
 
 * Add support for multiple manufacturer images
 * Integration with external APIs for automatic data updates
@@ -115,7 +115,7 @@ Known issues / Roadmap
 * Extended e-commerce platform integration
 
 Bug Tracker
-==========
+===========
 
 Bugs are tracked on `GitHub Issues <https://github.com/OCA/product-attribute/issues>`_.
 In case of trouble, please check there if your issue has already been reported.
@@ -128,17 +128,17 @@ Credits
 =======
 
 Authors
-~~~~~~~
+=======
 
 * Rosen Vladimirov
 
 Contributors
-~~~~~~~~~~~
+============
 
 * Rosen Vladimirov <email@example.com>
 
 Maintainers
-~~~~~~~~~~
+===========
 
 This module is maintained by the OCA.
 

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="stock.generate_serial_dialog" t-inherit="stock.generate_serial_dialog" t-inherit-mode="extension">
+        <xpath expr="//div[contains(@class, 'd-flex d-sm-contents') and .//input[@id='keep_lines_0']]" position="before">
+            <div class="d-flex d-sm-contents">
+                <div class="o_cell flex-grow-0 flex-sm-grow-0 text-900 pe-3">
+                    <label class="o_form_label" for="data_code_0">Data Code</label>
+                </div>
+                <div class="o_cell flex-grow-1 flex-sm-grow-0">
+                    <div name="data_code" class="o_field_widget o_field_char">
+                        <input placeholder="e.g. 2412" class="o_input" t-ref="dataCode" id="data_code_0" type="text"/>
+                    </div>
+                </div>
+            </div>
+        </xpath>
+    </t>
+</templates>

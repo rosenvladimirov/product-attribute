@@ -1,5 +1,3 @@
-# Configuration
-
 To configure the "Product Manufacturer Data" module:
 
 1. Go to Settings > Technical > Users & Companies > Users

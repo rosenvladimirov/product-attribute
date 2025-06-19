@@ -67,7 +67,7 @@ class ProductTemplate(models.Model):
             if len(template.product_variant_ids) == 1:
                 template.product_variant_ids.update(
                     {
-                        "manufacturer_id": template.manufacturer_id,
+                        "manufacturer_id": template.manufacturer_id.id,
                         "manufacturer_pname": template.manufacturer_pname,
                         "manufacturer_pref": template.manufacturer_pref,
                         "manufacturer_purl": template.manufacturer_purl,
@@ -75,7 +75,7 @@ class ProductTemplate(models.Model):
                 )
 
     def _get_related_fields_variant_template(self):
-        """Adds fields related to manufacturer that are present on template and
+        """Adds fields related to a manufacturer that are present on template and
         variants models"""
         res = super()._get_related_fields_variant_template()
         res.extend(

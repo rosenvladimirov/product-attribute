@@ -6,42 +6,47 @@
         <field name="inherit_id" ref="product.product_template_form_view"/>
         <field name="arch" type="xml">
             <xpath expr="//div[@name='button_box']" position="inside">
-                <button name="action_update_nextar_data"
+                <button name="action_update_nexar_data"
                         type="object"
                         class="oe_stat_button"
                         string="Octpart"
                         icon="fa-database"/>
             </xpath>
             <xpath expr="//notebook/page[@name='general_information']" position="after">
-                <page string="Electrical data" name="project_bom_data" invisible="product_variant_count &gt; 1">
+                <page string="Electrical data" name="component_data" invisible="product_variant_count &gt; 1">
                     <group>
-                        <group string="Other data">
-<!--                            <field name="short_description"/>-->
+                        <group string="Storage Requirements">
+                            <field name="moisture_sensitivity_level"/>
+                            <field name="storage_conditions"/>
+                            <field name="shelf_life"/>
+                            <field name="esd_protection"/>
+                        </group>
+                        <group string="Component types">
                             <field name="component_type_id"/>
+<!--                            <field name="short_description"/>-->
                             <field name="manufacturer_id" invisible="1"/>
-                        </group>
-                        <group name="manufacturer" string="Manufacturer" colspan="2">
-                            <field name="manufacturer_ids"
-                                    colspan="2"
-                                    nolabel="1"
-                                    context="{'default_product_tmpl_id': active_id, 'default_company_id': company_id}"/>
-                        </group>
-                        <group name="reel" string="Reels" colspan="2" invisible="not manufacturer_id">
-                            <field name="reelpackaging_ids"
-                                   colspan="2"
-                                   nolabel="1"
-                                   readonly="1"
-                                   context="{'tree_view_ref':'product_electrical_properties.product_packaging_reel_tree_view2', 'default_product_id': product_variant_id, 'manufacturer_id': manufacturer_id}"/>
                         </group>
                         <separator string="Technical data" invisible="not component_type_id" colspan="4"/>
                         <div class="d-flex" invisible="not component_type_id" colspan="4">
                             <field name="component_properties"
                                    nolabel="1"
-                                   columns="4"
-                                   colspan="4"
+                                   columns="2"
                                    hideKanbanOption="0"
                                    invisible="not component_type_id"/>
-                        </div>>
+                        </div>
+                        <group name="manufacturer" string="Manufacturer" colspan="2">
+                            <field name="manufacturer_ids"
+                                   colspan="2"
+                                   nolabel="1"
+                                   context="{'default_product_tmpl_id': id, 'default_company_id': company_id}"/>
+                        </group>
+                        <group name="reel" string="Reels" colspan="2" invisible="not manufacturer_id">
+                            <field name="packaging_ids"
+                                   colspan="2"
+                                   nolabel="1"
+                                   readonly="1"
+                                   context="{'list_view_ref':'product.product_packaging_tree_view2', 'default_product_id': product_variant_id}"/>
+                        </group>
                     </group>
                 </page>
             </xpath>
@@ -53,6 +58,69 @@
         <field name="inherit_id" ref="product_manufacturer_data.product_template_form_view"/>
         <field name="arch" type="xml">
             <xpath expr="//page[@name='manufacturer_data']" position="replace"/>
+        </field>
+    </record>
+
+    <record id="product_template_tree_view_inherit_component" model="ir.ui.view">
+        <field name="name">product.template.tree.inherit.component</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_tree_view"/>
+        <field name="arch" type="xml">
+            <field name="name" position="after">
+                <field name="component_type_id" column_invisible="product_variant_count &gt; 1"/>
+                <field name="moisture_sensitivity_level" column_invisible="product_variant_count &gt; 1"/>
+                <field name="storage_conditions" column_invisible="product_variant_count &gt; 1"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="product_template_search_view_inherit_component" model="ir.ui.view">
+        <field name="name">product.template.search.inherit.component</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_search_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='attribute_line_ids']" position="before">
+                <field name="component_type_id"/>
+                <field name="moisture_sensitivity_level"/>
+                <field name="storage_conditions"/>
+                <separator/>
+                <filter string="Has ESD Protection" name="has_esd"
+                        domain="[('esd_protection', '=', True)]"/>
+                <filter string="Requires Special Storage" name="special_storage"
+                        domain="[('storage_conditions', '!=', 'normal')]"/>
+            </xpath>
+            <xpath expr="//filter[@name='categ_id']" position="after">
+                <filter string="Component Type" name="groupby_component_type"
+                        context="{'group_by': 'component_type_id'}"/>
+                <filter string="MSL Level" name="groupby_msl"
+                        context="{'group_by': 'moisture_sensitivity_level'}"/>
+                <filter string="Storage Conditions" name="groupby_storage"
+                        context="{'group_by': 'storage_conditions'}"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="product_template_kanban_view_inherit_moisture" model="ir.ui.view">
+        <field name="name">product.template.kanban.moisture</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_kanban_view"/>
+        <field name="arch" type="xml">
+            <!-- Добавяме полето в списъка с полета -->
+            <xpath expr="//field[@name='currency_id']" position="after">
+                <field name="moisture_sensitivity_level"/>
+            </xpath>
+
+            <!-- Добавяме MSL информацията след кода на продукта -->
+            <xpath expr="//span[@t-if='record.default_code.value']" position="after">
+                <t t-if="record.moisture_sensitivity_level.value">
+                    <!-- MSL -->
+                    <field name="moisture_sensitivity_level"
+                           widget="badge"
+                           nolabel="1"
+                           decoration-warning="moisture_sensitivity_level in ['3','4']"
+                           decoration-danger="moisture_sensitivity_level in ['5','5a','6']"/>
+                </t>
+            </xpath>
         </field>
     </record>
 </odoo>

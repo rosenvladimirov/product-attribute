@@ -5,6 +5,10 @@
             <item name="type">char</item>
             <item name="default"></item>
         </items>
+        <items name="IEEE_315-1975">
+            <item name="type">char</item>
+            <item name="default">C</item>
+        </items>
         <items name="Capacitance">
             <item name="type">char</item>
             <item name="default"></item>
@@ -39,6 +43,10 @@
             <item name="type">char</item>
             <item name="default"></item>
         </items>
+        <items name="IEEE_315-1975">
+            <item name="type">char</item>
+            <item name="default">R</item>
+        </items>
         <items name="Resistance">
             <item name="type">char</item>
             <item name="default"></item>
@@ -51,11 +59,305 @@
             <item name="type">char</item>
             <item name="default"></item>
         </items>
+        <items name="Power Rating">
+            <item name="type">char</item>
+            <item name="default"></item>
+        </items>
+        <items name="Mount">
+            <item name="type">char</item>
+            <item name="default"></item>
+        </items>
+    </properties>
+    <properties code="RS-TH" name="Through-Hole Resistor">
+        <items name="mpn">
+            <item name="type">char</item>
+            <item name="default"></item>
+        </items>
+        <items name="IEEE_315-1975">
+            <item name="type">char</item>
+            <item name="default">R</item>
+        </items>
+        <items name="Resistance">
+            <item name="type">char</item>
+            <item name="default"></item>
+        </items>
         <items name="Tolerance">
             <item name="type">char</item>
             <item name="default"></item>
         </items>
         <items name="Power Rating">
+            <item name="type">char</item>
+            <item name="default"></item>
+        </items>
+    </properties>
+    <properties code="RES-TH-ADJ" name="Through-Hole Adjustable Resistor">
+        <items name="mpn">
+            <item name="type">char</item>
+            <item name="default"></item>
+        </items>
+        <items name="IEEE_315-1975">
+            <item name="type">char</item>
+            <item name="default">POT</item>
+        </items>
+        <items name="Resistance Range">
+            <item name="type">char</item>
+            <item name="default"></item>
+        </items>
+        <items name="Tolerance">
+            <item name="type">char</item>
+            <item name="default"></item>
+        </items>
+        <items name="Power Rating">
+            <item name="type">char</item>
+            <item name="default"></item>
+        </items>
+        <items name="Number of Turns">
+            <item name="type">char</item>
+            <item name="default"></item>
+        </items>
+    </properties>
+    <properties code="DI" name="Diodes">
+        <items name="mpn">
+            <item name="type">char</item>
+            <item name="default"></item>
+        </items>
+        <items name="IEEE_315-1975">
+            <item name="type">char</item>
+            <item name="default">D</item>
+        </items>
+        <items name="Forward Voltage">
+            <item name="type">char</item>
+            <item name="default"></item>
+        </items>
+        <items name="Reverse Voltage">
+            <item name="type">char</item>
+            <item name="default"></item>
+        </items>
+        <items name="Reverse Current">
+            <item name="type">char</item>
+            <item name="default"></item>
+        </items>
+        <items name="Forward Current">
+            <item name="type">char</item>
+            <item name="default"></item>
+        </items>
+        <items name="Case/Package">
+            <item name="type">char</item>
+            <item name="default"></item>
+        </items>
+        <items name="Capacitance">
+            <item name="type">char</item>
+            <item name="default"></item>
+        </items>
+        <items name="Mount">
+            <item name="type">char</item>
+            <item name="default"></item>
+        </items>
+    </properties>
+    <properties code="TR" name="Transistor">
+        <items name="mpn">
+            <item name="type">char</item>
+            <item name="default"></item>
+        </items>
+        <items name="IEEE_315-1975">
+            <item name="type">char</item>
+            <item name="default">Q</item>
+        </items>
+        <items name="Max Collector Current">
+            <item name="type">char</item>
+            <item name="default"></item>
+        </items>
+        <items name="Continuous Drain Current (ID)">
+            <item name="type">char</item>
+            <item name="default"></item>
+        </items>
+        <items name="Collector Emitter Voltage (VCEO)">
+            <item name="type">char</item>
+            <item name="default"></item>
+        </items>
+        <items name="Case/Package">
+            <item name="type">char</item>
+            <item name="default"></item>
+        </items>
+        <items name="Mount">
+            <item name="type">char</item>
+            <item name="default"></item>
+        </items>
+    </properties>
+    <properties code="CPU" name="Processor">
+        <items name="mpn">
+            <item name="type">char</item>
+            <item name="default"></item>
+        </items>
+        <items name="IEEE_315-1975">
+            <item name="type">char</item>
+            <item name="default">U</item>
+        </items>
+        <items name="Case/Package">
+            <item name="type">char</item>
+            <item name="default"></item>
+        </items>
+        <items name="Mount">
+            <item name="type">char</item>
+            <item name="default"></item>
+        </items>
+    </properties>
+    <properties code="MCU" name="Microcontroller">
+        <items name="mpn">
+            <item name="type">char</item>
+            <item name="default"></item>
+        </items>
+        <items name="IEEE_315-1975">
+            <item name="type">char</item>
+            <item name="default">U</item>
+        </items>
+        <items name="Case/Package">
+            <item name="type">char</item>
+            <item name="default"></item>
+        </items>
+        <items name="Mount">
+            <item name="type">char</item>
+            <item name="default"></item>
+        </items>
+    </properties>
+    <properties code="IC-LOG" name="Logic IC">
+        <items name="mpn">
+            <item name="type">char</item>
+            <item name="default"></item>
+        </items>
+        <items name="IEEE_315-1975">
+            <item name="type">char</item>
+            <item name="default">U</item>
+        </items>
+        <items name="Case/Package">
+            <item name="type">char</item>
+            <item name="default"></item>
+        </items>
+        <items name="Mount">
+            <item name="type">char</item>
+            <item name="default"></item>
+        </items>
+    </properties>
+    <properties code="IC-ANA" name="Analog IC">
+        <items name="mpn">
+            <item name="type">char</item>
+            <item name="default"></item>
+        </items>
+        <items name="IEEE_315-1975">
+            <item name="type">char</item>
+            <item name="default">U</item>
+        </items>
+        <items name="Case/Package">
+            <item name="type">char</item>
+            <item name="default"></item>
+        </items>
+        <items name="Mount">
+            <item name="type">char</item>
+            <item name="default"></item>
+        </items>
+    </properties>
+    <properties code="IC-PWR" name="Power Management IC">
+        <items name="mpn">
+            <item name="type">char</item>
+            <item name="default"></item>
+        </items>
+        <items name="IEEE_315-1975">
+            <item name="type">char</item>
+            <item name="default">U</item>
+        </items>
+        <items name="Case/Package">
+            <item name="type">char</item>
+            <item name="default"></item>
+        </items>
+        <items name="Mount">
+            <item name="type">char</item>
+            <item name="default"></item>
+        </items>
+    </properties>
+    <properties code="IC-MEM" name="Memory IC">
+        <items name="mpn">
+            <item name="type">char</item>
+            <item name="default"></item>
+        </items>
+        <items name="IEEE_315-1975">
+            <item name="type">char</item>
+            <item name="default">U</item>
+        </items>
+        <items name="Case/Package">
+            <item name="type">char</item>
+            <item name="default"></item>
+        </items>
+        <items name="Mount">
+            <item name="type">char</item>
+            <item name="default"></item>
+        </items>
+    </properties>
+    <properties code="IC-INT" name="Interface IC">
+        <items name="mpn">
+            <item name="type">char</item>
+            <item name="default"></item>
+        </items>
+        <items name="IEEE_315-1975">
+            <item name="type">char</item>
+            <item name="default">U</item>
+        </items>
+        <items name="Case/Package">
+            <item name="type">char</item>
+            <item name="default"></item>
+        </items>
+        <items name="Mount">
+            <item name="type">char</item>
+            <item name="default"></item>
+        </items>
+    </properties>
+    <properties code="RLY" name="Relay">
+        <items name="mpn">
+            <item name="type">char</item>
+            <item name="default"></item>
+        </items>
+        <items name="IEEE_315-1975">
+            <item name="type">char</item>
+            <item name="default">K</item>
+        </items>
+        <items name="Contact Current Rating">
+            <item name="type">char</item>
+            <item name="default"></item>
+        </items>
+        <items name="Contact Voltage Rating (AC)">
+            <item name="type">char</item>
+            <item name="default"></item>
+        </items>
+        <items name="Coil Voltage (DC)">
+            <item name="type">char</item>
+            <item name="default"></item>
+        </items>
+        <items name="Mount">
+            <item name="type">char</item>
+            <item name="default"></item>
+        </items>
+    </properties>
+    <properties code="SSR" name="Solid State Relay">
+        <items name="mpn">
+            <item name="type">char</item>
+            <item name="default"></item>
+        </items>
+        <items name="IEEE_315-1975">
+            <item name="type">char</item>
+            <item name="default">K</item>
+        </items>
+        <items name="Contact Current Rating">
+            <item name="type">char</item>
+            <item name="default"></item>
+        </items>
+        <items name="Contact Voltage Rating (AC)">
+            <item name="type">char</item>
+            <item name="default"></item>
+        </items>
+        <items name="Coil Voltage (DC)">
+            <item name="type">char</item>
+            <item name="default"></item>
+        </items>
+        <items name="Mount">
             <item name="type">char</item>
             <item name="default"></item>
         </items>

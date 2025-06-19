@@ -3,7 +3,7 @@
 import logging
 
 from odoo import api, fields, models, _
-
+from odoo.addons.product_electrical_properties.models.product_template import MOISTURE_LEVELS, STORAGE_CONDITIONS
 _logger = logging.getLogger(__name__)
 
 NEXAR_PART_ATTRIBUTES = """
@@ -59,109 +59,104 @@ NEXAR_ALTERNATIVE_PART = """query findAlternativeParts(
 class ProductProduct(models.Model):
     _inherit = "product.product"
 
-    direct_standard_price = fields.Float('Cost', company_dependent=True)
-    # CAD additional information
-    # short_description = fields.Char('Technical Description', size=40)
-    component_type_id = fields.Many2one('component.definition.properties', 'Definition properties',)
-    component_properties = fields.Properties('Component technical data',
-                                             definition='component_type_id.component_properties_definition')
-    reelpackaging_ids = fields.One2many(
-        'product.packaging.reel',
-        'product_id',
-        string='Standard Product Packages',
+    component_type_id = fields.Many2one(
+        'component.definition.properties',
+        'Definition properties',
+    )
+    # component_properties = fields.Properties(
+    #     'Component technical data',
+    #     definition='component_properties_definition'
+    # )
+    component_properties = fields.Properties(
+        'Component technical data',
+        definition='component_type_id.component_properties_definition'
+    )
+    moisture_sensitivity_level = fields.Selection(
+        MOISTURE_LEVELS,
+        string='MSL'
     )
 
-    # @api.model
-    # def _name_search(self, name, domain=None, operator='ilike', limit=None, order=None):
-    #     short_description = False
-    #     positive_operators = ['=', 'ilike', '=ilike', 'like', '=like']
-    #     domain = domain or []
-    #     _logger.info(f"Product search: {domain}---{name}---{operator}")
-    #     if name and domain is not None:
-    #         for arg in domain:
-    #             if isinstance(arg, (list, tuple)) and arg[0] == 'short_description':
-    #                 short_description = True
-    #                 break
-    #     if name and operator in positive_operators and not short_description:
-    #         domain += ['|', ('short_description', operator, name),
-    #                    ('product_tmpl_id.short_description', operator, name)]
-    #     return super()._name_search(name, domain=domain, operator=operator, limit=limit, order=order)
+    esd_protection = fields.Boolean(
+        string='ESD Protection',
+        help='Indicates if the packaging has ESD protection'
+    )
 
-    # @api.onchange('short_description')
-    # def _onchange_short_description(self):
-    #     for record in self:
-    #         if record.short_description \
-    #                 and record.product_tmpl_id.short_description != record.short_description \
-    #                 and record.product_tmpl_id.product_variant_count == 1:
-    #             record.product_tmpl_id.short_description = record.short_description
+    storage_conditions = fields.Selection(
+        STORAGE_CONDITIONS,
+        string='Storage Conditions'
+    )
 
-    @api.onchange('component_type_id')
-    def _onchange_component_type_id(self):
-        for record in self:
-            if record.component_type_id \
-                    and record.product_tmpl_id.component_type_id != record.component_type_id \
-                    and record.product_tmpl_id.product_variant_count == 1:
-                record.product_tmpl_id.component_type_id = record.component_type_id
+    def _update_template_properties(self, template, values):
+        """Helper method to update template properties when variant properties change."""
+        if template.product_variant_count == 1 and 'product_tmpl_id' not in values:
+            template_values = {}
+            if 'component_properties' in values:
+                template_values['component_properties'] = values['component_properties']
+            if 'component_type_id' in values:
+                template_values.update({
+                    'component_type_id': values['component_type_id'],
+                })
+            if template_values:
+                template.with_context(**dict(self._context, block_properties=True)).write(template_values)
 
     @api.model_create_multi
     def create(self, vals_list):
-        if not self._context.get('block_properties', False):
-            for vals in vals_list:
-                if vals.get('component_properties', False) and vals.get('product_tmpl_id', False):
-                    product_tmpl_id = self.env['product.template'].browse(vals['product_tmpl_id'])
-                    if product_tmpl_id.product_variant_count == 1:
-                        product_tmpl_id.with_context(**dict(self._context, block_properties=True)).write({
-                            'component_properties': vals['component_properties'],
-                        })
-        return super().create(vals_list)
+        """Create product variants with proper property handling."""
+        records = super().create(vals_list)
+
+        if not self._context.get('block_properties'):
+            for record, vals in zip(records, vals_list):
+                self._update_template_properties(record.product_tmpl_id, vals)
+        return records
 
     def write(self, vals):
-        if not self._context.get('block_properties', False) and vals.get('component_properties', False):
-            product_tmpl_id = self.mapped('product_tmpl_id')
-            if product_tmpl_id.product_variant_count == 1:
-                product_tmpl_id.with_context(**dict(self._context, block_properties=True)).write({
-                    'component_properties': vals['component_properties']
-                })
+        """Update product variants with proper property handling."""
+        if not self._context.get('block_properties'):
+            templates = self.mapped('product_tmpl_id')
+            for template in templates:
+                self._update_template_properties(template, vals)
         return super().write(vals)
 
     def _get_product_properties(self, key, value):
-        current_component_properties = {}
+        """Extract properties for a given key-value pair."""
         all_properties = self.read(['component_properties'])[0]['component_properties']
-        for curr in list(filter(lambda x: x['string'] == key, all_properties)):
-            current_component_properties.update({
-                curr.get('name'): value
-            })
-        return current_component_properties
+        return {
+            prop['name']: value
+            for prop in all_properties
+            if prop['string'] == key
+        }
 
-    def action_update_nextar_data(self):
+    def action_update_nexar_data(self):
+        """Update product properties from Nexar API data."""
         for record in self:
             all_properties = self.read(['component_properties'])[0]['component_properties']
-            component_properties = list(filter(lambda x: x['string'] == 'mpn', all_properties))
-            current_component_properties = record.component_properties or {}
-            for component_properties in component_properties:
-                if component_properties.get('string', '') == 'mpn' and component_properties.get('value', False):
-                    mpn = component_properties['value']
-                    query = NEXAR_PART_ATTRIBUTES
-                    status, response, ask_time = self.env.user._do_request('', json={
-                        "query": query,
-                        "variables": {
-                            'mpn': mpn,
-                            'limit': 1
-                        }
-                    })
-                    if not response.get('data'):
-                        _logger.info(f"Status: {status}")
-                        continue
-                    data = response.get('data')
-                    for result in data.get("supSearchMpn",{}).get("results",{}):
-                        for part in result.get("part",{}).get("specs",{}):
-                            if part.get('attribute').get('name') == 'mpm':
-                                continue
-                            current_component_properties.update(
-                                record._get_product_properties(part.get('attribute').get('name'), part.get('displayValue'))
-                            )
-                            # for curr in list(filter(lambda x: x['string'] == part.get('attribute').get('name'), all_properties)):
-                            #     current_component_properties.update({
-                            #         curr.get('name'): part.get('displayValue')
-                            #     })
-                    record.component_properties = current_component_properties
+            mpn_properties = [prop for prop in all_properties if prop['string'] == 'mpn']
+
+            current_properties = record.component_properties or {}
+
+            for mpn_prop in mpn_properties:
+                if not mpn_prop.get('value'):
+                    continue
+
+                status, response, _ = self.env.user._do_request('', json={
+                    "query": NEXAR_PART_ATTRIBUTES,
+                    "variables": {
+                        'mpn': mpn_prop['value'],
+                        'limit': 1
+                    }
+                })
+
+                if not response.get('data'):
+                    _logger.info(f"Status: {status}")
+                    continue
+
+                for result in response['data'].get('supSearchMpn', {}).get('results', []):
+                    for part in result.get('part', {}).get('specs', []):
+                        attr_name = part.get('attribute', {}).get('name')
+                        if attr_name == 'mpm':
+                            continue
+                        current_properties.update(
+                            record._get_product_properties(attr_name, part.get('displayValue'))
+                        )
+
+            record.component_properties = current_properties

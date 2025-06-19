@@ -8,9 +8,11 @@
     'version': '18.0.1.0.0',
     'license': 'AGPL-3',
     'author': 'Rosen Vladimirov,Odoo Community Association (OCA)',
-    'website': 'https://github.com/OCA/product-attribute',
+    'website': 'https://github.com/rosenvladimirov/product-attribute',
     'depends': [
+        'stock',
         'product',
+        'product_expiry',
         'base',
         'mrp',
         'purchase',
@@ -21,12 +23,20 @@
         'security/ir.model.access.csv',
         'views/res_users_views.xml',
         'views/component_definition_properties.xml',
-        'views/product_packaging_views.xml',
         'views/product_template_views.xml',
-        # 'views/product_product_views.xml',
+        'views/product_views.xml',
         'views/product_manufacturer.xml',
-        'data/component_definition.xml',
+        'views/stock_package_type_views.xml',
+        'views/stock_lot_views.xml',
+        'wizards/mbb_opening_wizard.xml',
+        'data/install_component_definition.xml',
     ],
     'demo': [
     ],
+    'assets': {
+        'web.assets_backend': [
+            'product_electrical_properties/static/src/**/*.js',
+            'product_electrical_properties/static/src/**/*.xml',
+        ],
+    },
 }

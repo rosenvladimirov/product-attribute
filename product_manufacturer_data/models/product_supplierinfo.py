@@ -16,23 +16,25 @@ class SupplierInfo(models.Model):
     )
     manufacturer_pref = fields.Char(
         related="manufacturer_id.manufacturer_pref",
+        readonly=False,
     )
     manufacturer_pname = fields.Char(
         related="manufacturer_id.manufacturer_pname",
+        readonly=False,
     )
 
-    @api.model_create_multi
-    def create(self, vals_list):
-        res = super().create(vals_list)
-        for supplierinfo_id, values in zip(res, vals_list):
-            if values.get('manufacturer_id'):
-                manufacturer_id = supplierinfo_id.manufacturer_id
-                manufacturer_id.supplierinfo_ids |= supplierinfo_id
-        return res
-
-    def write(self, values):
-        res = super().write(values)
-        for record in self:
-            if values.get('manufacturer_id'):
-                record.manufacturer_id.supplierinfo_ids |= record
-        return res
+    # @api.model_create_multi
+    # def create(self, vals_list):
+    #     res = super().create(vals_list)
+    #     for supplierinfo_id, values in zip(res, vals_list):
+    #         if values.get('manufacturer_id'):
+    #             manufacturer_id = supplierinfo_id.manufacturer_id
+    #             manufacturer_id.supplierinfo_ids |= supplierinfo_id
+    #     return res
+    #
+    # def write(self, values):
+    #     res = super().write(values)
+    #     for record in self:
+    #         if values.get('manufacturer_id'):
+    #             record.manufacturer_id.supplierinfo_ids |= record
+    #     return res

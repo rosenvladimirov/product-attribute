@@ -11,7 +11,7 @@
                     <field name="manufacturer_ids"
                             colspan="2"
                             nolabel="1"
-                            context="{'default_product_tmpl_id': active_id, 'default_company_id': company_id}"/>
+                            context="{'default_product_tmpl_id': id, 'default_company_id': company_id}"/>
                 </page>
             </xpath>
         </field>

@@ -4,6 +4,7 @@ from random import randint
 from typing import List, Dict, Any, Optional
 from xml.etree import ElementTree as ET
 from odoo import addons, fields, models, _
+from odoo.exceptions import UserError
 
 XML_FILENAME = "component_definition.xml"
 UUID_LENGTH = 16
@@ -59,7 +60,7 @@ class ComponentsDefinition(models.Model):
         corresponding text. If the 'name' attribute does not exist or the text is
         empty, default values are handled accordingly.
 
-        :param item: An XML element from the ElementTree representing a single
+        :param item: An XML element from the ElementTree is representing a single
                      item node. The element should contain a 'name' attribute.
         :type item: ET.Element
         :return: A dictionary with a single key-value pair where the key is the
@@ -131,37 +132,30 @@ class ComponentsDefinition(models.Model):
         }
 
     def create_component_properties_definition(self, codes=False):
-        """
-        Creates a definition of component properties by processing the data from an XML
-        file and manipulating the records in the database. This function processes a set
-        of XML property records, removes the existing definitions that match specified
-        codes (if provided), and creates new records based on the parsed values.
+        try:
+            module_path = self._get_module_path()
+            xml_path = os.path.join(module_path, XML_FILENAME)
 
-        :param codes: An optional list of strings representing the codes of properties to
-            be processed. If provided, only properties whose code matches the codes in
-            this list will be processed. If set to False, all properties will be
-            processed.
-        :type codes: Optional[List[str]]
+            if not os.path.exists(xml_path):
+                raise FileNotFoundError(f"XML file not found: {xml_path}")
 
-        :return: Newly created database records for component properties.
-        :rtype: Model
-        """
-        module_path = self._get_module_path()
-        xml_file = ET.parse(os.path.join(module_path, XML_FILENAME))
-        records = xml_file.getroot().find("properties")
+            xml_file = ET.parse(xml_path)
+            records = xml_file.getroot()
 
-        values = []
-        for sequence, properties in enumerate(records.iter("properties")):
-            if codes and properties.attrib.get('code') not in codes:
-                continue
-            values.append(self._process_properties(properties, sequence))
+            values = []
+            for sequence, properties in enumerate(records.iter("properties")):
+                code = properties.attrib.get('code')
+                if codes and code not in codes:
+                    continue
+                values.append(self._process_properties(properties, sequence))
 
-        record_to_delete = self.env['component.definition.properties']
-        for value in values:
-            if value.get('code'):
-                record_to_delete |= self.search([('code', '=', value['code'])])
+            if values:
+                codes_to_delete = [v['code'] for v in values if v.get('code')]
+                if codes_to_delete:
+                    records_to_delete = self.search([('code', 'in', codes_to_delete)])
+                    records_to_delete.unlink()
 
-        if record_to_delete:
-            record_to_delete.unlink()
+            return self.create(values)
 
-        return self.create(values)
+        except (IOError, ET.ParseError) as e:
+            raise UserError(f"Error processing XML file: {str(e)}")
