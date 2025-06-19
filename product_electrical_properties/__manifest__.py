@@ -5,7 +5,7 @@
     'name': 'Product Electrical Properties',
     'summary': """
         Add electrical properties in product and support for nextar-octopart api.""",
-    'version': '18.0.1.0.0',
+    'version': '18.0.2.0.0',
     'license': 'AGPL-3',
     'author': 'Rosen Vladimirov,Odoo Community Association (OCA)',
     'website': 'https://github.com/rosenvladimirov/product-attribute',
@@ -26,6 +26,8 @@
         'views/product_template_views.xml',
         'views/product_views.xml',
         'views/product_manufacturer.xml',
+        'views/stock_move_views.xml',
+        'views/stock_move_line_views.xml',
         'views/stock_package_type_views.xml',
         'views/stock_lot_views.xml',
         'wizards/mbb_opening_wizard.xml',
@@ -39,4 +41,7 @@
             'product_electrical_properties/static/src/**/*.xml',
         ],
     },
+    'images': [
+        'static/description/banner.png',
+    ],
 }

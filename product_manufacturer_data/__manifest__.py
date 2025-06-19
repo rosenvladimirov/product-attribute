@@ -3,7 +3,7 @@
 
 {
     'name': 'Product Manufacturer Data',
-    'summary': """Marafacturer data files for products""",
+    'summary': """Manufacturer data files for products""",
     'version': '18.0.1.0.0',
     'license': 'AGPL-3',
     'author': 'Rosen Vladimirov,Odoo Community Association (OCA)',
@@ -21,5 +21,8 @@
         'views/product_supplierinfo_views.xml'
     ],
     'demo': [
+    ],
+    'images': [
+        'static/description/banner.png',
     ],
 }
