@@ -1,0 +1,434 @@
+// Integration with existing extended_property_definition.scss styles
+// This extends the existing o_property_definition_model_fields styles
+
+// Base integration with property definition
+.o_property_definition {
+    // When "fields" type is selected, show the ModelFieldsWidget
+    .o_property_definition_model_fields {
+        margin-top: 10px;
+
+        // Ensure smooth appearance animation
+        animation: slideIn 0.3s ease-out;
+
+        .o_model_fields_widget {
+            // Inherit the nice styling from existing code
+            border: 1px solid #dee2e6;
+            border-radius: 6px;
+            background-color: #fff;
+
+            // Make sure it fits well in the property definition context
+            width: 100%;
+
+            // Override some styles for better integration
+            .o_model_fields_selector {
+                border: none;
+
+                .o_model_fields_header {
+                    background-color: #f1f3f4;
+                    border-bottom: 1px solid #e0e0e0;
+                    padding: 12px;
+
+                    .o_model_fields_title {
+                        color: #3c4043;
+                        font-size: 0.9rem;
+                        margin-bottom: 8px;
+                        text-align: left; // Ляво ориентиране
+
+                        i {
+                            color: #5f6368;
+                            margin-right: 6px;
+                        }
+                    }
+
+                    .o_model_fields_search {
+                        margin-bottom: 8px;
+
+                        .form-control {
+                            border: 1px solid #dadce0;
+                            font-size: 0.85rem;
+                            text-align: left; // Ляво ориентиране
+
+                            &:focus {
+                                border-color: #1a73e8;
+                                box-shadow: 0 0 0 0.2rem rgba(26, 115, 232, 0.25);
+                            }
+
+                            &::placeholder {
+                                color: #9aa0a6;
+                            }
+                        }
+                    }
+
+                    .o_model_fields_actions {
+                        display: flex;
+                        gap: 6px;
+                        justify-content: flex-start; // Ляво ориентиране
+
+                        .btn {
+                            font-size: 0.75rem;
+                            padding: 3px 6px;
+                            border-radius: 3px;
+
+                            &.btn-secondary {
+                                background-color: #f8f9fa;
+                                border-color: #dadce0;
+                                color: #5f6368;
+
+                                &:hover {
+                                    background-color: #e8eaed;
+                                    border-color: #c5c7ca;
+                                }
+
+                                &:disabled {
+                                    background-color: #f8f9fa;
+                                    border-color: #e8eaed;
+                                    color: #9aa0a6;
+                                }
+                            }
+                        }
+                    }
+                }
+
+                .o_model_fields_list {
+                    max-height: 250px;
+                    background-color: #fafbfc;
+                    padding: 8px;
+                    overflow-y: auto;
+
+                    .o_model_fields_item {
+                        .form-check {
+                            padding: 6px 10px;
+                            border-radius: 4px;
+                            margin-bottom: 2px;
+                            text-align: left; // Ляво ориентиране
+
+                            &:hover {
+                                background-color: #f1f3f4;
+                                border-color: #e0e0e0;
+                            }
+
+                            // Стил за избрания елемент
+                            &.selected {
+                                background-color: #e8f0fe; // Лек син фон
+                                border: 1px solid #d2e3fc;
+
+                                .form-check-label {
+                                    .o_model_fields_item_content {
+                                        .o_model_fields_item_main {
+                                            .o_model_fields_description {
+                                                color: #1a73e8;
+                                                font-weight: 600;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+
+                            .form-check-input {
+                                &:checked {
+                                    background-color: #1a73e8;
+                                    border-color: #1a73e8;
+                                }
+
+                                &:focus {
+                                    box-shadow: 0 0 0 0.2rem rgba(26, 115, 232, 0.25);
+                                    outline: 2px solid #1a73e8;
+                                    outline-offset: 2px;
+                                }
+                            }
+
+                            .form-check-label {
+                                cursor: pointer;
+                                width: 100%;
+                                text-align: left; // Ляво ориентиране
+
+                                .o_model_fields_item_content {
+                                    .o_model_fields_item_main {
+                                        display: flex;
+                                        align-items: center;
+                                        justify-content: flex-start; // Ляво ориентиране
+
+                                        .o_model_fields_description {
+                                            font-size: 0.85rem;
+                                            color: #3c4043;
+                                            font-weight: 500;
+                                            flex-grow: 1;
+                                            text-align: left; // Ляво ориентиране
+                                        }
+
+                                        .o_model_fields_required {
+                                            font-size: 0.65rem;
+                                            background-color: #fef7e0;
+                                            color: #b06000;
+                                            border: 1px solid #fdd663;
+                                            padding: 2px 6px;
+                                            border-radius: 10px;
+                                            font-weight: 500;
+                                            margin-left: 8px;
+                                        }
+                                    }
+
+                                    .o_model_fields_item_details {
+                                        font-size: 0.75rem;
+                                        color: #5f6368;
+                                        margin-left: 20px;
+                                        margin-top: 2px;
+                                        text-align: left; // Ляво ориентиране
+
+                                        .o_model_fields_name {
+                                            background-color: #f1f3f4;
+                                            border: 1px solid #e0e0e0;
+                                            font-size: 0.7rem;
+                                            padding: 1px 4px;
+                                            border-radius: 2px;
+                                            font-family: monospace;
+                                            margin-right: 8px;
+                                        }
+
+                                        .o_model_fields_type {
+                                            color: #70757a;
+                                            font-style: italic;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    .o_model_fields_empty {
+                        padding: 15px;
+                        font-size: 0.85rem;
+                        text-align: left; // Ляво ориентиране вместо center
+                        color: #9aa0a6;
+                        font-style: italic;
+
+                        .fa-info-circle {
+                            margin-right: 6px;
+                            color: #5f6368;
+                        }
+                    }
+                }
+
+                .o_model_fields_footer {
+                    background-color: #f8f9fa;
+                    border-top: 1px solid #e0e0e0;
+                    padding: 8px 12px;
+
+                    .o_model_fields_summary {
+                        font-size: 0.8rem;
+                        color: #5f6368;
+                        margin: 0;
+                        text-align: left; // Ляво ориентиране
+
+                        .badge {
+                            background-color: #1a73e8;
+                            color: white;
+                            font-size: 0.7rem;
+                            padding: 2px 6px;
+                            border-radius: 10px;
+                            margin-left: 6px;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+// Loading state for property definition
+.o_property_definition_model_fields {
+    .o_model_fields_loading {
+        padding: 20px;
+        text-align: left; // Ляво ориентиране
+        color: #5f6368;
+
+        .fa-spinner {
+            margin-right: 8px;
+            animation: spin 1s linear infinite;
+        }
+    }
+
+    .o_model_fields_error {
+        padding: 15px;
+        background-color: #fef7e0;
+        border: 1px solid #fdd663;
+        border-radius: 4px;
+        color: #b06000;
+        text-align: left; // Ляво ориентиране
+
+        .fa-exclamation-triangle {
+            margin-right: 6px;
+        }
+    }
+}
+
+// Animation keyframes
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+// Responsive adjustments for property definition
+@media (max-width: 768px) {
+    .o_property_definition_model_fields {
+        .o_model_fields_widget {
+            .o_model_fields_selector {
+                .o_model_fields_header {
+                    padding: 8px;
+
+                    .o_model_fields_actions {
+                        margin-top: 8px;
+                        justify-content: flex-start; // Ляво ориентиране
+
+                        .btn {
+                            font-size: 0.7rem;
+                            padding: 2px 4px;
+                        }
+                    }
+                }
+
+                .o_model_fields_list {
+                    max-height: 200px;
+                    padding: 6px;
+
+                    .o_model_fields_item {
+                        .form-check {
+                            padding: 4px 8px;
+
+                            .form-check-label {
+                                .o_model_fields_item_content {
+                                    .o_model_fields_item_details {
+                                        margin-left: 10px;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+// Dark mode support
+@media (prefers-color-scheme: dark) {
+    .o_property_definition_model_fields {
+        .o_model_fields_widget {
+            background-color: #2d2d2d;
+            border-color: #404040;
+
+            .o_model_fields_selector {
+                .o_model_fields_header {
+                    background-color: #363636;
+                    border-bottom-color: #404040;
+
+                    .o_model_fields_title {
+                        color: #e8eaed;
+
+                        i {
+                            color: #9aa0a6;
+                        }
+                    }
+
+                    .o_model_fields_search {
+                        .form-control {
+                            background-color: #2d2d2d;
+                            border-color: #404040;
+                            color: #e8eaed;
+
+                            &::placeholder {
+                                color: #9aa0a6;
+                            }
+                        }
+                    }
+                }
+
+                .o_model_fields_list {
+                    background-color: #2d2d2d;
+
+                    .o_model_fields_item {
+                        .form-check {
+                            &:hover {
+                                background-color: #404040;
+                            }
+
+                            // Dark mode за избрания елемент
+                            &.selected {
+                                background-color: #1a3a5c; // Тъмен син фон
+                                border: 1px solid #2d4f73;
+
+                                .form-check-label {
+                                    .o_model_fields_item_content {
+                                        .o_model_fields_item_main {
+                                            .o_model_fields_description {
+                                                color: #4fc3f7;
+                                                font-weight: 600;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+
+                            .form-check-label {
+                                .o_model_fields_item_content {
+                                    .o_model_fields_item_main {
+                                        .o_model_fields_description {
+                                            color: #e8eaed;
+                                        }
+                                    }
+
+                                    .o_model_fields_item_details {
+                                        color: #9aa0a6;
+
+                                        .o_model_fields_name {
+                                            background-color: #404040;
+                                            border-color: #565656;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+
+                .o_model_fields_footer {
+                    background-color: #363636;
+                    border-top-color: #404040;
+
+                    .o_model_fields_summary {
+                        color: #9aa0a6;
+                    }
+                }
+            }
+        }
+    }
+}
+
+// Integration with existing property definition layout
+.o_property_definition {
+    .o_property_definition_model_fields {
+        // Make sure it appears smoothly after type selection
+        opacity: 0;
+        animation: fadeIn 0.3s ease-out forwards;
+
+        // Proper spacing within property definition
+        margin-top: 15px;
+        margin-bottom: 10px;
+    }
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}

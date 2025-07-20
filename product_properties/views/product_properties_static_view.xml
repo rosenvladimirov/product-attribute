@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- product.properties.static.dropdown -->
+    <record id="product_static_properties_dropdown_list_view" model="ir.ui.view">
+        <field name="name">product.properties.static.dropdown.list.view</field>
+        <field name="model">product.properties.static.dropdown</field>
+        <field name="arch" type="xml">
+            <list editable="bottom">
+                <field name="code"/>
+                <field name="name"/>
+                <field name="field_name" invisible="context.get('hide_invoice_sub_type')"/>
+            </list>
+        </field>
+    </record>
+    <record id="product_static_properties_dropdown_view" model="ir.ui.view">
+        <field name="name">product.properties.static.dropdown.form.view</field>
+        <field name="model">product.properties.static.dropdown</field>
+        <field name="arch" type="xml">
+            <form string="Product Static properties Dropdown">
+                <sheet>
+                    <group>
+                        <field name="code"/>
+                        <field name="name"/>
+                        <field name="field_name" invisible="context.get('hide_invoice_sub_type')"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="product_static_properties_dropdown_search_view" model="ir.ui.view">
+        <field name="name">product.properties.static.dropdown.search.view</field>
+        <field name="model">product.properties.static.dropdown</field>
+        <field name="arch" type="xml">
+            <search string="Product Static properties Dropdown">
+                <field string="Name" name="name" filter_domain="[('name', '=', self)]"/>
+                <filter name="invoice_sub_type" string="Document sub types" domain="[('field_name', '=', 'invoice_sub_type')]"/>
+                <group expand="0" string="Group By">
+                    <filter string="Type" name="groupby_field_name" domain="[]" context="{'group_by': 'field_name'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+    <record id="product_static_properties_dropdown_action" model="ir.actions.act_window">
+        <field name="name">Product Static properties dropdown</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">product.properties.static.dropdown</field>
+        <!-- <field name="view_type">form</field> -->
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="product_static_properties_dropdown_search_view"/>
+    </record>
+
+    <record id="product_static_properties_doc_sub_dropdown_action" model="ir.actions.act_window">
+        <field name="name">Product Static document sub types</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">product.properties.static.dropdown</field>
+        <!-- <field name="view_type">form</field> -->
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="product_static_properties_dropdown_search_view"/>
+        <field name="context">{'hide_invoice_sub_type': 1, 'default_field_name': 'invoice_sub_type', 'search_default_invoice_sub_type': 1}</field>
+    </record>
+
+    <!-- product.properties.static -->
+    <record id="product_properties_static_list_view" model="ir.ui.view">
+        <field name="name">product.properties.static.view</field>
+        <field name="model">product.properties.static</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="sequence" widget="handle"/>
+            </list>
+        </field>
+    </record>
+    <record id="product_properties_static_form_view" model="ir.ui.view">
+        <field name="name">product.properties.static.form.view</field>
+        <field name="model">product.properties.static</field>
+        <field name="arch" type="xml">
+            <form string="Product Static properties">
+                <sheet>
+                    <group name="static">
+                        <field name="sequence"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="product_properties_static_action" model="ir.actions.act_window">
+        <field name="name">Product Static properties</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">product.properties.static</field>
+        <!-- <field name="view_type">form</field> -->
+        <field name="view_mode">list,form</field>
+    </record>
+</odoo>

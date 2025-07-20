@@ -1,0 +1,346 @@
+
+// EXTENDED: ModelFieldsWidget styling - адаптирано от o_field_properties
+.o_model_fields_widget {
+    position: relative;
+    min-width: 200px;
+    width: 100%;
+    display: block;
+    margin-bottom: 0 !important;
+
+    // Използваме същите стилове като o_field_properties за консистентност
+    .o_input,
+    .o_dropdown_button {
+        @include print-variable(o-input-border-color, $o-form-lightsecondary);
+        color: $o-main-text-color !important;
+    }
+
+    .o_dropdown_button {
+        color: initial !important;
+    }
+
+    // Focus стилове като в o_field_properties
+    .o_input:focus,
+    .dropdown:focus ~ .o_dropdown_button,
+    .dropdown:focus-within ~ .o_dropdown_button,
+    .o_dropdown_button:focus {
+        @include print-variable(o-input-border-color, $o-action);
+        * {
+            @include print-variable(o-input-border-color, $o-action);
+        }
+    }
+
+    // Loading state
+    .o_model_fields_loading {
+        display: flex;
+        align-items: center;
+        padding: 8px 12px;
+        color: $o-main-text-color;
+        font-size: 14px;
+        @include print-variable(o-input-border-color, $o-form-lightsecondary);
+
+        .fa-spinner {
+            margin-right: 8px;
+        }
+    }
+
+    // Error state - използваме същия стил като o_field_property_empty_label
+    .o_model_fields_error {
+        margin-bottom: 0;
+        padding: 8px 12px;
+        font-size: 14px;
+        color: map-get($theme-colors, 'danger');
+
+        .fa-exclamation-triangle {
+            color: map-get($theme-colors, 'warning');
+        }
+    }
+
+    // Readonly mode - адаптиран от o_input стилове
+    .o_model_fields_readonly {
+        display: flex;
+        align-items: center;
+        padding: 6px 12px;
+        background-color: $o-form-lightsecondary;
+        border: 1px solid $o-form-lightsecondary;
+        border-radius: 4px;
+        font-size: 14px;
+        color: $o-main-text-color;
+
+        .fa {
+            color: $o-main-text-color;
+        }
+    }
+
+    // Dropdown container - адаптиран от o_dropdown_button стилове
+    .o_model_fields_dropdown {
+        position: relative;
+        width: 100%;
+
+        .o_model_fields_toggle {
+            width: 100%;
+            text-align: left;
+            @include print-variable(o-input-border-color, $o-form-lightsecondary);
+            color: $o-main-text-color !important;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 6px 12px;
+            background-color: white;
+            border: 1px solid;
+            border-radius: 4px;
+            cursor: pointer;
+
+            &:hover {
+                @include print-variable(o-input-border-color, $o-action);
+            }
+
+            &:focus {
+                @include print-variable(o-input-border-color, $o-action);
+                box-shadow: 0 0 0 0.2rem rgba($o-action, 0.25);
+                outline: none;
+            }
+
+            &::after {
+                content: "\f0d7";
+                font-family: "Font Awesome 5 Free";
+                font-weight: 900;
+                margin-left: auto;
+                opacity: 0.7;
+            }
+        }
+
+        .o_model_fields_display_value {
+            display: flex;
+            align-items: center;
+            flex-grow: 1;
+            gap: 8px;
+
+            .fa {
+                color: $o-main-text-color;
+                flex-shrink: 0;
+                width: 16px;
+                text-align: center;
+            }
+
+            span {
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+        }
+    }
+
+    // Dropdown menu - адаптиран от Odoo dropdown стилове
+    .o_model_fields_menu {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        z-index: 1000;
+        max-height: 300px;
+        overflow-y: auto;
+        background-color: white;
+        border: 1px solid $o-form-lightsecondary;
+        border-radius: 4px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        margin-top: 2px;
+
+        .modal & {
+            z-index: 1060;
+        }
+
+        .o_property_field_popover & {
+            z-index: 1070;
+        }
+    }
+
+    // Search input - използваме o_input стилове
+    .o_model_fields_search {
+        padding: 8px 12px;
+        border-bottom: 1px solid $o-form-lightsecondary;
+
+        input {
+            @include print-variable(o-input-border-color, $o-form-lightsecondary);
+            color: $o-main-text-color !important;
+            border: 1px solid;
+            border-radius: 4px;
+            padding: 4px 8px;
+            width: 100%;
+
+            &:focus {
+                @include print-variable(o-input-border-color, $o-action);
+                box-shadow: 0 0 0 0.2rem rgba($o-action, 0.25);
+                outline: none;
+            }
+
+            &::placeholder {
+                color: rgba($o-main-text-color, 0.6);
+            }
+        }
+    }
+
+    // Fields list
+    .o_model_fields_list {
+        max-height: 200px;
+        overflow-y: auto;
+    }
+
+    // Field items - адаптиран от dropdown-item стилове
+    .o_model_fields_item {
+        padding: 8px 12px;
+        cursor: pointer;
+        border: none;
+        background: none;
+        width: 100%;
+        text-align: left;
+        display: flex;
+        align-items: flex-start;
+        gap: 8px;
+        transition: background-color 0.15s ease;
+
+        &:hover {
+            background-color: $o-form-lightsecondary;
+        }
+
+        &.active {
+            background-color: rgba($o-action, 0.1);
+            color: $o-action;
+        }
+
+        .o_model_fields_description {
+            font-weight: 500;
+            color: $o-main-text-color;
+            margin-bottom: 2px;
+            flex-grow: 1;
+
+            .text-danger {
+                font-weight: 600;
+                color: map-get($theme-colors, 'danger');
+            }
+        }
+
+        .o_model_fields_details {
+            font-size: 12px;
+            color: rgba($o-main-text-color, 0.7);
+            line-height: 1.2;
+        }
+
+        .fa {
+            width: 16px;
+            text-align: center;
+            color: $o-main-text-color;
+            flex-shrink: 0;
+            margin-top: 2px;
+
+            &.fa-check {
+                color: map-get($theme-colors, 'success');
+            }
+        }
+    }
+
+    // Clear selection - използваме danger стил
+    .o_model_fields_clear {
+        color: map-get($theme-colors, 'danger');
+        font-style: italic;
+
+        &:hover {
+            background-color: rgba(map-get($theme-colors, 'danger'), 0.1);
+        }
+
+        .fa-times {
+            color: map-get($theme-colors, 'danger');
+        }
+    }
+
+    // Empty state
+    .o_model_fields_empty {
+        padding: 12px;
+        text-align: center;
+        color: rgba($o-main-text-color, 0.6);
+        font-style: italic;
+
+        .fa-info-circle {
+            color: map-get($theme-colors, 'info');
+        }
+    }
+
+    // Type badges
+    .o_model_fields_type_badge {
+        font-size: 10px;
+        padding: 2px 6px;
+        border-radius: 10px;
+        background-color: rgba($o-main-text-color, 0.8);
+        color: white;
+        font-weight: 500;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-left: 4px;
+    }
+
+    // Overlay for closing dropdown
+    .o_model_fields_overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 999;
+        background: transparent;
+
+        .modal & {
+            z-index: 1059;
+        }
+
+        .o_property_field_popover & {
+            z-index: 1069;
+        }
+    }
+
+    // Field type specific icons - по-консистентни цветове
+    .fa-font { color: map-get($theme-colors, 'info'); }
+    .fa-align-left { color: map-get($theme-colors, 'secondary'); }
+    .fa-hashtag { color: map-get($theme-colors, 'warning'); }
+    .fa-calculator { color: map-get($theme-colors, 'success'); }
+    .fa-check-square { color: map-get($theme-colors, 'success'); }
+    .fa-calendar { color: map-get($theme-colors, 'primary'); }
+    .fa-calendar-plus-o { color: map-get($theme-colors, 'primary'); }
+    .fa-list { color: $o-main-text-color; }
+    .fa-link { color: map-get($theme-colors, 'warning'); }
+    .fa-list-ul { color: map-get($theme-colors, 'info'); }
+    .fa-tags { color: map-get($theme-colors, 'secondary'); }
+    .fa-file { color: map-get($theme-colors, 'warning'); }
+    .fa-code { color: map-get($theme-colors, 'info'); }
+    .fa-question { color: map-get($theme-colors, 'danger'); }
+
+    // Dropdown divider
+    .dropdown-divider {
+        margin: 4px 0;
+        border-top: 1px solid $o-form-lightsecondary;
+    }
+}
+
+// Integration with properties field - като o_property_field
+.o_property_field {
+    .o_model_fields_widget {
+        width: 100%;
+    }
+}
+
+// Highlight стил като o_property_field_highlight
+.o_property_field_highlight .o_model_fields_widget {
+    border: 1px solid $primary;
+    padding: 5px;
+    margin: -5px;
+    border-radius: 3px;
+}
+
+// Animation for smooth transitions
+.o_model_fields_widget {
+    .o_model_fields_menu {
+        transition: opacity 0.2s ease;
+    }
+
+    .o_model_fields_item {
+        transition: background-color 0.15s ease;
+    }
+}

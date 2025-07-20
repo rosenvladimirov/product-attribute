@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="product_category_form_view_inherit_properties" model="ir.ui.view">
+            <field name="name">product.category.properties.form</field>
+            <field name="model">product.category</field>
+            <field name="inherit_id" ref="product.product_category_form_view" />
+            <field name="arch" type="xml">
+                <group name="first" position="after">
+                    <group string="Product properties">
+                        <field name="product_properties_ids" context="{'default_categ_id': active_id}" nolabel="1">
+                            <form string="Product properties">
+                                <sheet>
+                                    <field name="image_1920" widget="image" options="{'preview_image': 'image_128'}" attrs="{'invisible': [('type_fields', '!=', 'package')]}"/>
+                                    <div class="oe_title">
+                                        <label class="oe_edit_only" for="name" string="Properties Name"/>
+                                        <h1>
+                                            <field name="name"/>
+                                        </h1>
+                                    </div>
+                                    <group>
+                                        <group>
+                                            <field name="type_fields"/>
+                                        </group>
+                                        <group name="properties">
+                                            <lable for="type_currency" attrs="{'invisible':[('type_fields', '!=', 'currency')]}"/>
+                                            <div attrs="{'invisible':[('type_fields', '!=', 'currency')]}">
+                                                <field name="type_currency" attrs="{'invisible':[('type_fields', '!=', 'currency')]}"/>
+                                                <field name="currency_id" attrs="{'invisible':[('type_fields', '!=', 'currency')]}"/>
+                                            </div>
+                                            <field name="type_float" attrs="{'invisible':[('type_fields', '!=', 'float')]}"/>
+                                            <field name="type_char" attrs="{'invisible':[('type_fields', '!=', 'char')]}"/>
+                                            <field name="type_int" attrs="{'invisible':[('type_fields', '!=', 'int')]}"/>
+                                            <field name="type_boolean" attrs="{'invisible':[('type_fields', '!=', 'boolean')]}"/>
+                                            <field name="type_url" widget="url" attrs="{'invisible':[('type_fields', '!=', 'url')]}"/>
+                                            <field name="type_uom_id" attrs="{'invisible':[('type_fields', 'not in', ('float', 'int', 'dropdown_id'))]}" domain="[('name_id', '=', active_id)]" context="{'default_name_id': active_id}"/>
+                                            <field name="type_dropdown_id" attrs="{'invisible':[('type_fields', '!=', 'dropdown_id')]}" domain="[('name_id', '=', name)]" context="{'default_name_id': name}"/>
+                                        </group>
+                                        <group string="Range" attrs="{'invisible':[('type_fields', '!=', 'range')]}">
+                                            <field name="type_int" attrs="{'invisible':[('type_fields', 'not in', ('int', 'range'))]}"/>
+                                            <field name="type_int_second" attrs="{'invisible':[('type_fields', 'not in', ('int', 'range'))]}"/>
+                                        </group>
+                                        <group string="Dimensions" attrs="{'invisible':[('type_fields', '!=', 'package')]}">
+                                            <field name="type_package_id" attrs="{'invisible':[('type_fields', '!=', 'package')]}" domain="[('name_id', '=', active_id)]" context="{'default_name_id': active_id}"/>
+                                            <field name="dimensions_x"/>
+                                            <field name="dimensions_y"/>
+                                            <field name="dimensions_z"/>
+                                        </group>
+                                    </group>
+                                </sheet>
+                            </form>
+                            <list string="Product properties">
+                                <field name="sequence" widget="handle"/>
+                                <field name="name"/>
+                                <field name="type_display"/>
+                                <!-- <field name="type_range"/> -->
+                                <field name="type_display_attrs"/>
+                                <field name="type_fields" invisible="1"/>
+                                <field name="image_1920" widget="image" options="{'preview_image': 'image_128'}" attrs="{'invisible': [('type_fields', '!=', 'package')]}"/>
+                            </list>
+                        </field>
+                    </group>
+                </group>
+            </field>
+        </record>
+
+</odoo>

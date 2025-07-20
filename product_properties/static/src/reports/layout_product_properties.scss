@@ -1,0 +1,117 @@
+/* properties layout */
+.o_properties_table {
+    display: table;
+    width: 100%;
+    line-height: 1.3;
+    border: none;
+}
+.o_properties_thead {
+    display: table-header-group;
+}
+.o_properties_tbody {
+    display: table-row-group;
+}
+.o_properties_row {
+    display: table-row;
+    page-break-inside: avoid;
+    clear: both;
+}
+.o_properties_custom_cell {
+    color: rgba($o-default-report-primary-color, 0.8);
+    display: table-cell !important;
+    width: 20% !important;
+    padding: 3px 3px;
+    word-wrap: break-word;
+    font-weight: 700;
+    border: none;
+    float: left;
+}
+.o_properties_cell {
+    display: table-cell !important;
+    width: 80%;
+    padding: 3px 5px;
+    word-wrap: break-word;
+    font-weight: normal;
+    border: none;
+    float: left;
+}
+.o_properties_cells_full_clear {
+    border-top: 0 !important;
+    border-left: 0 !important;
+    border-right: 0 !important;
+    border-bottom: 0 !important;
+}
+.o_properties_cells_only_bottom {
+    border-bottom: 0 !important;
+    border-left: 0 !important;
+    border-right: 0 !important;
+    border-top: 1px solid $o-default-report-border-color !important;
+}
+.o_properties_cells_only_bottom_background {
+    color: darkblue !important;
+    border-bottom: 0 !important;
+    border-left: 0 !important;
+    border-right: 0 !important;
+    border-top: 1px solid $o-default-report-border-color !important;
+    background-color: $o-default-report-background-color;
+}
+.o_properties_custom_cells {
+    font-weight: bold;
+    color: $o-default-report-primary-color;
+}
+.o_properties_detail_cells {
+    font-weight: bold;
+    color: $o-default-report-secondary-color;
+}
+.o_properties_cells {
+    font-weight: bold;
+    border-left: none;
+    border-right: none;
+    border-bottom: 1px solid black;
+}
+.o_properties_cells_sprv {
+    font-weight: bold;
+    border-left: none;
+    border-right: none;
+    border-bottom: 1px solid black;
+}
+.o_properties_cells_clear {
+    font-weight: bold;
+    border-left: none;
+    border-bottom: 1px solid black;
+}
+.o_properties_cells_right {
+    font-weight: bold;
+    border-left: none;
+    border-right: 1px;
+    border-bottom: 1px solid black;
+}
+.o_properties_wrapper {
+    display: flex;
+    flex-wrap: nowrap;
+}
+.o_properties_main {
+    order: 2;
+    text-align: left;
+}
+.o_properties_aside-1 {
+    order: 1;
+    color: $o-default-report-primary-color;
+    font-weight: bold;
+}
+.o_properties_aside-2 {
+    order: 3;
+}
+.o_properties_aside-3 {
+    order: 4;
+}
+.o_properties_custom_name {
+    color: $o-default-report-primary-color !important;
+    font-weight: bold;
+}
+.o_properties_custom_name_pricelist {
+    background-color: #79796d !important;
+    color: #FFFFFF !important;
+    font-weight: bold;
+    border: none;
+}

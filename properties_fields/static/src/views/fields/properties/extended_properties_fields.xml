@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="properties_fields.ModelFieldsWidget">
+        <div class="o_field_model_fields_widget">
+            <div class="o_field_property_definition_type">
+                <div t-if="props.readonly" class="d-flex align-items-center mb-2">
+                    <i t-att-class="'fa ' + selectedFieldIcon + ' me-2'" t-att-style="'color: ' + selectedFieldColor"/>
+                    <span t-out="selectedFieldLabel"/>
+                    <span t-if="hasValue" class="text-muted ms-2">
+                        - <span t-out="currentFieldValue"/>
+                    </span>
+                    <span t-else="" class="text-muted text-warning ms-2">
+                        - No value set
+                    </span>
+                </div>
+                <div t-else="">
+                    <Dropdown menuClass="'o_field_property_definition_type_menu'">
+                        <button class="btn btn-link d-flex p-0 w-100" t-att-title="selectedFieldLabel">
+                            <div class="o_input_dropdown w-100 o_field_property_dropdown position-relative">
+                                <i t-att-class="'fa ' + selectedFieldIcon + ' position-absolute'"
+                                   t-att-style="'color: ' + selectedFieldColor + '; left: 8px; top: 50%; transform: translateY(-50%); z-index: 10;'"/>
+                                <input type="text" class="dropdown text-start w-100 o_input py-1 align-middle"
+                                    t-att-value="selectedFieldLabel" readonly="" style="padding-left: 28px;"/>
+                                <span class="o_dropdown_button" />
+                            </div>
+                        </button>
+                        <t t-set-slot="content">
+                            <t t-foreach="state.availableFields" t-as="field" t-key="field.name">
+                                <DropdownItem onSelected.bind="() => this.onFieldSelect(field.name)">
+                                    <div class="d-flex align-items-center">
+                                        <i t-att-class="'fa ' + field.icon + ' me-2'"
+                                           t-att-style="'color: ' + field.color + '; min-width: 16px;'"/>
+                                        <div class="d-flex flex-column">
+                                            <span t-out="field.description"/>
+                                            <small class="text-muted" t-out="field.name + ' (' + field.type + ')'"/>
+                                        </div>
+                                    </div>
+                                </DropdownItem>
+                            </t>
+                        </t>
+                    </Dropdown>
+
+                    <!-- Стойността под dropdown-а при селектабъл режим -->
+                    <div class="mt-2">
+                        <small t-if="hasValue" class="text-muted">
+                            Current value: <span t-out="currentFieldValue"/>
+                        </small>
+                        <small t-else="" class="text-muted text-warning">
+                            No value set
+                        </small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <!-- Patch PropertyDefinition template за да използва нашите икони -->
+    <t t-name="web.PropertyDefinition" t-inherit="web.PropertyDefinition" t-inherit-mode="extension">
+        <!-- Patch иконата за readonly режим (първо място) -->
+        <xpath expr="//div[@t-if='props.readonly']//img[@t-attf-src='/web/static/src/views/fields/properties/icons/{{state.propertyDefinition.type}}.png']" position="attributes">
+            <attribute name="t-attf-src">/properties_fields/static/src/views/fields/properties/icons/{{state.propertyDefinition.type}}.png</attribute>
+        </xpath>
+
+        <!-- Patch иконата в dropdown button (второ място) -->
+        <xpath expr="//div[@class='o_input_dropdown w-100 o_field_property_dropdown']//img[@t-attf-src='/web/static/src/views/fields/properties/icons/{{state.propertyDefinition.type}}.png']" position="attributes">
+            <attribute name="t-attf-src">/properties_fields/static/src/views/fields/properties/icons/{{state.propertyDefinition.type}}.png</attribute>
+        </xpath>
+
+        <!-- Patch иконата в dropdown опциите (трето място) -->
+        <xpath expr="//DropdownItem//img[@t-attf-src='/web/static/src/views/fields/properties/icons/{{option[0]}}.png']" position="attributes">
+            <attribute name="t-attf-src">/properties_fields/static/src/views/fields/properties/icons/{{option[0]}}.png</attribute>
+        </xpath>
+
+        <!-- Скриваме полето "Default Value" когато типът е fields -->
+        <xpath expr="//div[contains(@class,'o_field_property_definition_value')]" position="attributes">
+            <attribute name="t-if">state.propertyDefinition.type !== 'fields'</attribute>
+        </xpath>
+
+        <!-- Добавяме поддръжка за fields тип -->
+        <xpath expr="//div[contains(@class,'o_field_property_definition_value')]" position="after">
+            <div t-if="state.propertyDefinition.type === 'fields'" class="d-contents mb-3 mb-sm-0">
+                <label class="o_form_label align-self-center text-900">Model Field</label>
+
+                <div style="background: #ffe6e6; padding: 5px; margin: 5px; border: 1px solid #ff9999; font-size: 11px;">
+                    <strong>DEBUG PropertyValue:</strong><br/>
+                    Type: <t t-out="props.type"/><br/>
+                    Has definition: <t t-out="state.propertyDefinition ? 'Yes' : 'No'"/><br/>
+                    Definition keys: <t t-out="state.propertyDefinition ? Object.keys(state.propertyDefinition).length : 0"/><br/>
+                    Record: <t t-out="props.record ? 'exists' : 'null'"/><br/>
+                    Context: <t t-out="props.context ? 'exists' : 'null'"/>
+                </div>
+
+                <ModelFieldsWidget
+                    definition="state.propertyDefinition || {}"
+                    onChange.bind="onModelFieldsDefinitionChange"
+                    record="props.record"
+                    context="props.context"
+                    resModel="props.record and props.record.resModel or ''"/>
+
+            </div>
+        </xpath>
+    </t>
+</templates>

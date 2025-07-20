@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Type of print properties views -->
+    <record id="product_properties_type_search_view" model="ir.ui.view">
+        <field name="name">product.properties.type.search.view</field>
+        <field name="model">product.properties.type</field>
+        <field name="arch" type="xml">
+            <search string="Product properties type">
+                <field string="Properties type" name="name" filter_domain="[('name', '=', self)]"/>
+                <group expand="0" string="Group By">
+                    <filter string="Type properties" name="groupby_type" domain="[]" context="{'group_by': 'type_fields'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+    <record id="product_properties_type_list_view" model="ir.ui.view">
+        <field name="name">product.properties.type.view</field>
+        <field name="model">product.properties.type</field>
+        <field name="arch" type="xml">
+            <list string="Product properties type">
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="type_fields"/>
+            </list>
+        </field>
+    </record>
+    <record id="product_properties_type_form_view" model="ir.ui.view">
+        <field name="name">product.properties.type.form.view</field>
+        <field name="model">product.properties.type</field>
+        <field name="arch" type="xml">
+            <form string="Product properties type">
+                <sheet>
+                    <div class="oe_title">
+                        <label class="oe_edit_only" for="name" string="Properties Name"/>
+                        <h1>
+                            <field name="name"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="type_fields"/>
+                        </group>
+                        <group name="properties">
+                            <label for="type_currency" attrs="{'invisible':[('type_fields', '!=', 'currency')]}"/>
+                            <div attrs="{'invisible':[('type_fields', '!=', 'currency')]}">
+                                <field name="type_currency" attrs="{'invisible':[('type_fields', '!=', 'currency')]}"/>
+                                <field name="currency_id" attrs="{'invisible':[('type_fields', '!=', 'currency')]}"/>
+                            </div>
+                            <field name="type_float" attrs="{'invisible':[('type_fields', '!=', 'float')]}"/>
+                            <field name="type_char" attrs="{'invisible':[('type_fields', '!=', 'char')]}"/>
+                            <field name="type_int" attrs="{'invisible':[('type_fields', '!=', 'int')]}"/>
+                            <field name="type_boolean" attrs="{'invisible':[('type_fields', '!=', 'boolean')]}"/>
+                            <field name="type_url" widget="url" attrs="{'invisible':[('type_fields', '!=', 'url')]}"/>
+                            <!-- <field name="type_uom_id" attrs="{'invisible':[('type_fields', 'in', ('char', 'package', 'field', 'lot', 'url', 'dropdown_id'))]}"/> -->
+                            <!-- <field name="type_dropdown_id" attrs="{'invisible':[('type_fields', '!=', 'dropdown_id')]}" domain="[('name_id', '=', active_id)]" context="{'default_name_id': active_id}"/> -->
+                            <field name="type_field" attrs="{'invisible':[('type_fields', '!=', 'field')]}"/>
+                        </group>
+                        <group name="fields" string="Fields sources" attrs="{'invisible':[('type_fields', '!=', 'field')]}">
+                            <field name="type_field_model_id" readonly="0" options="{'no_create_edit': True}" attrs="{'invisible':[('type_fields', '!=', 'field')]}"/>
+                            <field name="type_field_target"
+                                   options="{'no_create_edit': True}"
+                                   attrs="{'invisible':[('type_fields', '!=', 'field')]}"
+                                   domain="[('model_id', '=', type_field_model_id), ('ttype', 'in', ['char', 'monetary', 'float', 'many2one'])]"
+                            />
+                        </group>
+                        <group string="Range" attrs="{'invisible':[('type_fields', '!=', 'range')]}">
+                            <field name="type_int" attrs="{'invisible':[('type_fields', 'not in', ('int', 'range'))]}"/>
+                            <field name="type_int_second" attrs="{'invisible':[('type_fields', 'not in', ('int', 'range'))]}"/>
+                        </group>
+                        <separator name="listings" attrs="{'invisible':[('type_fields', 'not in', ('float', 'int', 'dropdown_id'))]}" colspan="4" col="2"/>
+                        <field name="type_uom_id" attrs="{'invisible':[('type_fields', '!=', 'package')]}" domain="[('name_id', '=', active_id)]" context="{'default_name_id': active_id}">
+                            <list>
+                                <field name="sequence" widget="handle"/>
+                                <field name="name"/>
+                            </list>
+                        </field>
+                        <separator name="listings" attrs="{'invisible':[('type_fields', '!=', 'package')]}" colspan="4"/>
+                        <field name="type_package_id" nolabel="1" colspan="4" attrs="{'invisible':[('type_fields', '!=', 'package')]}" domain="[('name_id', '=', active_id)]" context="{'default_name_id': active_id}">
+                            <list>
+                                <field name="dimensions_x"/>
+                                <field name="dimensions_y"/>
+                                <field name="dimensions_z"/>
+                            </list>
+                        </field>
+                        <separator name="dropdowns" attrs="{'invisible':[('type_fields', '!=', 'dropdown_id')]}" colspan="4"/>
+                        <field name="type_dropdown_id" widget="one2many_list" nolabel="1" colspan="4" attrs="{'invisible':[('type_fields', '!=', 'dropdown_id')]}" domain="[('name_id', '=', active_id)]" context="{'default_name_id': active_id}">
+                            <list>
+                                <field name="sequence" widget="handle"/>
+                                <field name="code"/>
+                                <field name="name"/>
+                                <field name="name_id" invisible="1"/>
+                            </list>
+                        </field>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="product_properties_type_action" model="ir.actions.act_window">
+        <field name="name">Types</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">product.properties.type</field>
+        <!-- <field name="view_type">form</field> -->
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="product_properties_type_search_view"/>
+        <field name="context">{'groupby_type':1}</field>
+    </record>
+</odoo>

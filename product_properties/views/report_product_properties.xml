@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<odoo>
+<!--    <template id="properties_assets_common" name="html_layout_product_properties">-->
+<!--        <link href="/l10n_bg_extend/static/src/less/l10n_bg_variables.less" rel="stylesheet" type="text/less"/>-->
+<!--        <link href="/l10n_bg_extend/static/src/less/l10n_bg_custom_variables.less" rel="stylesheet" type="text/less"/>-->
+<!--        <link href="/l10n_bg_extend/static/src/less/layout_bulgaria.less" rel="stylesheet" type="text/less"/>-->
+<!--    </template>-->
+    <template id="internal_layout">
+        <t t-if="not o" t-set="o" t-value="doc"/>
+        <!-- Multicompany -->
+        <t t-if="o and 'company_id' in o">
+            <t t-set="company" t-value="o.company_id"/>
+        </t>
+        <t t-if="not o or not 'company_id' in o">
+            <t t-set="company" t-value="res_company"/>
+        </t>
+        <div class="header"/>
+        <div class="article" t-att-data-oe-model="o and o._name" t-att-data-oe-id="o and o.id" t-att-data-oe-lang="o and o.env.context.get('lang')">
+          <t t-out="0"/>
+        </div>
+        <div class="footer"/>
+    </template>
+    <template id="document_sub_type">
+        <div class="row o_sections_name mt8" t-if="invoice_sub_type">
+            <div class="col-8"/>
+            <div class="col-4">
+                <h6>
+                    <span t-esc="invoice_sub_type"/>
+                </h6>
+            </div>
+        </div>
+    </template>
+</odoo>

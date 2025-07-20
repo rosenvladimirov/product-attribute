@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="product_properties_description">
+        <div class="o_properties_table">
+            <div class="o_properties_tbody">
+                <t t-if="not product_properties">
+                    <t t-set="product_properties" t-value="line.product_id"/>
+                </t>
+                <t t-foreach="line.env['product.properties.type'].get_product_properties_print(product_properties, properties_print, line, lot_ids)" t-as="description">
+                    <div class="o_properties_row">
+                        <div class="o_properties_custom_cell">
+                            <t t-if="description['value']['value']">
+                                <span t-esc="description['label']"/>
+                            </t>
+                        </div>
+                        <div class="o_properties_cell">
+                            <t t-if="description['value']['value']">
+                                <t t-if="description['value']['type'] in ('currency', 'monetary')">
+                                    <span t-esc="description['value']['value']" t-options="{'widget': 'monetary', 'display_currency': description['value']['currency_id']}"/>
+                                </t>
+                                <t t-else="">
+                                    <span t-esc="description['value']['value']"/>
+                                </t>
+                            </t>
+                        </div>
+                    </div>
+                </t>
+            </div>
+        </div>
+    </template>
+    <template id="product_properties_description_force_print">
+        <div class="o_properties_table">
+            <div class="o_properties_tbody">
+                <t t-if="not product_properties">
+                    <t t-set="product_properties" t-value="line.product_id"/>
+                </t>
+                <t t-foreach="line.env['product.properties.type'].with_context(line._context, force_print=True).get_product_properties_print(product_properties, properties_print, line, lot_ids)" t-as="description">
+                    <div class="o_properties_row">
+                        <div class="o_properties_custom_cell">
+                            <span t-esc="description['label']"/>
+                        </div>
+                        <div class="o_properties_cell">
+                            <t t-if="description['value']['value']">
+                                <t t-if="description['value']['type'] in ('currency', 'monetary')">
+                                    <span t-esc="description['value']['value']" t-options="{'widget': 'monetary', 'display_currency': description['value']['currency_id']}"/>
+                                </t>
+                                <t t-else="">
+                                    <span t-esc="description['value']['value']"/>
+                                </t>
+                            </t>
+                        </div>
+                    </div>
+                </t>
+            </div>
+        </div>
+    </template>
+    <template id="document_properties_description">
+        <t t-if="doc">
+            <t t-set="o" t-value="doc"/>
+        </t>
+        <t t-if="o and o.has_properties">
+            <div class="o_properties_table">
+                <t t-foreach="o.env['product.properties.type'].get_product_properties_print(o, properties_print)" t-as="description">
+                    <t t-if="description['value']['value']">
+                        <div class="o_properties_row">
+                            <t t-if="description['label']">
+                                <div class="o_properties_custom_cell">
+                                    <span t-esc="description['label']"/>
+                                </div>
+                            </t>
+                            <div class="o_properties_cell">
+                                <t t-if="description['value']['type'] in ('currency', 'monetary')">
+                                    <span t-esc="description['value']['value']" t-options="{'widget': 'monetary', 'display_currency': description['value']['currency_id']}"/>
+                                </t>
+                                <t t-else="">
+                                    <span t-esc="description['value']['value']"/>
+                                </t>
+                            </div>
+                        </div>
+                    </t>
+                </t>
+            </div>
+        </t>
+        <t t-else="">
+            <t t-if="replace">
+                <span t-esc="replace"/>
+            </t>
+        </t>
+    </template>
+</odoo>

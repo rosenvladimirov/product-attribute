@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="external_layout_sections" inherit_id="report_theme_sections.external_layout_sections">
+        <xpath expr="//t[@t-call='report_theme_sections.document_name']" position="after">
+            <t name="document_sub_type" t-call="product_properties.document_sub_type"/>
+        </xpath>
+    </template>
+</odoo>

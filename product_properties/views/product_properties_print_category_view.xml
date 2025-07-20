@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- product.properties.print.category -->
+    <record id="product_properties_print_category_list_view" model="ir.ui.view">
+        <field name="name">product.properties.print.category.list.view</field>
+        <field name="model">product.properties.print.category</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+                <field name="type_ids" widget="many2many"/>
+                <field name="type_static_id" widget="many2many"/>
+            </list>
+        </field>
+    </record>
+    <record id="product_properties_print_category_form_view" model="ir.ui.view">
+        <field name="name">product.properties.print.category.form.view</field>
+        <field name="model">product.properties.print.category</field>
+        <field name="arch" type="xml">
+            <form string="Category Properties for print">
+                <sheet>
+                    <group>
+                        <group colspan="2">
+                            <field name="name"/>
+                        </group>
+                        <field name="type_ids" nolabel="1" colspan="4">
+                            <form string="Default properties print">
+                                <sheet>
+                                    <group>
+                                        <group>
+                                            <field name="type_id"/>
+                                            <field name="static_field"/>
+                                        </group>
+                                    </group>
+                                </sheet>
+                            </form>
+                            <list string="Default properties print">
+                                <field name="sequence" widget="handle"/>
+                                <field name="type_id"/>
+                                <field name="static_field"/>
+                            </list>
+                        </field>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="product_properties_print_category_action" model="ir.actions.act_window">
+        <field name="name">Categories for print defaults</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">product.properties.print.category</field>
+        <field name="view_mode">list,form</field>
+    </record>
+</odoo>

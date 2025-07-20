@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_move_form_buttons" model="ir.ui.view">
+        <field name="name">account.move.form.buttons</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <field name="use_product_properties" invisible="1"/>
+                <button name="toggle_use_product_properties" type="object" icon="fa-bars" title="Toggle between analytic and standard" class="oe_stat_button">
+                    <span attrs="{'invisible': [('use_product_properties', '!=', 'description')]}">Description</span>
+                    <span attrs="{'invisible': [('use_product_properties', '!=', 'properties')]}">Properties</span>
+                </button>
+            </xpath>
+        </field>
+    </record>
+    <record id="view_move_form_page" model="ir.ui.view">
+        <field name="name">account.move.form.page</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook" position="inside">
+                <page name="product_properties" string="Product properties">
+                    <group name="product_properties" string="Print options">
+                        <group name="buttons" col="2">
+                            <button name="%(product_properties.act_product_properties_set_all)d"
+                                string="Select" type="action"
+                                context="{'active_id': active_id, 'obj_name': 'account.move'}"
+                                class="oe_highlight"/>
+                            <button name="remove_all_print_properties"
+                                string="Clear" type="object"
+                                class="oe_highlight"/>
+                        </group>
+                        <group name="buttons" col="2">
+                            <button name="invoice_set_partner_print_properties"
+                                string="Partner" type="object"
+                                class="oe_highlight"/>
+                            <button name="invoice_set_products_print_properties"
+                                string="Products" type="object"
+                                class="oe_highlight"/>
+                        </group>
+                        <group colspan="4">
+                            <field name="invoice_sub_type" context="{'default_field_name': 'invoice_sub_type'}" domain="[('field_name', '=', 'invoice_sub_type')]" readonly="0"/>
+                        </group>
+                        <separator string="Selection"/>
+                        <field name="print_properties" nolabel="1">
+                            <form string="Properties for print">
+                                <group>
+                                    <group>
+                                        <field name="invoice_sub_type"/>
+                                        <field name="name"/>
+                                        <field name="static_field"/>
+                                        <field name="print"/>
+                                    </group>
+                                </group>
+                            </form>
+                            <list editable="bottom" create="false">
+                                <field name="display_name"/>
+                                <field name="invoice_sub_type" invisible="1"/>
+                                <field name="name" invisible="1"/>
+                                <field name="static_field" invisible="1"/>
+                                <field name="print"/>
+                            </list>
+                        </field>
+                        <separator string="Preview" groups="base.group_no_one"/>
+                        <field name="products_properties" nolabel="1" colspan="4" groups="base.group_no_one"/>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>

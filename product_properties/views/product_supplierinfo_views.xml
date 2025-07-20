@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="product_supplierinfo_manufacturer_form_view" model="ir.ui.view">
+        <field name="name">product.supplierinfo.manufacturer.form.view</field>
+        <field name="model">product.supplierinfo</field>
+        <field name="inherit_id" ref="product.product_supplierinfo_form_view"/>
+        <field name="arch" type="xml">
+            <field name="name" position="before">
+                <!--  widget="selection" -->
+                <field name="manufacturer_id"/>
+            </field>
+            <field name="product_name" position="after">
+                <field name="manufacturer_pname" readonly="1"/>
+            </field>
+            <field name="product_code" position="after">
+                <field name="manufacturer_pref" readonly="1"/>
+            </field>
+            <field name="min_qty" position="before">
+                <field name="divide_qty"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="product_supplierinfo_list_manufacturer_view" model="ir.ui.view">
+        <field name="name">product.supplierinfo.list.manufacturer.view</field>
+        <field name="model">product.supplierinfo</field>
+        <field name="inherit_id" ref="product.product_supplierinfo_tree_view"/>
+        <field name="arch" type="xml">
+            <field name="name" position="after">
+                <field name="manufacturer_id"/>
+            </field>
+            <field name="min_qty" position="after">
+                <field name="divide_qty"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="product_supplierinfo_search_manufacturer_view" model="ir.ui.view">
+        <field name="name">product.supplierinfo.search.manufacturer.view</field>
+        <field name="model">product.supplierinfo</field>
+        <field name="inherit_id" ref="product.product_supplierinfo_search_view"/>
+        <field name="arch" type="xml">
+            <field name="name" position="after">
+                <field name="manufacturer_id"/>
+            </field>
+            <filter name="groupby_vendor" position="after">
+                <filter string="Manufacturer" name="groupby_manufacturer" domain="[]" context="{'group_by': 'manufacturer'}"/>
+            </filter>
+        </field>
+    </record>
+</odoo>
