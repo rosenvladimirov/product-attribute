@@ -16,15 +16,21 @@ patch(PropertyDefinition.prototype, {
 
     get availablePropertyTypes() {
         const types = super.availablePropertyTypes;
-        // Добавяме новия тип "fields" към списъка
         const fieldsType = ["fields", _t("Model Fields")];
         return [...types, fieldsType];
     },
 
-    onPropertyTypeChange(newType) {
-        console.log("=== onPropertyTypeChange ===");
-        console.log("newType:", newType);
+    get propertyValueProps() {
+        const baseProps = super.propertyValueProps || {};
 
+        return {
+            ...baseProps,
+            fieldName: this.state.propertyDefinition?.field_name,
+            propertyDefinitionState: this.state,
+        };
+    },
+
+    onPropertyTypeChange(newType) {
         if (newType === "fields") {
             const propertyDefinition = {
                 ...this.state.propertyDefinition,
@@ -32,9 +38,8 @@ patch(PropertyDefinition.prototype, {
                 value: false,
                 field_name: "",
                 default: false,
+                printable: false, // Добавяме printable свойство
             };
-
-            console.log("Final propertyDefinition:", propertyDefinition);
 
             this.props.onChange(propertyDefinition);
             this.state.propertyDefinition = propertyDefinition;
@@ -42,21 +47,27 @@ patch(PropertyDefinition.prototype, {
             this.state.resModelDescription = "";
             this.state.typeLabel = this._typeLabel(newType);
         } else {
-            // За всички други типове използваме оригиналната логика
             super.onPropertyTypeChange(newType);
         }
     },
 
     onModelFieldsDefinitionChange(definition) {
-        console.log("onModelFieldsDefinitionChange called with:", definition);
-        console.log("Current state.propertyDefinition:", this.state.propertyDefinition);
-
         this.state.propertyDefinition = {
             ...this.state.propertyDefinition,
             ...definition
         };
 
-        console.log("Updated state.propertyDefinition:", this.state.propertyDefinition);
         this.props.onChange(this.state.propertyDefinition);
+    },
+
+    // Нов метод за обработка на промяната в checkbox-а
+    onPrintableChange(newValue) {
+        const propertyDefinition = {
+            ...this.state.propertyDefinition,
+            printable: newValue,
+        };
+
+        this.props.onChange(propertyDefinition);
+        this.state.propertyDefinition = propertyDefinition;
     },
 });

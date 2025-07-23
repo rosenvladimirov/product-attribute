@@ -3,28 +3,24 @@
     <t t-name="web.PropertyValue" t-inherit="web.PropertyValue" t-inherit-mode="extension">
         <!-- Модифицираме readonly условието -->
         <xpath expr="//t[contains(@t-if, 'readonly')]" position="replace">
-            <t t-if="props.readonly and !['boolean', 'many2one', 'many2many', 'tags', 'fields'].includes(props.type)">
+            <t t-if="props.readonly and !['boolean', 'many2one', 'many2many', 'tags', 'fields'].includes(props.type || (props.definition and props.definition.type))">
                 <span t-if="displayValue" t-out="displayValue"/>
             </t>
         </xpath>
-        <xpath expr="//CheckBox/.." position="after">
-            <t t-elif="props.type === 'fields'">
-                <!-- Debug информация за PropertyValue -->
-                <div style="background: #ffe6e6; padding: 5px; margin: 5px; border: 1px solid #ff9999; font-size: 11px;">
-                    <strong>DEBUG PropertyValue:</strong><br/>
-                    Type: <t t-out="props.type"/><br/>
-                    Has definition: <t t-out="props.definition ? 'Yes' : 'No'"/><br/>
-                    Definition keys: <t t-out="props.definition ? Object.keys(props.definition).length : 0"/><br/>
-                    Record: <t t-out="props.record ? 'exists' : 'null'"/><br/>
-                    Context: <t t-out="props.context ? 'exists' : 'null'"/>
-                </div>
 
-                <ModelFieldsWidget
-                    definition="props || {}"
-                    onChange.bind="onModelFieldsDefinitionChange"
-                    record="props.record"
-                    context="props.context"
-                    resModel="props.record and props.record.resModel or ''"/>
+        <xpath expr="//CheckBox/.." position="after">
+            <t t-elif="(props.type || (props.definition and props.definition.type)) === 'fields'">
+                <!-- Input поле (readonly) -->
+                <input
+                    class="o_input"
+                    t-att-id="props.id"
+                    type="text"
+                    autocomplete="off"
+                    readonly="readonly"
+                    disabled="disabled"
+                    t-att-value="displayValue || ''"
+                    t-att-placeholder="props.string ? ('Field: ' + props.string) : 'There is no field selected'"
+                />
             </t>
         </xpath>
     </t>
