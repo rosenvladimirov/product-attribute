@@ -1,10 +1,16 @@
+
 /** @odoo-module **/
+
 import { Component, useState } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
+import { registry } from "@web/core/registry";
+import { standardFieldProps } from "@web/views/fields/standard_field_props";
 
 export class PropertiesDefinitionViewer extends Component {
     static template = "properties_fields.PropertiesDefinitionViewer";
+
     static props = {
+        ...standardFieldProps,
         propertiesDefinition: { type: Array, optional: true },
         readonly: { type: Boolean, optional: true },
         onPrintableChange: { type: Function, optional: true },
@@ -12,6 +18,51 @@ export class PropertiesDefinitionViewer extends Component {
         onEdit: { type: Function, optional: true },
         onDelete: { type: Function, optional: true },
         onDuplicate: { type: Function, optional: true },
+    };
+
+    static extractProps = ({ attrs }, dynamicInfo) => {
+        return {
+            propertiesDefinition: dynamicInfo.value || [],
+            readonly: dynamicInfo.readonly,
+            onAdd: (property) => {
+                if (dynamicInfo.update) {
+                    const newValue = [...(dynamicInfo.value || []), property];
+                    dynamicInfo.update(newValue);
+                }
+            },
+            onEdit: (property) => {
+                if (dynamicInfo.update && dynamicInfo.value) {
+                    const newValue = dynamicInfo.value.map(p =>
+                        p.name === property.name ? property : p
+                    );
+                    dynamicInfo.update(newValue);
+                }
+            },
+            onDelete: (property) => {
+                if (dynamicInfo.update && dynamicInfo.value) {
+                    const newValue = dynamicInfo.value.filter(p =>
+                        p.name !== property.name
+                    );
+                    dynamicInfo.update(newValue);
+                }
+            },
+            onDuplicate: (property) => {
+                if (dynamicInfo.update && dynamicInfo.value) {
+                    const newProperty = { ...property };
+                    newProperty.name = `${property.name}_copy`;
+                    const newValue = [...dynamicInfo.value, newProperty];
+                    dynamicInfo.update(newValue);
+                }
+            },
+            onPrintableChange: (propertyName, newValue) => {
+                if (dynamicInfo.update && dynamicInfo.value) {
+                    const newProperties = dynamicInfo.value.map(p =>
+                        p.name === propertyName ? { ...p, printable: newValue } : p
+                    );
+                    dynamicInfo.update(newProperties);
+                }
+            },
+        };
     };
 
     setup() {
@@ -85,7 +136,6 @@ export class PropertiesDefinitionViewer extends Component {
 
     // Row interaction methods
     onRowClick(property) {
-        // Toggle selection on row click
         if (this.state.selectedRows.has(property.name)) {
             this.state.selectedRows.delete(property.name);
         } else {
@@ -94,7 +144,6 @@ export class PropertiesDefinitionViewer extends Component {
     }
 
     onCellClick(property, fieldName) {
-        // Handle cell-specific actions if needed
         console.log(`Clicked ${fieldName} for property ${property.name}`);
     }
 
@@ -142,3 +191,6 @@ export class PropertiesDefinitionViewer extends Component {
         }
     }
 }
+
+// Регистрираме widget-а
+registry.category("view_widgets").add("property_definition_viewer", PropertiesDefinitionViewer);

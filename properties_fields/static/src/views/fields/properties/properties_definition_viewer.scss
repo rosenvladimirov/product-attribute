@@ -8,7 +8,16 @@
 
         .o_control_panel_main_buttons {
             .o_list_button_add {
-                @include o-btn-primary-style;
+                @extend .btn;
+                @extend .btn-primary;
+                display: inline-flex;
+                align-items: center;
+                gap: 0.5rem;
+                padding: 0.375rem 0.75rem;
+                font-size: 0.875rem;
+                font-weight: 500;
+                line-height: 1.2;
+                border-radius: 0.25rem;
 
                 &:disabled {
                     opacity: 0.6;
@@ -60,35 +69,14 @@
                     }
 
                     &.o_column_sorted_asc .fa-sort:before {
-                        content: "\f0de"; // fa-sort-up
+                        content: "\f0de";
                         opacity: 1;
                     }
 
                     &.o_column_sorted_desc .fa-sort:before {
-                        content: "\f0dd"; // fa-sort-down
+                        content: "\f0dd";
                         opacity: 1;
                     }
-                }
-
-                // Column specific widths
-                &[data-name="name"] { min-width: 150px; }
-                &[data-name="string"] { min-width: 180px; }
-                &[data-name="type"] { min-width: 120px; }
-                &[data-name="comodel"] { min-width: 140px; }
-                &[data-name="default"] { min-width: 120px; }
-                &[data-name="view_in_cards"] { width: 80px; text-align: center; }
-                &[data-name="printable"] { width: 80px; text-align: center; }
-                &.o_list_actions_header { width: 50px; text-align: center; }
-            }
-
-            .o_list_record_selector {
-                width: 40px;
-                text-align: center;
-
-                .o_list_record_selector_wrapper {
-                    display: flex;
-                    justify-content: center;
-                    align-items: center;
                 }
             }
         }
@@ -117,149 +105,6 @@
 
                     &.cursor-pointer {
                         cursor: pointer;
-                    }
-
-                    // Field-specific styling
-                    &[data-field="name"] {
-                        .o_field_text {
-                            font-family: var(--o-font-family-monospace);
-                            font-size: 0.8125rem;
-                            background-color: var(--o-code-bg);
-                            padding: 0.125rem 0.375rem;
-                            border-radius: 0.25rem;
-                            border: 1px solid var(--border-color);
-                        }
-                    }
-
-                    &[data-field="string"] {
-                        .o_field_text {
-                            font-weight: 600;
-                            color: var(--o-main-text-color);
-                        }
-                    }
-
-                    &[data-field="type"] {
-                        .o_field_widget {
-                            .o_field_property_type_icon {
-                                flex-shrink: 0;
-                            }
-
-                            .badge {
-                                font-size: 0.75rem;
-                                padding: 0.25rem 0.5rem;
-                            }
-                        }
-                    }
-
-                    &[data-field="comodel"] {
-                        .o_field_text {
-                            font-size: 0.8125rem;
-                            color: var(--o-brand-primary);
-                        }
-                    }
-
-                    &[data-field="default"] {
-                        .o_field_text {
-                            max-width: 150px;
-                            overflow: hidden;
-                            text-overflow: ellipsis;
-                            white-space: nowrap;
-                        }
-                    }
-
-                    // Boolean fields styling
-                    &[data-field="view_in_cards"],
-                    &[data-field="printable"] {
-                        text-align: center;
-
-                        .o_checkbox {
-                            display: flex;
-                            justify-content: center;
-                            align-items: center;
-
-                            .form-check-input {
-                                margin: 0;
-
-                                &.o_printable_checkbox {
-                                    cursor: pointer;
-
-                                    &:disabled {
-                                        cursor: not-allowed;
-                                        opacity: 0.6;
-                                    }
-
-                                    &:focus {
-                                        box-shadow: 0 0 0 0.2rem rgba(var(--o-brand-primary-rgb), 0.25);
-                                    }
-                                }
-                            }
-                        }
-                    }
-
-                    // Actions cell
-                    &.o_list_record_actions {
-                        text-align: center;
-
-                        .dropdown {
-                            .dropdown-toggle {
-                                border: none;
-                                background: transparent;
-                                color: var(--o-main-text-color);
-                                padding: 0.25rem 0.5rem;
-
-                                &:hover {
-                                    color: var(--o-brand-primary);
-                                }
-
-                                &:focus {
-                                    box-shadow: none;
-                                }
-
-                                &::after {
-                                    display: none;
-                                }
-                            }
-
-                            .dropdown-menu {
-                                min-width: 150px;
-                                border: 1px solid var(--border-color);
-                                box-shadow: var(--o-dropdown-shadow);
-
-                                .dropdown-item {
-                                    font-size: 0.875rem;
-                                    padding: 0.5rem 1rem;
-
-                                    &:hover {
-                                        background-color: var(--o-dropdown-item-hover-bg);
-                                    }
-
-                                    &.text-danger:hover {
-                                        background-color: var(--o-color-danger-light);
-                                        color: var(--o-color-danger);
-                                    }
-
-                                    i {
-                                        width: 16px;
-                                        text-align: center;
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-
-                // Selection checkbox styling
-                .o_list_record_selector {
-                    text-align: center;
-
-                    .o_list_record_selector_wrapper {
-                        display: flex;
-                        justify-content: center;
-                        align-items: center;
-
-                        .form-check-input {
-                            margin: 0;
-                        }
                     }
                 }
             }
@@ -296,7 +141,8 @@
             }
 
             .o_nocontent_cta {
-                @include o-btn-primary-style;
+                @extend .btn;
+                @extend .btn-primary;
                 font-size: 0.9375rem;
                 padding: 0.5rem 1.5rem;
             }
@@ -309,52 +155,6 @@
             padding: 0.5rem 1rem;
             flex-direction: column;
             align-items: stretch;
-
-            .o_control_panel_main_buttons {
-                margin-bottom: 0.75rem;
-                justify-content: center;
-            }
-
-            .o_control_panel_breadcrumbs {
-                justify-content: center;
-            }
-        }
-
-        .o_list_table {
-            thead th {
-                padding: 0.5rem 0.25rem;
-                font-size: 0.8125rem;
-
-                &[data-name="comodel"],
-                &[data-name="default"] {
-                    display: none;
-                }
-            }
-
-            tbody .o_data_cell {
-                padding: 0.375rem 0.25rem;
-
-                &[data-field="comodel"],
-                &[data-field="default"] {
-                    display: none;
-                }
-            }
-        }
-    }
-
-    @include media-breakpoint-down(md) {
-        .o_list_table {
-            thead th {
-                &[data-name="type"] {
-                    display: none;
-                }
-            }
-
-            tbody .o_data_cell {
-                &[data-field="type"] {
-                    display: none;
-                }
-            }
         }
     }
 
@@ -375,65 +175,11 @@
                 }
             }
         }
-
-        .o_view_nocontent {
-            .o_nocontent_help {
-                .o_nocontent_empty_folder {
-                    filter: invert(1);
-                }
-            }
-        }
-    }
-
-    // Animation for smooth interactions
-    .o_data_row {
-        .o_data_cell {
-            .o_checkbox .form-check-input {
-                transition: all 0.15s ease;
-            }
-
-            .dropdown .dropdown-toggle {
-                transition: color 0.15s ease;
-            }
-        }
-    }
-
-    // Focus states for accessibility
-    .o_list_table {
-        .o_column_sortable:focus {
-            outline: 2px solid var(--o-brand-primary);
-            outline-offset: -2px;
-        }
-
-        .o_data_cell.cursor-pointer:focus {
-            outline: 2px solid var(--o-brand-primary);
-            outline-offset: -2px;
-        }
-    }
-
-    // Print styles
-    @media print {
-        .o_control_panel,
-        .o_list_record_selector,
-        .o_list_actions_header,
-        .o_list_record_actions {
-            display: none !important;
-        }
-
-        .o_list_table {
-            border-collapse: collapse;
-
-            th, td {
-                border: 1px solid #000 !important;
-                padding: 0.25rem !important;
-            }
-        }
     }
 }
 
-// Global helper classes for the component
+// Global helper classes
 .o_properties_definition_list {
-    // Custom scrollbar for overflow areas
     ::-webkit-scrollbar {
         width: 6px;
         height: 6px;

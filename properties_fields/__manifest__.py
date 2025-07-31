@@ -10,8 +10,10 @@
     'depends': [
         'base',
         'web',
+        'product',
     ],
     'data': [
+        'security/ir.model.access.csv'
     ],
     'demo': [
     ],

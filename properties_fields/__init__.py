@@ -2,6 +2,8 @@
 
 import logging
 
+from . import wizards
+
 _logger = logging.getLogger(__name__)
 
 
