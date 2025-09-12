@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-05-13 01:19+0000\n"
-"PO-Revision-Date: 2024-03-27 18:36+0000\n"
+"PO-Revision-Date: 2023-08-29 08:30+0000\n"
 "Last-Translator: Ivorra78 <informatica@totmaterial.es>\n"
 "Language-Team: Spanish (https://www.transifex.com/oca/teams/23907/es/)\n"
 "Language: es\n"
@@ -28,17 +28,17 @@ msgstr "Activo"
 #. module: product_set
 #: model_terms:ir.ui.view,arch_db:product_set.view_product_set_form
 msgid "Add a line"
-msgstr "Añadir una línea"
+msgstr ""
 
 #. module: product_set
 #: model_terms:ir.ui.view,arch_db:product_set.view_product_set_form
 msgid "Add a note"
-msgstr "Añadir Una Nota"
+msgstr ""
 
 #. module: product_set
 #: model_terms:ir.ui.view,arch_db:product_set.view_product_set_form
 msgid "Add a section"
-msgstr "Añadir Una Sección"
+msgstr ""
 
 #. module: product_set
 #: model_terms:ir.ui.view,arch_db:product_set.view_product_set_form
@@ -73,7 +73,7 @@ msgstr "Nombre mostrado"
 #. module: product_set
 #: model:ir.model.fields,field_description:product_set.field_product_set_line__display_type
 msgid "Display Type"
-msgstr "Mostrar Tipo"
+msgstr ""
 
 #. module: product_set
 #: model:ir.model.fields,field_description:product_set.field_product_set__id
@@ -85,6 +85,12 @@ msgstr "ID"
 #: model:ir.model.fields,field_description:product_set.field_product_set__ref
 msgid "Internal Reference"
 msgstr "Referencia interna"
+
+#. module: product_set
+#: model:ir.model.fields,field_description:product_set.field_product_set____last_update
+#: model:ir.model.fields,field_description:product_set.field_product_set_line____last_update
+msgid "Last Modified on"
+msgstr "Última modificación en"
 
 #. module: product_set
 #: model:ir.model.fields,field_description:product_set.field_product_set__write_uid
@@ -107,11 +113,10 @@ msgstr "Nombre"
 #. module: product_set
 #: model:ir.model.fields.selection,name:product_set.selection__product_set_line__display_type__line_note
 msgid "Note"
-msgstr "Nota"
+msgstr ""
 
 #. module: product_set
 #: model:ir.model.fields,field_description:product_set.field_product_set__partner_id
-#: model:ir.model.fields,field_description:product_set.field_product_set_wizard__partner_id
 #: model_terms:ir.ui.view,arch_db:product_set.view_product_set_search
 msgid "Partner"
 msgstr "Contacto"
@@ -123,19 +128,8 @@ msgid "Product"
 msgstr "Producto"
 
 #. module: product_set
-#: model:ir.model.fields,field_description:product_set.field_product_set_line__product_packaging_id
-msgid "Product Packaging"
-msgstr ""
-
-#. module: product_set
-#: model:ir.model.fields,field_description:product_set.field_product_set_line__product_packaging_qty
-msgid "Product Packaging Qty"
-msgstr ""
-
-#. module: product_set
 #: model:ir.actions.act_window,name:product_set.act_open_product_set_view
 #: model:ir.model,name:product_set.model_product_set
-#: model:ir.model.fields,field_description:product_set.field_product_set_wizard__product_set_id
 #: model_terms:ir.ui.view,arch_db:product_set.view_product_set_form
 #: model_terms:ir.ui.view,arch_db:product_set.view_product_set_line_search
 #: model_terms:ir.ui.view,arch_db:product_set.view_product_set_search
@@ -155,11 +149,6 @@ msgid "Product set line"
 msgstr "Línea de conjunto de productos"
 
 #. module: product_set
-#: model:ir.model.fields,field_description:product_set.field_product_set_wizard__product_set_line_ids
-msgid "Product set lines"
-msgstr "Líneas de conjunto de productos"
-
-#. module: product_set
 #: model:ir.model.fields,help:product_set.field_product_set__name
 msgid "Product set name"
 msgstr "Nombre del conjunto de productos"
@@ -171,14 +160,13 @@ msgstr "Productos"
 
 #. module: product_set
 #: model:ir.model.fields,field_description:product_set.field_product_set_line__quantity
-#: model:ir.model.fields,field_description:product_set.field_product_set_wizard__quantity
 msgid "Quantity"
 msgstr "Cantidad"
 
 #. module: product_set
 #: model:ir.model.fields.selection,name:product_set.selection__product_set_line__display_type__line_section
 msgid "Section"
-msgstr "Sección"
+msgstr ""
 
 #. module: product_set
 #: model:ir.model.fields,field_description:product_set.field_product_set_line__sequence
@@ -186,25 +174,9 @@ msgid "Sequence"
 msgstr "Secuencia"
 
 #. module: product_set
-#: model:product.set,name:product_set.product_set_services
-msgid "Services"
-msgstr "Servicios"
-
-#. module: product_set
 #: model:ir.model.fields,field_description:product_set.field_product_set_line__product_set_id
 msgid "Set"
 msgstr "Conjunto"
-
-#. module: product_set
-#. odoo-python
-#: code:addons/product_set/tests/models.py:0
-msgid "This set of products is restricted for this user."
-msgstr "Este conjunto de productos está restringido para este usuario."
-
-#. module: product_set
-#: model:ir.model,name:product_set.model_product_set_wizard
-msgid "Transient base model to define custom wizards"
-msgstr "Modelo base transitorio para definir asistentes personalizados"
 
 #. module: product_set
 #: model:ir.model.fields,help:product_set.field_product_set__partner_id
@@ -214,20 +186,6 @@ msgid ""
 msgstr ""
 "Puede adjuntar el conjunto a un contacto específico o a nadie. Si no "
 "especifica ninguno, estará disponible para todos ellos."
-
-#. module: product_set
-#. odoo-python
-#: code:addons/product_set/models/product_set_line.py:0
-msgid "You must define a package before setting a quantity of said package."
-msgstr ""
-
-#. module: product_set
-#: model:product.set,name:product_set.product_set_i5_computer
-msgid "i5 computer offer"
-msgstr "oferta ordenador i5"
-
-#~ msgid "Last Modified on"
-#~ msgstr "Última modificación en"
 
 #~ msgid "Add set"
 #~ msgstr "Añadir conjunto"
@@ -253,6 +211,9 @@ msgstr "oferta ordenador i5"
 #~ msgstr ""
 #~ "Habilite esto para no agregar nuevas líneas para productos ya incluidos "
 #~ "en las líneas SO."
+
+#~ msgid "Product set lines"
+#~ msgstr "Líneas de conjunto de productos"
 
 #~ msgid "Sale Order"
 #~ msgstr "Pedido de venta"

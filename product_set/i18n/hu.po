@@ -86,6 +86,12 @@ msgid "Internal Reference"
 msgstr ""
 
 #. module: product_set
+#: model:ir.model.fields,field_description:product_set.field_product_set____last_update
+#: model:ir.model.fields,field_description:product_set.field_product_set_line____last_update
+msgid "Last Modified on"
+msgstr "Utolsó frissítés dátuma"
+
+#. module: product_set
 #: model:ir.model.fields,field_description:product_set.field_product_set__write_uid
 #: model:ir.model.fields,field_description:product_set.field_product_set_line__write_uid
 msgid "Last Updated by"
@@ -110,7 +116,6 @@ msgstr ""
 
 #. module: product_set
 #: model:ir.model.fields,field_description:product_set.field_product_set__partner_id
-#: model:ir.model.fields,field_description:product_set.field_product_set_wizard__partner_id
 #: model_terms:ir.ui.view,arch_db:product_set.view_product_set_search
 msgid "Partner"
 msgstr ""
@@ -122,19 +127,8 @@ msgid "Product"
 msgstr ""
 
 #. module: product_set
-#: model:ir.model.fields,field_description:product_set.field_product_set_line__product_packaging_id
-msgid "Product Packaging"
-msgstr ""
-
-#. module: product_set
-#: model:ir.model.fields,field_description:product_set.field_product_set_line__product_packaging_qty
-msgid "Product Packaging Qty"
-msgstr ""
-
-#. module: product_set
 #: model:ir.actions.act_window,name:product_set.act_open_product_set_view
 #: model:ir.model,name:product_set.model_product_set
-#: model:ir.model.fields,field_description:product_set.field_product_set_wizard__product_set_id
 #: model_terms:ir.ui.view,arch_db:product_set.view_product_set_form
 #: model_terms:ir.ui.view,arch_db:product_set.view_product_set_line_search
 #: model_terms:ir.ui.view,arch_db:product_set.view_product_set_search
@@ -154,11 +148,6 @@ msgid "Product set line"
 msgstr ""
 
 #. module: product_set
-#: model:ir.model.fields,field_description:product_set.field_product_set_wizard__product_set_line_ids
-msgid "Product set lines"
-msgstr ""
-
-#. module: product_set
 #: model:ir.model.fields,help:product_set.field_product_set__name
 msgid "Product set name"
 msgstr ""
@@ -170,7 +159,6 @@ msgstr ""
 
 #. module: product_set
 #: model:ir.model.fields,field_description:product_set.field_product_set_line__quantity
-#: model:ir.model.fields,field_description:product_set.field_product_set_wizard__quantity
 msgid "Quantity"
 msgstr ""
 
@@ -185,24 +173,8 @@ msgid "Sequence"
 msgstr ""
 
 #. module: product_set
-#: model:product.set,name:product_set.product_set_services
-msgid "Services"
-msgstr ""
-
-#. module: product_set
 #: model:ir.model.fields,field_description:product_set.field_product_set_line__product_set_id
 msgid "Set"
-msgstr ""
-
-#. module: product_set
-#. odoo-python
-#: code:addons/product_set/tests/models.py:0
-msgid "This set of products is restricted for this user."
-msgstr ""
-
-#. module: product_set
-#: model:ir.model,name:product_set.model_product_set_wizard
-msgid "Transient base model to define custom wizards"
 msgstr ""
 
 #. module: product_set
@@ -211,17 +183,3 @@ msgid ""
 "You can attache the set to a specific partner or no one. If you don't "
 "specify one, it's going to be available for all of them."
 msgstr ""
-
-#. module: product_set
-#. odoo-python
-#: code:addons/product_set/models/product_set_line.py:0
-msgid "You must define a package before setting a quantity of said package."
-msgstr ""
-
-#. module: product_set
-#: model:product.set,name:product_set.product_set_i5_computer
-msgid "i5 computer offer"
-msgstr ""
-
-#~ msgid "Last Modified on"
-#~ msgstr "Utolsó frissítés dátuma"

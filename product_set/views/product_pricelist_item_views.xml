@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <record model="ir.ui.view" id="product_pricelist_item_view_search">
+        <field name="name">product.pricelist.item.search</field>
+        <field name="model">product.pricelist.item</field>
+        <field name="inherit_id" ref="product.product_pricelist_item_view_search"/>
+        <field name="arch" type="xml">
+            <field name="pricelist_id" position="after">
+                <field name="product_set_id"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="product_pricelist_item_form_view" model="ir.ui.view">
+        <field name="name">product.pricelist.item.form</field>
+        <field name="model">product.pricelist.item</field>
+        <field name="inherit_id" ref="product.product_pricelist_item_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='pricelist_rule_related']" position="after">
+                <group name="product_set">
+                    <field name="product_set_id"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

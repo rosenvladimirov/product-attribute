@@ -1,2 +1,2 @@
 from . import models  # pragma: no cover
-from . import wizard
+from .hooks import post_init_hook

@@ -6,9 +6,9 @@
         <field name="global" eval="True" />
         <field name="domain_force">[('company_id', 'in', [False] + company_ids)]</field>
     </record>
-    <record id="product_set_line_comp_rule" model="ir.rule">
-        <field name="name">Product Set Line multi company rule</field>
-        <field name="model_id" ref="model_product_set_line" />
+    <record id="product_set_pricelist_comp_rule" model="ir.rule">
+        <field name="name">Product Set Pricelist multi company rule</field>
+        <field name="model_id" ref="model_product_set_pricelist" />
         <field name="global" eval="True" />
         <field name="domain_force">[('company_id', 'in', [False] + company_ids)]</field>
     </record>
