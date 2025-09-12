@@ -115,13 +115,6 @@ class ProductSet(models.Model):
             ]).mapped('pricelist_id')
             record.pricelist_count = len(count_price_list.ids)
 
-    # @api.depends('pricelist_id', 'company_id')
-    # def _compute_currency_id(self):
-    #     for record in self:
-    #         record.currency_id = record.pricelist_id.currency_id or record.company_id.currency_id
-    #         for line in record.set_line_ids:
-    #             line.currency_id = record.company_id.currency_id
-
     @api.depends('currency_id', 'company_id')
     def _compute_currency_rate(self):
         for record in self:

@@ -1,3 +1,4 @@
+# Copyright 2025 Rosen Vladimirov
 # Copyright 2023 BioPrint Ltd.
 # Copyright 2015 Anybox
 # Copyright 2018 Camptocamp, ACSONE SA/NV
@@ -6,8 +7,8 @@
     "name": "Product set",
     "category": "Sale",
     "license": "AGPL-3",
-    "author": "Anybox, Odoo Community Association (OCA)",
-    "version": "16.0.3.0.0",
+    "author": "Rosen Vladimirov, Anybox, Odoo Community Association (OCA)",
+    "version": "18.0.1.0.0",
     "website": "https://github.com/OCA/product-attribute",
     "depends": [
         "product",
