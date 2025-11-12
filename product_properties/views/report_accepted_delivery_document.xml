@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <odoo>
-    <template id="report_accepted_delivery_document" inherit_id="report_accepted_delivery.report_accepted_delivery_document">
+    <template id="report_accepted_delivery_document" inherit_id="l10n_bg_report_stock.report_accepted_delivery_document">
         <xpath expr='//t[@t-if="o.state == &apos;done&apos;"]' position="before">
             <t t-set="invoice_sub_type" t-value="o.invoice_sub_type.name"/>
         </xpath>

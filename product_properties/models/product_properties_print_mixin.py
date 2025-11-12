@@ -12,11 +12,13 @@ class ProductPropertiesPrintMixin(models.AbstractModel):
     _description = "Product properties print Mixin"
 
     use_product_properties = fields.Selection([
-        ('description', _('Use descriptions')),
-        ('properties', _('Use properties')), ],
+        ('description', 'Use descriptions'),
+        ('properties', 'Use properties'),
+    ],
         string="Type product description",
         help='Choice type of the view for product description',
-        default="description")
+        default="description"
+    )
     category_print_properties = fields.Many2one('product.properties.print.category',
                                                 'Default Print properties category')
     products_properties_env_ref = fields.Char('Product properties env.ref')

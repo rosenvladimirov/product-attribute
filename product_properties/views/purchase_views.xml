@@ -8,8 +8,8 @@
             <xpath expr="//div[@name='button_box']" position="inside">
                 <field name="use_product_properties" invisible="1"/>
                 <button name="toggle_use_product_properties" type="object" icon="fa-bars" title="Toggle between analytic and standard" class="oe_stat_button">
-                    <span attrs="{'invisible': [('use_product_properties', '!=', 'description')]}">Description</span>
-                    <span attrs="{'invisible': [('use_product_properties', '!=', 'properties')]}">Properties</span>
+                    <span invisible="use_product_properties != 'description'">Description</span>
+                    <span invisible="use_product_properties != 'properties'">Properties</span>
                 </button>
             </xpath>
         </field>
@@ -26,7 +26,7 @@
                         <group name="buttons" col="2">
                             <button name="%(product_properties.act_product_properties_set_all)d"
                                 string="Select" type="action"
-                                context="{'active_id': active_id, 'obj_name': 'sale.order'}"
+                                context="{'active_id': id, 'obj_name': 'sale.order'}"
                                 class="oe_highlight"/>
                             <button name="remove_all_print_properties"
                                 string="Clear" type="object"
@@ -81,7 +81,7 @@
                 <div>
                     <button name="%(product_properties.act_product_properties_set_all)d"
                         string="Select Properties" type="action"
-                        context="{'active_id': active_id, 'obj_name': 'sale.order'}"
+                        context="{'active_id': id, 'obj_name': 'sale.order'}"
                         class="btn-primary"/>
                 </div>
             </xpath>
@@ -98,7 +98,7 @@
                 <div>
                     <button name="%(product_properties.act_product_properties_set_all)d"
                         string="Select Properties" type="action"
-                        context="{'active_id': active_id, 'obj_name': 'sale.order'}"
+                        context="{'active_id': id, 'obj_name': 'sale.order'}"
                         class="btn-primary"/>
                 </div>
             </xpath>

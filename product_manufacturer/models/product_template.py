@@ -39,6 +39,7 @@ class ProductTemplate(models.Model):
         "product_variant_ids.manufacturer_pref",
         "product_variant_ids.manufacturer_purl",
     )
+
     def _compute_manufacturer_info(self):
         unique_variants = self.filtered(
             lambda template: len(template.product_variant_ids) == 1

@@ -10,7 +10,7 @@ def post_init_hook(cr, registry):
     env = api.Environment(cr, SUPERUSER_ID, {})
     product_tmpl_id = env['product.template'].create({
         'name': 'Manuals & Instructions for using',
-        'detailed_type': 'product',
+        'type': 'consu',
         'sale_ok': True,
         'purchase_ok': True,
         'default_code': 'IFU',

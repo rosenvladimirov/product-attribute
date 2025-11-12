@@ -28,7 +28,6 @@ class ProductPropertiesPrintLineCategory(models.Model):
     static_field = fields.Selection(
         selection=lambda self: self.env['product.properties.static']._get_field_name_filter(),
         string="Static Properties Field name")
-    display_name = fields.Char(compute='_compute_display_name')
     invoice_sub_type = fields.Many2one("product.properties.static.dropdown", string="Category Type Documents",
                                        domain="[('field_name', '=', 'invoice_sub_type')]")
 

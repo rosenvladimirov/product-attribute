@@ -1,9 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from odoo import api, fields, models, _, Command
-
-from odoo.tools import float_compare
-
 import logging
+
+from odoo import api, fields, models, _, Command
 
 _logger = logging.getLogger(__name__)
 
@@ -12,49 +10,69 @@ class ProductProduct(models.Model):
     _name = 'product.product'
     _inherit = ['product.product', 'product.properties.mixin', 'documents.mixin']
 
-    def _get_domain_categ_ids(self):
+    @staticmethod
+    def _get_domain_categ_ids():
         return [
             ('applicability', 'in', ['product', 'productoo'])
         ]
 
-    def _get_domain_tmpl_categ_ids(self):
+    @staticmethod
+    def _get_domain_tmpl_categ_ids():
         return [
             ('applicability', 'in', ['template', 'templateoo'])
         ]
 
-    has_category_properties = fields.Boolean(compute="_compute_has_category_properties",
-                                             string="Category Has Product properties")
+    has_category_properties = fields.Boolean(
+        compute="_compute_has_category_properties",
+        string="Category Has Product properties"
+    )
 
-    product_properties_ids = fields.One2many("product.properties",
-                                             "product_id",
-                                             string='Product properties',
-                                             copy=False)
+    product_properties_ids = fields.One2many(
+        "product.properties",
+        "product_id",
+        string='Product properties',
+        copy=False
+    )
 
-    tmpl_product_prop_static_id = fields.Many2one("product.properties.static",
-                                                  string='Product static properties',
-                                                  related="product_tmpl_id.product_prop_static_id")
+    tmpl_product_prop_static_id = fields.Many2one(
+        related="product_tmpl_id.product_prop_static_id"
+    )
 
-    has_product_properties = fields.Boolean(compute="_compute_has_product_properties",
-                                            string="Product has properties")
+    has_product_properties = fields.Boolean(
+        compute="_compute_has_product_properties",
+        string="Product has properties"
+    )
 
-    tmpl_product_properties_ids = fields.Many2many("product.properties",
-                                                   compute="_compute_tmpl_product_properties_ids",
-                                                   string='Product template properties')
+    tmpl_product_properties_ids = fields.Many2many(
+        "product.properties",
+        compute="_compute_tmpl_product_properties_ids",
+        string='Product template properties'
+    )
 
-    properties_category_ids = fields.Many2many('product.properties.category',
-                                               relation="product_prod_prop",
-                                               string='Global Category properties',
-                                               domain=lambda self: self._get_domain_categ_ids())
-    tmpl_properties_category_ids = fields.Many2many('product.properties.category',
-                                                    relation="product_tmpl_prod_prop",
-                                                    string='Base on Category properties',
-                                                    domain=lambda self: self._get_domain_tmpl_categ_ids())
-    curr_category_ids = fields.Many2many('product.properties.category',
-                                         string='Category properties',
-                                         compute='_compute_curr_category_ids')
+    properties_category_ids = fields.Many2many(
+        'product.properties.category',
+        relation="product_prod_prop",
+        string='Global Category properties',
+        domain=lambda self: self._get_domain_categ_ids()
+    )
 
-    product_count_static_properties = fields.Integer("Count product static properties",
-                                                     compute="_compute_count_static_properties")
+    tmpl_properties_category_ids = fields.Many2many(
+        'product.properties.category',
+        relation="product_tmpl_prod_prop",
+        string='Base on Category properties',
+        domain=lambda self: self._get_domain_tmpl_categ_ids()
+    )
+
+    curr_category_ids = fields.Many2many(
+        'product.properties.category',
+        string='Category properties',
+        compute='_compute_curr_category_ids'
+    )
+
+    product_count_static_properties = fields.Integer(
+        "Count product static properties",
+        compute="_compute_count_static_properties"
+    )
 
     def _compute_count_static_properties(self):
         for record in self:

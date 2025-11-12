@@ -5,11 +5,11 @@
         <field name="model">product.set</field>
         <field name="type">list</field>
         <field name="arch" type="xml">
-            <tree>
+            <list>
                 <field name="display_name"/>
                 <field name="partner_id" />
                 <field name="company_id" groups="base.group_multi_company" />
-            </tree>
+            </list>
         </field>
     </record>
     <record id="view_product_set_form" model="ir.ui.view">
@@ -23,7 +23,6 @@
                         <button class="oe_stat_button"
                                name="synchronize_prices"
                                icon="fa-list-ul"
-                               groups="product.group_product_pricelist"
                                type="object">
                                <div class="o_field_widget o_stat_info">
                                    <span>Price lists</span>
@@ -37,7 +36,7 @@
                         name="web_ribbon"
                         title="Archived"
                         bg_color="bg-danger"
-                        attrs="{'invisible': [('active', '=', True)]}"
+                        invisible="active"
                     />
                     <field name="active" invisible="1" />
                     <field name="has_active_pricelist" invisible="1"/>
@@ -58,20 +57,19 @@
                         </group>
                         <group name="partner">
                             <field name="partner_id" />
-                            <label for="pricelist_id" groups="product.group_product_pricelist"
-                                   attrs="{'invisible': [('has_active_pricelist', '=', False)]}"
+                            <label for="pricelist_id"
+                                   invisible="not has_active_pricelist"
                                    domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]"
                             />
-                            <div groups="product.group_product_pricelist" class="o_row"
-                                 attrs="{'invisible': [('has_active_pricelist', '=', False)]}">
+                            <div class="o_row" invisible="not has_active_pricelist">
                                 <field name="pricelist_id" options="{'no_open':True,'no_create': True}" readonly="0"
-                                attrs="{'invisible': [('has_active_pricelist', '=', False)]}" domain="[('company_id', '=', company_id)]"/>
+                                       invisible="not has_active_pricelist and company_id == company_id"/>
                                 <button name="action_update_prices" type="object"
                                     string=" Update Prices"
                                     help="Recompute all prices based on this pricelist"
                                     class="btn-link mb-1 px-0" icon="fa-refresh"
                                     confirm="This will update the unit price of all products based on the new pricelist."
-                                    attrs="{'invisible': [('show_update_pricelist', '=', False)]}"/>
+                                    invisible="not show_update_pricelist"/>
                             </div>
                             <field name="price_list"/>
                             <field name="currency_id"/>
@@ -82,7 +80,7 @@
                             name="set_line_ids"
                             nolabel="1"
                             widget="section_and_note_one2many"
-                            context="{'default_product_set_id': active_id}"
+                            context="{'default_product_set_id': id}"
                         >
                             <list editable="bottom">
                                 <field name="sequence" widget="handle" />
@@ -135,9 +133,10 @@
                                 <field name="amount_untaxed"/>
                                 <field name="currency_id"/>
                                 <button name="action_set_price_list"
-                                        groups="product.group_product_pricelist"
                                         type="object"
-                                        icon="fa-save"/>
+                                        icon="fa-save"
+                                        title="Set price list for all products in the set"
+                                />
                             </list>
                         </field>
                     </group>

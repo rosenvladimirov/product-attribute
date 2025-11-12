@@ -46,13 +46,11 @@ class ProductSet(models.Model):
         "Company",
         default=lambda self: self.env.company,
         ondelete="cascade",
-        company_dependent=True,
     )
     partner_id = fields.Many2one(
         comodel_name="res.partner",
         required=False,
         ondelete="cascade",
-        company_dependent=True,
         index=True,
         help="You can attache the set to a specific partner "
              "or no one. If you don't specify one, "
@@ -62,13 +60,9 @@ class ProductSet(models.Model):
         comodel_name='product.pricelist',
         string="Price list",
         # tracking=1,
-        company_dependent=True,
         help="If you change the price list, only newly added lines will be affected.")
     currency_id = fields.Many2one(
         comodel_name='res.currency',
-        # compute='_compute_currency_id',
-        # store=True,
-        company_dependent=True,
         ondelete='restrict'
     )
     pricelist_amount_untaxed = fields.Monetary(
@@ -88,8 +82,6 @@ class ProductSet(models.Model):
     amount_untaxed = fields.Monetary(string="Untaxed Amount",
                                      store=True,
                                      compute='_compute_amounts',
-                                     company_dependent=True,
-                                     tracking=5
                                      )
     has_active_pricelist = fields.Boolean(
         compute='_compute_has_active_pricelist'
@@ -98,9 +90,9 @@ class ProductSet(models.Model):
         string="Has Pricelist Changed"
     )  # True if the pricelist was changed
     price_list = fields.Selection(selection=[
-        ('delete', _('Delete current price items')),
-        ('add', _('Add current price items')),
-        ('change', _('Change current price'))
+        ('delete', 'Delete current price items'),
+        ('add', 'Add current price items'),
+        ('change', 'Change current price'),
     ],
         string="Price list Change",
         store=False,
@@ -114,16 +106,6 @@ class ProductSet(models.Model):
                 ('product_set_id', '=', record.id),
             ]).mapped('pricelist_id')
             record.pricelist_count = len(count_price_list.ids)
-
-    @api.depends('currency_id', 'company_id')
-    def _compute_currency_rate(self):
-        for record in self:
-            record.currency_rate = self.env['res.currency']._get_conversion_rate(
-                from_currency=record.company_id.currency_id,
-                to_currency=record.currency_id,
-                company=record.company_id,
-                date=fields.Date.today(),
-            )
 
     @api.depends('set_line_ids.price_subtotal')
     def _compute_amounts(self):
@@ -248,21 +230,35 @@ class ProductSet(models.Model):
             parts.append("@ %s" % self.partner_id.name)
         return " ".join(parts)
 
+    def _name_search(
+        self,
+        name: str = "",
+        domain: list | None = None,
+        operator: str = "ilike",
+        limit: int = 100,
+        order: str | None = None,
+    ):
+        """Търсене по име или вътрешен код (ref)
 
-    def _name_search(self, name, args=None, operator='ilike', limit=100, name_get_uid=None):
-        args = args or []
-        domain = []
-        name_name = False
+        Съвместимо с новата сигнатура в Odoo 18:
+        `_name_search(name='', domain=None, operator='ilike', limit=100, order=None)`
+        """
+        domain = domain or []
+        extra = []
+        has_name_filter = False
+
         if name:
-            for single_domain in args:
-                if isinstance(single_domain, (list, tuple)) and single_domain[0] == 'name':
-                    name_name = True
-                    domain += ['|', ('name', operator, name), ('ref', 'ilike', name)]
-                elif isinstance(single_domain, (list, tuple)):
-                    domain += [single_domain]
+            for clause in domain:
+                if isinstance(clause, (list, tuple)) and clause[0] == "name":
+                    has_name_filter = True
+                    extra += ["|", ("name", operator, name), ("ref", "ilike", name)]
                 else:
-                    domain += single_domain
-            if not name_name:
-                domain = ['|', ['name', operator, name], ['ref', 'ilike', name]] + domain
-            args = domain
-        return self._search(args, limit=limit, access_rights_uid=name_get_uid)
+                    extra.append(clause)
+
+            if not has_name_filter:
+                extra = ["|", ("name", operator, name), ("ref", "ilike", name)] + extra
+
+            domain = extra
+
+        # В Odoo 18 `access_rights_uid` вече не е необходим тук
+        return self._search(domain, limit=limit, order=order)

@@ -1,31 +1,31 @@
-# -*- coding: utf-8 -*-
-# Part of Odoo. See LICENSE file for full copyright and licensing details.
+# Copyright 2023-2025 Rosen Vladimirov, BioPrint Ltd.
+# License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
+
 {
-    'name': 'Product properties',
+    'name': 'Product Properties',
     'version': '18.0.1.0.0',
-    'category': 'Product',
-    'sequence': 5,
-    'summary': 'Product properties',
-    "license": "AGPL-3",
-    "website": "https://github.com/OCA/product-attribute",
-    'description': """
-Information's about Product properties
-""",
-    'author': 'Rosen Vladimirov, '
-              'BioPrint Ltd.',
+    'category': 'Inventory/Product',
+    'summary': 'Manage extended product properties and attributes',
+    'license': 'AGPL-3',
+    'author': 'Rosen Vladimirov, BioPrint Ltd., Odoo Community Association (OCA)',
+    'website': 'https://github.com/OCA/product-attribute',
+    'maintainers': ['rosenvladimirov'],
+    'development_status': 'Beta',
     'depends': [
         'sale',
         'base',
         'product',
+        'product_expiry',
         'stock',
         'purchase',
         'product_manufacturer',
+        'product_manufacturer_data',
         'product_brand',
         'l10n_bg_report_stock',
         'l10n_bg_report_theme',
         'documents',
         'documents_product',
-        'queue_job'
+        'queue_job',
     ],
     'data': [
         'security/product_properties.xml',
@@ -47,7 +47,7 @@ Information's about Product properties
         'views/stock_picking_views.xml',
         'views/product_properties_linename_templates.xml',
         'views/report_product_properties.xml',
-        'views/report_sale_templates.xml',
+        'views/ir_actions_report_templates.xml',
         'views/report_purchase_order_templates.xml',
         'views/report_deliveryslip.xml',
         'views/report_invoice.xml',
@@ -57,12 +57,14 @@ Information's about Product properties
     ],
     'demo': [],
     'installable': True,
+    'auto_install': False,
+    'application': False,
     'assets': {
         'web.report_assets_common': [
-            'product_properties/static/src/layout_product_properties.scss'
+            'product_properties/static/src/layout_product_properties.scss',
         ],
         'web.assets_backend': [
             'product_properties/static/src/layout_product_properties.scss',
-        ]
-    }
+        ],
+    },
 }

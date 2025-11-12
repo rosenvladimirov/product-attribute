@@ -6,7 +6,7 @@
         <field name="inherit_id" ref="base.view_partner_form"/>
         <field name="arch" type="xml">
             <page name="sales_purchases" position="after">
-                <page string="Printing properties" name="print_prop" colspan="4" attrs="{'invisible': [('is_company','=',False),('parent_id','!=',False)]}">
+                <page string="Printing properties" name="print_prop" colspan="4" invisible="not is_company and not parent_id">
                     <group string="Default configuration for printing">
                         <group col="2" name="technical_button">
                             <button name="set_all_print_properties"
@@ -22,7 +22,7 @@
                                     class="oe_highlight"/>
                         </group>
                     </group>
-                    <field name="print_properties" context="{'default_partner_id': active_id}">
+                    <field name="print_properties" context="{'default_partner_id': id}">
                         <form string="Printing properties">
                             <sheet>
                                 <group>
@@ -40,7 +40,7 @@
                         </list>
                     </field>
                 </page>
-                <page string="Printing properties" name="print_properties_parent" attrs="{'invisible': ['|',('is_company','=',True),('parent_id','=',False)]}">
+                <page string="Printing properties" name="print_properties_parent" invisible="is_company or not parent_id">
                     <div>
                         <p>Printing properties-related settings are managed on <button name="open_commercial_entity" type="object" string="the parent company" class="oe_link"/></p>
                     </div>

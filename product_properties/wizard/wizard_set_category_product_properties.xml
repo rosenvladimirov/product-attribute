@@ -13,11 +13,11 @@
               </group>
               <separator string="Product properties"/>
               <field name="wiz_line_ids" nolabel="1" create="0">
-                  <tree>
+                  <list>
                       <field name="applicability" readonly="1"/>
                       <field name="categ_id" readonly="1"/>
                       <field name="lines_ids" widget="many2many_tags" readonly="1"/>
-                  </tree>
+                  </list>
               </field>
               <footer>
                   <button name="action_set_category_product_properties" string="Set properties"

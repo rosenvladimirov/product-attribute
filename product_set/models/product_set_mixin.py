@@ -15,7 +15,8 @@ class ProductSetsMixin(models.AbstractModel):
     product_set_qty = fields.Float('Product set quantity')
     product_set_price_subtotal = fields.Float('Product set price subtotal')
 
-    def _get_update_product_set_section_values(self, total_quantity):
+    @staticmethod
+    def _get_update_product_set_section_values(total_quantity):
         return {
             'product_set_qty': total_quantity['section_quantity']/total_quantity['quantity'],
             'product_set_price_subtotal': total_quantity['amount'],

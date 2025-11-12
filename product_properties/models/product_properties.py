@@ -26,22 +26,22 @@ MAGIC_FIELDS = ['id',
                 'write_uid',
                 '__last_update', ]
 
-TYPES = [('char', _('String')),
-         ('float', _('Float')),
-         ('int', _('Integer')),
-         ('currency', _('Currency')),
-         ('date', _('Date')),
-         ('range', _('Range')),
-         ('boolean', _('Yes/No')),
-         ('package', _('Package')),
-         ('eval', _('HTML Eval filled')),
-         ('dropdown_id', _('Dropdown menu')),
-         ('pricelist', _('Linked width Price List')),
-         ('url', _('Base on URL')),
-         ('field', _('Base on field')),
-         ('lot', _('Base on LOT/SN')),
-         ('use_date', _('Base on Use date')),
-         ('gs1', _('Base on GS1(UDI)')),
+TYPES = [('char', 'String'),
+         ('float', 'Float'),
+         ('int', 'Integer'),
+         ('currency', 'Currency'),
+         ('date', 'Date'),
+         ('range', 'Range'),
+         ('boolean', 'Yes/No'),
+         ('package', 'Package'),
+         ('eval', 'HTML Eval filled'),
+         ('dropdown_id', 'Dropdown menu'),
+         ('pricelist', 'Linked width Price List'),
+         ('url', 'Base on URL'),
+         ('field', 'Base on field'),
+         ('lot', 'Base on LOT/SN'),
+         ('use_date', 'Base on Use date'),
+         ('gs1', 'Base on GS1(UDI)'),
          ]
 
 
@@ -113,8 +113,16 @@ class ProductProperties(models.Model):
         'Active', default=True,
         help="If unchecked, it will allow you to hide the product properties without removing it.")
 
-    product_tmpl_id = fields.Many2one('product.template', 'Product Template', index=True)
-    product_id = fields.Many2one('product.product', 'Product', index=True)
+    product_tmpl_id = fields.Many2one(
+        'product.template',
+        'Product Template',
+        index=True
+    )
+    product_id = fields.Many2one(
+        'product.product',
+        'Product',
+        index=True
+    )
 
     sequence = fields.Integer("Sequence", default=1, index=True, help="The first in the sequence is the default one.")
 

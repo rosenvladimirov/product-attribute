@@ -80,16 +80,13 @@ class ProductSetLine(models.Model):
     # )
     currency_id = fields.Many2one(
         related='product_set_id.currency_id',
-        depends=['product_set_id.currency_id'],
-        company_dependent=True,
         store=True,
         precompute=True)
 
     name = fields.Char()
-    price_subtotal = fields.Monetary(
+    price_subtotal = fields.Float(
         string="Subtotal",
         compute='_compute_amount',
-        company_dependent=True,
         store=True,
         precompute=True)
     pricelist_item_id = fields.Many2one(

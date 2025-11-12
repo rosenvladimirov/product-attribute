@@ -161,7 +161,7 @@ class ProductPropertiesType(models.Model):
         else:
             properties_available = ()
 
-        if line._name == 'account.move.line' and (not lot_ids or lot_ids._name == 'account.move.line'):
+        if line._name == 'account.move.line' and (lot_ids and lot_ids._name == 'account.move.line'):
             lot_ids = self.env['stock.lot']
             for line_lot in line._get_invoiced_lot_values():
                 if line_lot.get('lot_id'):
@@ -188,16 +188,16 @@ class ProductPropertiesType(models.Model):
                             prop_line.type_field_model = force_field_id
                             prop_line.model_obj_id = force_field_id.id
 
-                    if lot_ids and not isinstance(lot_ids, (str,)) and prop_line.name.type_fields == 'lot':
+                    if prop_line.type_field_name and lot_ids and not isinstance(lot_ids, (str,)) and prop_line.name.type_fields == 'lot':
                         res[prop_line.name.name] = {'value': '-'.join(
                             map(lambda lot_id: lot_id and get_prefix(lot_id, prefix) + lot_id.name + get_prefix(lot_id, suffix) or '', lot_ids)),
                             'field': prop_line.name.name,
                             'attrs': False, 'image': False, 'sequence': prop_line.name.sequence,
                             'type': prop_line.name.type_fields,
                             'currency_id': currency_id}
-                    elif lot_ids and not isinstance(lot_ids,
+                    elif prop_line.type_field_name and lot_ids and not isinstance(lot_ids,
                                                     (str,)) and prop_line.name.type_fields == 'use_date' and any(
-                            [lot.id for lot in lot_ids if lot.lot_id and lot.lot_id.use_date]):
+                            [lot.id for lot in lot_ids if lot and lot.product_id.use_expiration_date]):
                         res[prop_line.name.name] = {'value': '-'.join(
                             map(lambda lot_id: lot_id.use_date and "%s" % fields.Date.from_string(lot_id.use_date) or '', lot_ids)),
                             'field': prop_line.name.name,
@@ -205,15 +205,15 @@ class ProductPropertiesType(models.Model):
                             'type': prop_line.name.type_fields,
                             'currency_id': currency_id,
                             'color': color}
-                    elif lot_ids and not isinstance(lot_ids, (str,)) and prop_line.name.type_fields == 'gs1':
+                    elif prop_line.type_field_name and lot_ids and not isinstance(lot_ids, (str,)) and prop_line.name.type_fields == 'gs1':
                         res[prop_line.name.name] = {
-                            'value': '-'.join(map(lambda lot_id: lot_id and lot_id.hr_gs1 or '', lot_ids)),
+                            'value': '-'.join(map(lambda lot_id: lot_id and lot_id.name or '', lot_ids)),
                             'field': prop_line.name.name,
                             'attrs': False, 'image': False,
                             'sequence': prop_line.name.sequence,
                             'type': prop_line.name.type_fields,
                             'currency_id': self._get_default_currency_id(prop_line, prop_line.name)}
-                    elif lot_ids and isinstance(lot_ids, (str,)):
+                    elif prop_line.type_field_name and lot_ids and isinstance(lot_ids, (str,)):
                         res[prop_line.name.name] = {
                             'value': lot_ids and '-'.join([prefix + x + suffix for x in lot_ids]) or '',
                             'field': prop_line.name.name,

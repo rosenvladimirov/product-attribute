@@ -43,7 +43,12 @@ class ProductPropertiesPrint(models.Model):
                 display_name.append(name.get(record.static_field))
             elif record.invoice_sub_type:
                 display_name.append(record.invoice_sub_type.name)
-            record.display_name = "-".join(display_name)
+
+            # Filter out None values
+            display_name = [str(item) for item in display_name if item is not None]
+
+            # Always assign a value, even if empty
+            record.display_name = "-".join(display_name) if display_name else ""
 
     def get_print_properties(self, source=False):
         return [x.name.id for x in self if not x.static_field and x.print]

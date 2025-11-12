@@ -16,16 +16,16 @@ class ProductTemplate(models.Model):
         'product_tmpl_id',
         'Manufacturers'
     )
-    manufacturer_id = fields.Many2one('product.manufacturer',
-                                      'Manufacturer',
-                                      compute='_compute_manufacturer_id',
-                                      help='Technical fields for reels')
-
-
-    @api.depends('manufacturer_ids')
-    def _compute_manufacturer_id(self):
-        for record in self:
-            if len(record.manufacturer_ids) > 0:
-                record.manufacturer_id = record.manufacturer_ids[0]
-            else:
-                record.manufacturer_id = False
+    # manufacturer_id = fields.Many2one('product.manufacturer',
+    #                                   'Manufacturer',
+    #                                   compute='_compute_manufacturer_id',
+    #                                   help='Technical fields for reels')
+    #
+    #
+    # @api.depends('manufacturer_ids')
+    # def _compute_manufacturer_id(self):
+    #     for record in self:
+    #         if len(record.manufacturer_ids) > 0:
+    #             record.manufacturer_id = record.manufacturer_ids[0]
+    #         else:
+    #             record.manufacturer_id = False

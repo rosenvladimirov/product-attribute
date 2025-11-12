@@ -104,8 +104,8 @@
                             <field name="type_int" invisible="type_fields != 'int'"/>
                             <field name="type_boolean" invisible="type_fields != 'boolean'"/>
                             <field name="type_url" widget="url" invisible="type_fields != 'url'"/>
-                            <field name="type_uom_id" invisible="type_fields not in ('float', 'int', 'dropdown_id')" domain="[('name_id', '=', active_id)]" context="{'default_name_id': active_id}"/>
-                            <field name="type_dropdown_id" invisible="type_fields != 'dropdown_id'" domain="[('name_id', '=', active_id)]" context="{'default_name_id': active_id}"/>
+                            <field name="type_uom_id" invisible="type_fields not in ('float', 'int', 'dropdown_id')" domain="[('name_id', '=', id)]" context="{'default_name_id': id}"/>
+                            <field name="type_dropdown_id" invisible="type_fields != 'dropdown_id'" domain="[('name_id', '=', id)]" context="{'default_name_id': id}"/>
                             <field name="type_field" invisible="type_fields != 'field'"/>
                         </group>
                         <group name="fields" string="Fields sources" invisible="type_fields != 'field'">
@@ -121,7 +121,7 @@
                             <field name="type_int_second" invisible="type_fields not in ('int', 'range')"/>
                         </group>
                         <group string="Dimensions" invisible="type_fields != 'package'">
-                            <field name="type_package_id" invisible="type_fields != 'package'" domain="[('name_id', '=', active_id)]" context="{'default_name_id': active_id}"/>
+                            <field name="type_package_id" invisible="type_fields != 'package'" domain="[('name_id', '=', id)]" context="{'default_name_id': id}"/>
                             <field name="dimensions_x"/>
                             <field name="dimensions_y"/>
                             <field name="dimensions_z"/>

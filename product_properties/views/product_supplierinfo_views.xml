@@ -44,7 +44,7 @@
                 <field name="manufacturer_id"/>
             </field>
             <filter name="groupby_vendor" position="after">
-                <filter string="Manufacturer" name="groupby_manufacturer" domain="[]" context="{'group_by': 'manufacturer'}"/>
+                <filter string="Manufacturer" name="groupby_manufacturer" domain="[]" context="{'group_by': 'manufacturer_id'}"/>
             </filter>
         </field>
     </record>

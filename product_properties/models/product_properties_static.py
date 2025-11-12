@@ -40,23 +40,27 @@ class ProductPropertiesStatic(models.Model):
     object_id = fields.Reference(string='Reference', selection=_links_get, readonly=True, ondelete="set null")
     currency_id = fields.Many2one('res.currency', string='Currency of properties',
                                   default=lambda self: self.env.user.company_id.currency_id)
-    display_name = fields.Char(compute='_compute_display_name')
 
-    @api.depends('object_id', 'name')
+    @api.depends('object_id', 'name', 'sequence')
     def _compute_display_name(self):
         for record in self:
-            if record.object_id:
-                record.display_name = "%s: %s" % (record.name, record.object_id.name_get()[0][1])
+            if record.object_id and hasattr(record.object_id, 'display_name'):
+                record.display_name = "%s: %s" % (record.name, record.object_id.display_name)
             else:
                 record.display_name = "[%s] %s" % (record.sequence, record.name)
 
-    @api.depends('name', 'object_id')
+    @api.depends('name', 'object_id', 'sequence')
     def name_get(self):
         result = []
         for static_properties in self:
-            name = static_properties.name
-            if static_properties.object_id:
-                name = "[%s] %s" % (static_properties.sequence, static_properties.object_id.name_get()[0][1])
+            if static_properties.object_id and hasattr(static_properties.object_id, 'display_name'):
+                name = "[%s] %s: %s" % (
+                    static_properties.sequence,
+                    static_properties.name,
+                    static_properties.object_id.display_name
+                )
+            else:
+                name = "[%s] %s" % (static_properties.sequence, static_properties.name)
             result.append((static_properties.id, name))
         return result
 

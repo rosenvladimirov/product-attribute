@@ -14,11 +14,11 @@ class ProductPropertiesCategory(models.Model):
 
     name = fields.Char('Property name', required=True, translate=True)
     applicability = fields.Selection([
-        ('product', _('Product(o2m)')),
-        ('productoo', _('Product(o2o)')),
-        ('template', _('Product template(o2m)')),
-        ('templateoo', _('Product template(o2o)')),
-        ('product_set', _('Product set')),
+        ('product', 'Product(o2m)'),
+        ('productoo', 'Product(o2o)'),
+        ('template', 'Product template(o2m)'),
+        ('templateoo', 'Product template(o2o)'),
+        ('product_set', 'Product set'),
     ],
         'Use for',
         required=True)
