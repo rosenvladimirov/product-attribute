@@ -67,9 +67,9 @@
         <field name="inherit_id" ref="product.product_template_tree_view"/>
         <field name="arch" type="xml">
             <field name="name" position="after">
-                <field name="component_type_id" column_invisible="product_variant_count &gt; 1"/>
-                <field name="moisture_sensitivity_level" column_invisible="product_variant_count &gt; 1"/>
-                <field name="storage_conditions" column_invisible="product_variant_count &gt; 1"/>
+                <field name="component_type_id" optional="show"/>
+                <field name="moisture_sensitivity_level" optional="show"/>
+                <field name="storage_conditions" optional="show"/>
             </field>
         </field>
     </record>
