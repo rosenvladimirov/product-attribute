@@ -49,6 +49,7 @@ class ProductTemplate(models.Model):
         inverse='_inverse_component_properties',
         definition='component_type_id.component_properties_definition',
         store=True,
+        precompute=False,
     )
     moisture_sensitivity_level = fields.Selection(
         MOISTURE_LEVELS,
