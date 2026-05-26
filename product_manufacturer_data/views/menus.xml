@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menutem id="menu_product_manufacturer_purchase"
+              action="product_manufacturer_action"
+              parent="purchase.menu_procurement_management"
+              sequence="18"
+              groups="purchase.group_purchase_user"/>
+</odoo>

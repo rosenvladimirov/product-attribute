@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="product_set_properties_category_set_form_view" model="ir.ui.view">
+        <field name="name">product.set.properties.category.set.form</field>
+        <field name="model">product.set.properties.category.set</field>
+        <field name="arch" type="xml">
+          <form string="Set all properties">
+              <group>
+                  <field name="category_product_properties_ids" widget="many2many_tags"/>
+                  <field name="empty_properties"/>
+                  <field name="product_set_ids" invisible="1"/>
+              </group>
+              <separator string="Product properties"/>
+              <field name="wiz_line_ids" nolabel="1" create="0">
+                  <list>
+                      <field name="applicability" readonly="1"/>
+                      <field name="categ_id" readonly="1"/>
+                      <field name="lines_ids" widget="many2many_tags" readonly="1"/>
+                  </list>
+              </field>
+              <footer>
+                  <button name="action_set_category_product_properties" string="Set properties"
+                          type="object" class="oe_highlight"/>
+                  <button special="cancel" string="Cancel" class="oe_link"/>
+              </footer>
+          </form>
+        </field>
+    </record>
+
+    <record id="product_set_properties_category_set_all" model="ir.actions.act_window">
+        <field name="name">Set category properties</field>
+        <field name="res_model">product.set.properties.category.set</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="product_properties_product_set.product_set_properties_category_set_form_view"/>
+        <field name="target">new</field>
+        <field name="binding_model_id" ref="product_set.model_product_set"/>
+        <field name="binding_view_types">list</field>
+    </record>
+
+</odoo>

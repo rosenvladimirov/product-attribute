@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="product_manufacturer_form_view" model="ir.ui.view">
+        <field name="name">product.manufacturer.form.view</field>
+        <field name="model">product.manufacturer</field>
+        <field name="arch" type="xml">
+            <form string="Manufacturer Information">
+                <sheet>
+                    <widget name="web_ribbon" title="Archived" bg_color="bg-danger" invisible="active"/>
+                    <field name="active" invisible="1"/>
+                    <field name="product_variant_id" invisible="1"/>
+                    <group>
+                        <group colspan="4" string="Manufacturer" name="manufacturer">
+                            <group>
+                                <field name="product_tmpl_id" string="Product" invisible="context.get('visible_product_tmpl_id', True)"/>
+                                <field name="product_id" groups="product.group_product_variant" domain="[('product_tmpl_id', '=', product_tmpl_id)]" options="{'no_create_edit': True}"/>
+                            </group>
+                            <group>
+                                <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
+                            </group>
+                            <group>
+                                <field name="manufacturer" readonly="0" context="{'default_customer': 0, 'search_default_supplier': 1, 'default_supplier': 1}"/>
+                                <field name="manufacturer_pname" readonly="0"/>
+                                <field name="manufacturer_pref" readonly="0"/>
+                                <field name="manufacturer_purl" widget="url" readonly="0"/>
+                            </group>
+                        </group>
+<!--                            <group name="packaging" string="Product Packaging"-->
+<!--                                    colspan="4"-->
+<!--                                    attrs="{'invisible':[('type', 'not in', ['product', 'consu'])]}"-->
+<!--                                    groups="product.group_stock_packaging"-->
+<!--                                    invisible="0">-->
+<!--                                    <field name="packaging_ids" nolabel="1" invisible="0" context="{'default_product_id': product_id, 'search_default_product_tmpl_id': product_tmpl_id, 'default_product_tmpl_id': product_tmpl_id, 'tree_view_ref':'product.product_packaging_tree_view', 'form_view_ref':'product.product_packaging_form_view'}"/>-->
+<!--                            </group>-->
+                    </group>
+                    <notebook>
+                        <page string="Distributors" name="supplierinfo">
+                            <field name="supplierinfo_ids"
+                                   nolabel="1"
+                                   mode="list"
+                                   widget="one2many"
+                                   context="{'search_default_product_tmpl_id': product_tmpl_id, 'default_product_tmpl_id': product_tmpl_id, 'default_manufacturer_id': active_id}"/>
+                        </page>
+                    </notebook>
+
+
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="product_manufacturer_search_view" model="ir.ui.view">
+        <field name="name">product.manufacturer.search.view</field>
+        <field name="model">product.manufacturer</field>
+        <field name="arch" type="xml">
+            <search string="Manufacturer">
+                <field string="Product" name="product_id" filter_domain="[('product_id', '=', self)]"/>
+                <field string="Product template" name="product_tmpl_id" filter_domain="[('product_tmpl_id', '=', self)]"/>
+                <field string="Manufacturer" name="manufacturer" filter_domain="[('manufacturer', '=', self)]"/>
+                <group expand="0" string="Group By">
+                    <filter string="Product" name="groupby_product" domain="[]" context="{'group_by': 'product_tmpl_id'}"/>
+                    <filter string="manufacturer" name="groupby_manufacturer" domain="[]" context="{'group_by': 'manufacturer'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="product_manufacturer_tree_view" model="ir.ui.view">
+        <field name="name">product.manufacturer.tree.view</field>
+        <field name="model">product.manufacturer</field>
+        <field name="arch" type="xml">
+            <list string="Manufacturer Information">
+                <field name="sequence" widget="handle"/>
+<!--                <field name="manufacturer_id"/>-->
+                <field name="product_id" invisible="context.get('product_template_invisible_variant', False)" groups="product.group_product_variant"/>
+                <field name="product_tmpl_id" string="Product" invisible="context.get('visible_product_tmpl_id', True)"/>
+                <field name="manufacturer_pref"/>
+                <field name="manufacturer_pname"/>
+<!--                <button name="action_see_datasheets" type="object" icon="fa-files-o" string="Dataseets"/>-->
+                <field name="manufacturer_purl" widget="url"/>
+                <field name="supplierinfo_ids" widget="many2many_tags"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="product_manufacturer_action" model="ir.actions.act_window">
+        <field name="name">Factory Product Info</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">product.manufacturer</field>
+        <field name="view_mode">tree,form</field>
+        <field name="search_view_id" ref="product_manufacturer_search_view"/>
+        <field name="context">{'visible_product_tmpl_id':False}</field>
+    </record>
+</odoo>

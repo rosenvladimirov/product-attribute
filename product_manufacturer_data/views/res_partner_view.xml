@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_partner_form" model="ir.ui.view">
+        <field name="name">res.partner.form</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+<!--            <xpath expr="//div[@name='button_box']" position="inside">-->
+<!--                <button name="action_see_datasheets" type="object" icon="fa-files-o">-->
+<!--                    <field string="Datasheets" name="count_datasheets" widget="statinfo"/>-->
+<!--                </button>-->
+<!--            </xpath>-->
+            <field name="lang" position="after">
+                <field
+                    name="product_brand_ids"
+                    widget="many2many_tags"
+                    invisible="not is_company and parent_id"
+                />
+                <field
+                    name="authorised_id"
+                    context="{'type_company': 1}"
+                    invisible="not is_company"
+                />
+                <field
+                    name="qc_manager_id"
+                    domain="[('parent_id', '=', active_id)]"
+                    invisible="not is_company"
+                />
+                <field
+                    name="req_manager_id"
+                    domain="[('parent_id', '=', active_id)]"
+                    invisible="not is_company"
+                />
+                <field
+                    name="compliance_manager_id"
+                    domain="[('parent_id', '=', active_id)]"
+                    invisible="not is_company"
+            />
+            </field>
+            <page name="sales_purchases" position="after">
+                <field name="has_distributor" invisible="1"/>
+                <page string="Produced Products" name="manufacture" invisible="not is_company and parent_id">
+                    <field name="product_manufacture_ids"
+                           nolabel="1"
+                           mode="list"
+                           context="{'default_manufacturer': active_id, 'visible_product_tmpl_id': False}"/>
+                </page>
+                <page string="Distributors" name="distributors" invisible="not is_company and parent_id and not has_distributor">
+                    <field name="distributor_ids" widget="one2many"/>
+                </page>
+            </page>
+        </field>
+    </record>
+    <record id="view_res_manufacturer_filter" model="ir.ui.view">
+        <field name="name">res.partner.select</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_res_partner_filter"/>
+        <field name="arch" type="xml">
+            <filter name="supplier" position="after">
+                 <filter string="Manufacturer" name="manufacturier" domain="[('is_company','=',1), ('parent_id', '=', False)]"/>
+            </filter>
+        </field>
+    </record>
+</odoo>

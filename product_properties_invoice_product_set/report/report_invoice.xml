@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <template id="report_account_move_html" inherit_id="product_properties.report_account_move_html">
+        <xpath expr="//td[@name='td_section_line']" position="replace">
+            <t t-if="o.use_product_properties == 'properties' and o.print_properties and line.product_set_id">
+                <td name="td_section_line">
+                    <t t-set="properties_print" t-value="o.print_properties"/>
+                    <t t-set="product_properties" t-value="line.product_set_id"/>
+                    <t t-call="product_properties.product_properties_description"/>
+                </td>
+                <td name="td_section_line_quantity" class="text-end">
+                    <span t-field="line.product_set_qty" t-options='{"widget": "float", "decimal_precision": "Product Unit of Measure"}'/>
+                </td>
+                <td name="td_section_line_quantity" class="text-end">
+                    <span t-esc="line.product_set_price_subtotal/(line.product_set_qty != 0.0 and line.product_set_qty or 1.0)" t-options='{"widget": "float", "decimal_precision": "Product Price"}'/>
+                </td>
+                <td/>
+                <td name="td_section_line_subtotal" class="text-end">
+                    <span t-field="line.product_set_price_subtotal" t-options='{"widget": "monetary", "display_currency": line.currency_id}'/>
+                </td>
+            </t>
+            <t t-else="">
+                <t t-if="line.product_set_id">
+                    <td name="td_section_line_no_properties_set">
+                        <span t-field="line.name" t-options="{'widget': 'text'}"/>
+                    </td>
+                    <td name="td_section_quantity_properties" class="text-end">
+                        <span t-field="line.product_set_qty"/>
+                    </td>
+                    <td name="td_section_line_quantity" class="text-end">
+                        <span t-esc="line.product_set_price_subtotal/(line.product_set_qty != 0.0 and line.product_set_qty or 1.0)" t-options='{"widget": "float", "decimal_precision": "Product Price"}'/>
+                    </td>
+                    <td><span t-esc="', '.join(line.get_print_taxes())"/></td>
+                    <td name="td_section_subtotal_properties" class="text-end">
+                        <span t-field="line.product_set_price_subtotal" t-options='{"widget": "monetary", "display_currency": line.currency_id}'/>
+                    </td>
+                </t>
+                <t t-else="">
+                    <td name="td_section_line_no_properties" colspan="99">
+                        <span t-field="line.name" t-options="{'widget': 'text'}"/>
+                    </td>
+                </t>
+            </t>
+        </xpath>
+    </template>
+    <template id="report_invoice_document" inherit_id="account.report_invoice_document">
+        <xpath expr="//t[@t-foreach='lines']/t[@t-set='current_total']" position="after">
+            <!-- Product set с properties и show_details -->
+            <t name="properties_description" t-if="line.show_details and line.product_set_id and (o.use_product_properties == 'properties' and line.has_properties)">
+                <tr t-att-class="'fw-bold o_line_section' if line.product_set_id else ''">
+                    <t t-set="properties_print" t-value="o.print_properties"/>
+                    <t t-set="product_properties" t-value="line.product_set_id"/>
+                    <td name="td_name_product_properties_set">
+                        <t t-call="product_properties.product_properties_description"/>
+                    </td>
+                    <td class="text-end">
+                        <span t-field="line.product_set_qty" t-options='{"widget": "float", "decimal_precision": "Product Unit of Measure"}'/>
+                    </td>
+                    <td class="text-end">
+                        <span t-esc="line.product_set_price_subtotal / (line.product_set_qty or 1.0)" t-options='{"widget": "float", "decimal_precision": "Product Price"}'/>
+                    </td>
+                    <td/>
+                    <td class="text-end">
+                        <span t-field="line.product_set_price_subtotal" t-options='{"widget": "monetary", "display_currency": line.currency_id}'/>
+                    </td>
+                </tr>
+            </t>
+        </xpath>
+    </template>
+    <template id="report_invoice_document_set" inherit_id="product_properties.report_invoice_document">
+        <xpath expr="//td[@name='td_numero_section']" position="attributes">
+            <attribute name="t-if" add="line.show_details" separator=" and "/>
+        </xpath>
+        <xpath expr="//td[@name='td_numero']" position="attributes">
+            <attribute name="t-if" add="line.product_set_section_id.show_details or line.show_details" separator=" and "/>
+        </xpath>
+        <xpath expr="//t[@name='properties_description']" position="replace">
+            <!-- Обикновен продукт с properties -->
+            <t name="properties_description_normal" t-if="line.show_details and not line.product_set_id and (o.use_product_properties == 'properties' and line.has_properties)">
+                <t t-set="properties_print" t-value="o.print_properties"/>
+                <t t-set="product_properties" t-value="line.product_id"/>
+                <td name="td_name_product_properties">
+                    <t t-call="product_properties.product_properties_description"/>
+                </td>
+            </t>
+        </xpath>
+        <xpath expr="//t[@name='properties_description_else']" position="replace">
+            <!-- Стандартно показване -->
+            <t name="properties_description_else" t-if="line.show_details and not line.product_set_id and o.use_product_properties != 'properties'">
+                <td name="properties_account_invoice_line_name">
+                    <span t-if="line.name" t-field="line.name" t-options="{'widget': 'text'}"/>
+                </td>
+            </t>
+        </xpath>
+    </template>
+<!--    <template id="report_invoice_document_hide_detail" inherit_id="sale_layout_category_hide_detail.report_invoice_document_hide_detail">-->
+<!--        <xpath expr="//t[@t-set='display_table_head']" position="replace">-->
+<!--            <t t-set="display_table_head" t-value="not any(l.show_details or l.product_set_id for l in o.invoice_line_ids.filtered(lambda r: r.display_type == 'line_section')) or any(l.show_details or l.product_set_id for l in o.invoice_line_ids.filtered(lambda r: r.display_type == 'line_section'))"/>-->
+<!--        </xpath>-->
+<!--        <xpath expr="//td[@name='current_section_name']" position="replace">-->
+<!--            <t t-if="o.use_product_properties == 'properties' and o.print_properties and line.product_set_id">-->
+<!--                <t name="colspan_calculate_product_set" t-set="colspan" t-value="colspan-3"/>-->
+<!--                <td name="td_numero_section">-->
+<!--                    <span t-esc="current_section_index"/>-->
+<!--                </td>-->
+<!--                <td name="current_section_name" t-att-colspan="colspan">-->
+<!--                    <t t-set="properties_print" t-value="o.print_properties"/>-->
+<!--                    <t t-set="product_properties" t-value="current_section.product_set_id"/>-->
+<!--                    <t t-call="product_properties.product_properties_description"/>-->
+<!--                </td>-->
+<!--            </t>-->
+<!--            <t t-else="">-->
+<!--                <t t-if="line.product_set_id" name="colspan_calculate_product_set_no" t-set="colspan" t-value="colspan-3"/>-->
+<!--                <td name="td_numero_section">-->
+<!--                    <span t-esc="current_section_index"/>-->
+<!--                </td>-->
+<!--                <td name="current_section_name" t-att-colspan="colspan">-->
+<!--                    <span t-field="current_section.name" class="fw-bold float-start"/>-->
+<!--                </td>-->
+<!--            </t>-->
+<!--        </xpath>-->
+<!--        <xpath expr="//td[@name='current_section_current_subtotal']" position="replace">-->
+<!--            <t t-if="o.use_product_properties == 'properties' and o.print_properties and line.product_set_id">-->
+<!--                <td name="td_section_quantity_properties" class="text-end">-->
+<!--                    <span t-field="current_section.product_set_qty"/>-->
+<!--                </td>-->
+<!--                <td name="td_section_line_quantity" class="text-end">-->
+<!--                    <span t-esc="current_section.product_set_price_subtotal/(current_section.product_set_qty != 0.0 and current_section.product_set_qty or 1.0)" t-options='{"widget": "float", "decimal_precision": "Product Price"}'/>-->
+<!--                </td>-->
+<!--                <td><span t-esc="', '.join(current_section.get_print_taxes())"/></td>-->
+<!--                <td name="td_section_subtotal_properties" class="text-end">-->
+<!--                    <span t-field="current_section.product_set_price_subtotal" t-options='{"widget": "monetary", "display_currency": current_section.currency_id}'/>-->
+<!--                </td>-->
+<!--            </t>-->
+<!--            <t t-else="">-->
+<!--                <t t-if="line.product_set_id">-->
+<!--                    <td name="td_section_quantity_properties" class="text-end">-->
+<!--                        <span t-field="current_section.product_set_qty"/>-->
+<!--                    </td>-->
+<!--                    <td name="td_section_line_quantity" class="text-end">-->
+<!--                        <span t-esc="current_section.product_set_price_subtotal/(current_section.product_set_qty != 0.0 and current_section.product_set_qty or 1.0)" t-options='{"widget": "float", "decimal_precision": "Product Price"}'/>-->
+<!--                    </td>-->
+<!--                    <td><span t-esc="', '.join(current_section.get_print_taxes())"/></td>-->
+<!--                    <td name="td_section_subtotal_properties" class="text-end">-->
+<!--                        <span t-field="current_section.product_set_price_subtotal" t-options='{"widget": "monetary", "display_currency": current_section.currency_id}'/>-->
+<!--                    </td>-->
+<!--                </t>-->
+<!--                <t t-else="">-->
+<!--                    <td name="current_section_current_subtotal">-->
+<!--                        <span class="float-end">-->
+<!--                            <span t-if="current_section.show_section_subtotal" class="text-end" t-esc="current_subtotal"-->
+<!--                                  t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/>-->
+<!--                        </span>-->
+<!--                    </td>-->
+<!--                </t>-->
+<!--            </t>-->
+<!--        </xpath>-->
+<!--    </template>-->
+</odoo>

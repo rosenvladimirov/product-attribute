@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!-- product_set related "section lines" -->
+    <template id="stock_report_delivery_product_set_section_line">
+        <tr t-att-class="'bg-200 fw-bold o_line_section'">
+            <td colspan="99" name="product_set_info">
+                <span t-field="product_set.name"/>
+            </td>
+        </tr>
+    </template>
+</odoo>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="product_category_form_view" model="ir.ui.view">
+        <field name="name">product.category.form</field>
+        <field name="model">product.category</field>
+        <field name="inherit_id" ref="product.product_category_form_view"/>
+        <field name="arch" type="xml">
+            <group name="first" position="after">
+                <field name="id" invisible="1"/>
+                <field name="category_pricelist_item_ids"
+                       nolabel="1"
+                       readonly="0"
+                       context="{'categ_id': id, 'applied_on': '2_product_category', 'compute_price': 'fixed'}">
+                    <list editable="bottom">
+                        <field name="applied_on" invisible="1"/>
+                        <field name="compute_price" invisible="1"/>
+                        <field name="categ_id" invisible="1"/>
+                        <field name="pricelist_id"/>
+                        <field name="fixed_price"/>
+                        <field name="date_start" optional="hide"/>
+                        <field name="date_end" optional="hide"/>
+                        <field name="min_quantity" optional="hide"/>
+                        <field name="currency_id" readonly="1" optional="hide"/>
+                        <field name="company_id" readonly="1" optional="hide"/>
+                    </list>
+                </field>
+            </group>
+        </field>
+    </record>
+</odoo>
