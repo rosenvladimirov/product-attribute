@@ -1,4 +1,0 @@
-- Development: Rosen Vladimirov
-- Maintainer: Odoo Community Association (OCA)
-- License: AGPL-3.0 or later
-- Hosted at: https://github.com/OCA/product-attribute

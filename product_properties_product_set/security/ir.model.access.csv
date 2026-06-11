@@ -1,3 +1,0 @@
-id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_product_set_properties_category_set_user,product.set.properties.category.set.user,product_properties_product_set.model_product_set_properties_category_set,product_properties.group_properties_user,1,1,1,1
-access_product_set_properties_category_line_set_user,product.set.properties.category.line.set.user,product_properties_product_set.model_product_set_properties_category_line_set,product_properties.group_properties_user,1,1,1,1
